@@ -41,6 +41,10 @@ import OrganisationAnalytics from "./pages/organisation/Analytics";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/Dashboard";
+import AdminUsers from "./pages/admin/Users";
+import AdminVerifications from "./pages/admin/Verifications";
+import AdminOrganisations from "./pages/admin/Organisations";
+import AdminReports from "./pages/admin/Reports";
 
 const queryClient = new QueryClient();
 
