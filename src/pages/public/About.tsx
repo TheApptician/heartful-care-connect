@@ -43,10 +43,11 @@ const About = () => {
                             </div>
                             <div className="relative">
                                 <div className="aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
-                                    {/* Placeholder for an image */}
-                                    <div className="w-full h-full flex items-center justify-center text-[#1a9e8c]/20">
-                                        <Heart className="w-48 h-48 fill-current" />
-                                    </div>
+                                    <img
+                                        src="/about-care.png"
+                                        alt="Professional carer with elderly client"
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                                 {/* Stats Overlay */}
                                 <div className="absolute -bottom-10 -left-10 bg-white p-8 rounded-3xl shadow-2xl shadow-black/5 border border-black/5">
@@ -100,15 +101,12 @@ const About = () => {
                     <div className="container mx-auto px-6">
                         <div className="grid lg:grid-cols-2 gap-24 items-center">
                             <div className="order-2 lg:order-1">
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-6 mt-12">
-                                        <div className="h-80 bg-slate-100 rounded-[2rem] flex items-center justify-center text-[#1a9e8c]/10"><Rocket className="w-20 h-20" /></div>
-                                        <div className="h-64 bg-slate-100 rounded-[2rem] flex items-center justify-center text-[#1a9e8c]/10"><Award className="w-16 h-16" /></div>
-                                    </div>
-                                    <div className="space-y-6">
-                                        <div className="h-64 bg-slate-100 rounded-[2rem] flex items-center justify-center text-[#1a9e8c]/10"><Users className="w-16 h-16" /></div>
-                                        <div className="h-80 bg-slate-100 rounded-[2rem] flex items-center justify-center text-[#1a9e8c]/10"><Shield className="w-20 h-20" /></div>
-                                    </div>
+                                <div className="rounded-[3rem] overflow-hidden shadow-2xl">
+                                    <img
+                                        src="/about-team.png"
+                                        alt="Heems team collaborating"
+                                        className="w-full h-auto object-cover"
+                                    />
                                 </div>
                             </div>
                             <div className="order-1 lg:order-2">

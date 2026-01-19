@@ -46,13 +46,13 @@ const ForCarersSection = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" asChild>
-                <Link to="/carer-signup">
+                <Link to="/signup">
                   Apply to Join
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <Link to="/carer-info">
+                <Link to="/about">
                   Learn More
                 </Link>
               </Button>

@@ -93,8 +93,8 @@ const PricingSection = () => {
             <div
               key={plan.name}
               className={`flex flex-col p-10 rounded-[3rem] border transition-all duration-500 ${plan.popular
-                  ? "bg-[#111827] border-[#111827] shadow-2xl shadow-black/20"
-                  : "bg-white border-black/[0.05] hover:border-[#1a9e8c]/30"
+                ? "bg-[#111827] border-[#111827] shadow-2xl shadow-black/20"
+                : "bg-white border-black/[0.05] hover:border-[#1a9e8c]/30"
                 }`}
             >
               <div className="mb-10">
@@ -131,12 +131,12 @@ const PricingSection = () => {
               <Button
                 size="lg"
                 className={`h-16 px-8 rounded-2xl font-black text-lg transition-all ${plan.popular
-                    ? "bg-[#1a9e8c] text-white hover:bg-[#15806c] shadow-xl shadow-[#1a9e8c]/20"
-                    : "bg-[#111827] text-white hover:bg-[#1a9e8c]"
+                  ? "bg-[#1a9e8c] text-white hover:bg-[#15806c] shadow-xl shadow-[#1a9e8c]/20"
+                  : "bg-[#111827] text-white hover:bg-[#1a9e8c]"
                   }`}
                 asChild
               >
-                <Link to="/org-signup">
+                <Link to="/signup">
                   {plan.cta}
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
