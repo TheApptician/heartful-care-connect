@@ -30,8 +30,8 @@ Heems is a comprehensive care marketplace platform connecting families with veri
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-org/heems-care-connect.git
-cd heems-care-connect
+git clone https://github.com/EmmanuelEdward2019/heartful-care-connect.git
+cd heartful-care-connect
 ```
 
 2. Install dependencies:
