@@ -1,6 +1,5 @@
 // Modern, Sleek Hero Section with App Download
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -174,86 +173,48 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right Column - Visual */}
+          {/* Right Column - Hero Visual with Carer & App Mockup */}
           <div className="relative lg:block hidden animate-fade-in-up animation-delay-300">
-            {/* Phone Mockup */}
-            <div className="relative">
+            {/* 3D Animated Hero Image Container */}
+            <div className="relative group">
               {/* Glow Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#1a9e8c] to-purple-500 rounded-[3rem] blur-3xl opacity-30 animate-pulse-slow"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#1a9e8c] to-purple-500 rounded-3xl blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 animate-pulse-slow"></div>
 
-              {/* Phone Frame */}
-              <div className="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-[3rem] p-3 shadow-2xl border border-white/10">
-                <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-inner">
-                  {/* Notch */}
-                  <div className="h-8 bg-slate-900 rounded-b-3xl mx-auto w-40"></div>
+              {/* Main Hero Image with 3D Transform */}
+              <div className="relative transform perspective-1000 animate-float3d">
+                <img
+                  src="/hero-carer-app.png"
+                  alt="Professional carer with Heems mobile app"
+                  className="w-full max-w-lg mx-auto rounded-3xl shadow-2xl border border-white/10 transform hover:scale-105 transition-transform duration-500"
+                  style={{
+                    filter: 'drop-shadow(0 25px 50px rgba(26, 158, 140, 0.3))',
+                  }}
+                />
 
-                  {/* Screen Content */}
-                  <div className="bg-gradient-to-br from-slate-50 to-white p-6 space-y-4">
-                    {/* App Header */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#1a9e8c] to-emerald-500 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg">
-                          H
-                        </div>
-                        <div>
-                          <div className="font-bold text-slate-900">Heems</div>
-                          <div className="text-xs text-slate-500">Care Marketplace</div>
-                        </div>
-                      </div>
-                      <Badge className="bg-green-500">Live</Badge>
-                    </div>
-
-                    {/* Search Bar */}
-                    <div className="bg-white rounded-2xl p-4 shadow-lg border border-slate-200">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-slate-100 rounded-full"></div>
-                        <div className="flex-1 h-4 bg-slate-100 rounded"></div>
-                      </div>
-                    </div>
-
-                    {/* Carer Cards */}
-                    {[1, 2].map((i) => (
-                      <div key={i} className="bg-white rounded-2xl p-4 shadow-lg border border-slate-200 space-y-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-gradient-to-br from-[#1a9e8c] to-emerald-400 rounded-full"></div>
-                          <div className="flex-1 space-y-2">
-                            <div className="h-3 bg-slate-200 rounded w-3/4"></div>
-                            <div className="h-2 bg-slate-100 rounded w-1/2"></div>
-                          </div>
-                          <div className="text-right">
-                            <div className="font-bold text-[#1a9e8c]">£{15 + i * 5}</div>
-                            <div className="text-xs text-slate-500">/hour</div>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <div className="h-6 bg-emerald-100 rounded-full flex-1"></div>
-                          <div className="h-6 bg-blue-100 rounded-full flex-1"></div>
-                        </div>
-                      </div>
-                    ))}
-
-                    {/* Bottom Nav */}
-                    <div className="flex justify-around pt-4">
-                      {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className={`w-10 h-10 rounded-full ${i === 1 ? 'bg-[#1a9e8c]' : 'bg-slate-200'}`}></div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                {/* Animated Ring Effect */}
+                <div className="absolute -inset-4 border-2 border-[#1a9e8c]/30 rounded-[2rem] animate-pulse-slow pointer-events-none"></div>
+                <div className="absolute -inset-8 border border-[#1a9e8c]/20 rounded-[2.5rem] animate-pulse-slow animation-delay-1000 pointer-events-none"></div>
               </div>
 
               {/* Floating Elements */}
-              <div className="absolute -top-6 -right-6 bg-white rounded-2xl p-4 shadow-2xl border border-slate-200 animate-float">
+              <div className="absolute -top-4 -right-4 bg-white rounded-2xl p-4 shadow-2xl border border-slate-200 animate-float z-20">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-sm font-bold text-slate-900">Verified</span>
+                  <span className="text-sm font-bold text-slate-900">DBS Verified</span>
                 </div>
               </div>
 
-              <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-2xl border border-slate-200 animate-float animation-delay-1000">
+              <div className="absolute -bottom-4 -left-4 bg-white rounded-2xl p-4 shadow-2xl border border-slate-200 animate-float animation-delay-1000 z-20">
                 <div className="flex items-center gap-2">
                   <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
                   <span className="text-sm font-bold text-slate-900">4.9 Rating</span>
+                </div>
+              </div>
+
+              <div className="absolute top-1/2 -right-8 bg-gradient-to-r from-[#1a9e8c] to-emerald-500 rounded-2xl p-3 shadow-2xl animate-float animation-delay-2000 z-20">
+                <div className="flex items-center gap-2 text-white">
+                  <Sparkles className="h-4 w-4" />
+                  <span className="text-xs font-bold">Instant Match</span>
                 </div>
               </div>
             </div>
@@ -302,6 +263,15 @@ const HeroSection = () => {
         .animation-delay-1000 { animation-delay: 1s; }
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
+        .perspective-1000 { perspective: 1000px; }
+        .rotate-y-3:hover { transform: rotateY(3deg) rotateX(2deg); }
+        @keyframes float3d {
+          0%, 100% { transform: translateY(0) rotateY(0deg) rotateX(0deg); }
+          25% { transform: translateY(-10px) rotateY(2deg) rotateX(1deg); }
+          50% { transform: translateY(-15px) rotateY(-2deg) rotateX(-1deg); }
+          75% { transform: translateY(-5px) rotateY(1deg) rotateX(0.5deg); }
+        }
+        .animate-float3d { animation: float3d 6s ease-in-out infinite; }
         .animate-fade-in-up {
           animation: fadeInUp 0.8s ease-out forwards;
         }
