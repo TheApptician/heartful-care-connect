@@ -473,12 +473,26 @@ CREATE POLICY "Admins can do everything on conversations" ON public.conversation
   FOR ALL USING ((SELECT public.check_is_admin()));
 
 -- ============================================
--- PART 9: ENABLE REALTIME
+-- PART 9: ENABLE REALTIME (IDEMPOTENT)
 -- ============================================
 
--- Enable realtime for messages
-ALTER PUBLICATION supabase_realtime ADD TABLE public.messages;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.conversations;
+-- Enable realtime for messages (only if not already added)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'messages'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.messages;
+  END IF;
+  
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'conversations'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.conversations;
+  END IF;
+END $$;
 
 -- ============================================
 -- BLOG POSTS TABLE
