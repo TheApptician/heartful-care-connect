@@ -65,11 +65,12 @@ const HowItWorksSection = () => {
           <div className="relative h-[500px] flex items-center justify-center">
             <div className="absolute inset-0 flex items-center justify-center">
               {/* Center Circle - Heems Logo/Badge */}
-              <div className="relative z-20 w-40 h-40 rounded-full bg-gradient-to-br from-[#111827] to-[#1a9e8c] flex items-center justify-center shadow-2xl border-4 border-white">
-                <div className="text-center">
-                  <p className="text-white font-black text-2xl tracking-tight">Heems</p>
-                  <p className="text-white/70 text-xs font-bold uppercase tracking-widest">Elite Care</p>
-                </div>
+              <div className="relative z-20 w-40 h-40 rounded-full bg-gradient-to-br from-[#111827] to-[#1a9e8c] flex items-center justify-center shadow-2xl border-4 border-white overflow-hidden">
+                <img
+                  src="/heems-logo.png"
+                  alt="Heems"
+                  className="h-16 w-auto brightness-0 invert"
+                />
               </div>
 
               {/* Orbiting Carer Photos */}

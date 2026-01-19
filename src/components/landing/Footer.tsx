@@ -39,11 +39,12 @@ const Footer = () => {
         {/* Top Grid */}
         <div className="grid lg:grid-cols-12 gap-16 mb-24">
           <div className="lg:col-span-4 max-w-sm">
-            <Link to="/" className="flex items-center gap-2 mb-8 group">
-              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center group-hover:bg-[#1a9e8c] transition-colors duration-300">
-                <Heart className="w-5 h-5 text-[#111827] group-hover:text-white fill-current" />
-              </div>
-              <span className="text-2xl font-black tracking-tight">Heems</span>
+            <Link to="/" className="flex items-center mb-8 group">
+              <img
+                src="/heems-logo.png"
+                alt="Heems"
+                className="h-12 w-auto brightness-0 invert"
+              />
             </Link>
             <p className="text-white/60 font-medium leading-relaxed mb-10">
               Technological infrastructure for the future of private care. Connecting families, carers, and organisations through clinical-grade vetting and matching.

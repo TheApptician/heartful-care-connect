@@ -222,11 +222,12 @@ const DashboardLayout = ({
               <Menu className="w-6 h-6" />
             </button>
 
-            <Link to="/" className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${roleColors[role]} flex items-center justify-center`}>
-                <Heart className="w-4 h-4 text-primary-foreground fill-primary-foreground" />
-              </div>
-              <span className="text-lg font-bold text-foreground">Heems</span>
+            <Link to="/" className="flex items-center">
+              <img
+                src="/heems-logo.png"
+                alt="Heems"
+                className="h-8 w-auto"
+              />
             </Link>
 
             <div className="flex items-center gap-2">
@@ -256,11 +257,12 @@ const DashboardLayout = ({
           <div className="flex flex-col h-full">
             {/* Sidebar Header */}
             <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border">
-              <Link to="/" className="flex items-center gap-2">
-                <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${roleColors[role]} flex items-center justify-center`}>
-                  <Heart className="w-4 h-4 text-primary-foreground fill-primary-foreground" />
-                </div>
-                <span className="text-xl font-bold text-sidebar-foreground">Heems</span>
+              <Link to="/" className="flex items-center">
+                <img
+                  src="/heems-logo.png"
+                  alt="Heems"
+                  className="h-9 w-auto"
+                />
               </Link>
               <button
                 onClick={() => setSidebarOpen(false)}

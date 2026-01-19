@@ -107,18 +107,12 @@ const Header = () => {
       <nav className="container mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-14 lg:h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-xl bg-[#111827] flex items-center justify-center shadow-sm group-hover:bg-[#1a9e8c] transition-colors duration-300">
-              <Heart className="w-5 h-5 text-white fill-white" />
-            </div>
-            <div className="flex flex-col justify-center">
-              <span className="text-xl font-black text-[#111827] tracking-tight leading-none">
-                Heems
-              </span>
-              <span className="text-[9px] font-bold text-[#1a9e8c] uppercase tracking-widest mt-0.5 leading-none">
-                Care
-              </span>
-            </div>
+          <Link to="/" className="flex items-center group">
+            <img
+              src="/heems-logo.png"
+              alt="Heems"
+              className="h-10 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}

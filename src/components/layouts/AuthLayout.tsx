@@ -23,11 +23,12 @@ const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
 
         <div className="relative z-10 flex flex-col justify-between p-12 w-full h-full">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center group-hover:bg-[#1a9e8c] transition-all duration-500">
-              <Heart className="w-6 h-6 text-[#111827] group-hover:text-white fill-current" />
-            </div>
-            <span className="text-3xl font-black text-white tracking-tighter">Heems</span>
+          <Link to="/" className="flex items-center group">
+            <img
+              src="/heems-logo.png"
+              alt="Heems"
+              className="h-12 w-auto brightness-0 invert"
+            />
           </Link>
 
           {/* Content */}
@@ -70,11 +71,12 @@ const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
       <div className="flex-1 flex flex-col bg-white overflow-y-auto">
         {/* Mobile Header */}
         <div className="lg:hidden p-6 border-b border-black/[0.03]">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-[#111827] flex items-center justify-center">
-              <Heart className="w-5 h-5 text-white fill-current" />
-            </div>
-            <span className="text-2xl font-black text-[#111827] tracking-tight">Heems</span>
+          <Link to="/" className="flex items-center">
+            <img
+              src="/heems-logo.png"
+              alt="Heems"
+              className="h-10 w-auto"
+            />
           </Link>
         </div>
 
