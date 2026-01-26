@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu, X, Heart, User, LayoutDashboard, Settings, LogOut, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { clearRoleCache } from "@/components/auth/RoleGuard";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,17 +30,18 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    // Check for logged-in user
+    // Check for logged-in user - use getSession (cached) instead of getUser (server validation)
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
 
-      if (user) {
+      if (currentUser) {
         // Fetch user profile to get role
         const { data: profileData } = await supabase
           .from('profiles')
           .select('*')
-          .eq('id', user.id)
+          .eq('id', currentUser.id)
           .single();
         setProfile(profileData);
       }
@@ -66,6 +68,8 @@ const Header = () => {
   }, []);
 
   const handleSignOut = async () => {
+    // Clear the role cache before signing out
+    clearRoleCache();
     await supabase.auth.signOut();
     navigate('/');
   };
@@ -97,8 +101,9 @@ const Header = () => {
 
   const navLinks = [
     { name: "Marketplace", href: "/marketplace" },
-    { name: "For Carers", href: "/carers" },
-    { name: "Solutions", href: "/solutions" },
+    { name: "Types of Care", href: "/types-of-care" },
+    { name: "How it Works", href: "/how-it-works" },
+
     { name: "Pricing", href: "/pricing" },
   ];
 
@@ -111,7 +116,7 @@ const Header = () => {
             <img
               src="/heems-logo.png"
               alt="Heems"
-              className="h-10 w-auto"
+              className="h-14 w-auto"
             />
           </Link>
 
@@ -142,7 +147,7 @@ const Header = () => {
                     </Avatar>
                     <div className="text-left">
                       <p className="text-sm font-bold text-[#111827] leading-none">
-                        {getUserName().split(' ')[0]}
+                        Welcome, {getUserName().split(' ')[0]}
                       </p>
                       <p className="text-xs text-[#4B5563] capitalize leading-none mt-0.5">
                         {profile?.role || 'User'}

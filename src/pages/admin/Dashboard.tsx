@@ -53,7 +53,7 @@ const AdminDashboard = () => {
       // Fetch pending verifications
       const { data: verificationsData, count: pendingCount } = await supabase
         .from('profiles')
-        .select('id, first_name, last_name, email, role, created_at', { count: 'exact' })
+        .select('id, full_name, role, email, phone, created_at', { count: 'exact' })
         .eq('verified', false)
         .order('created_at', { ascending: false })
         .limit(5);
@@ -242,16 +242,14 @@ const AdminDashboard = () => {
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 rounded-xl bg-[#1a9e8c]/10 flex items-center justify-center">
                             <span className="text-lg font-black text-[#1a9e8c]">
-                              {user.first_name?.[0] || user.email[0].toUpperCase()}
+                              {user.full_name?.[0]?.toUpperCase() || 'U'}
                             </span>
                           </div>
                           <div>
                             <p className="font-bold text-[#111827]">
-                              {user.first_name && user.last_name
-                                ? `${user.first_name} ${user.last_name}`
-                                : user.email}
+                              {user.full_name || 'Unknown User'}
                             </p>
-                            <p className="text-xs text-slate-500 capitalize">{user.role}</p>
+                            <p className="text-xs text-slate-500 capitalize">{user.role || 'user'}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">

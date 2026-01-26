@@ -29,7 +29,7 @@ const SafetyGuidelines = () => {
                     <div className="container mx-auto px-6">
                         <div className="text-center mb-24">
                             <h2 className="text-4xl font-black text-[#111827] mb-6 underline decoration-rose-600/20 decoration-8 underline-offset-8">Triple-Verification System</h2>
-                            <p className="text-slate-500 text-lg font-medium max-w-2xl mx-auto">Every carer on our platform passes through three distinct layers of clinical and residential vetting.</p>
+                            <p className="text-slate-500 text-lg font-medium max-w-2xl mx-auto">Every carer on our platform passes through three distinct layers of care and residential vetting.</p>
                         </div>
                         <div className="grid lg:grid-cols-3 gap-12">
                             {[
@@ -40,13 +40,13 @@ const SafetyGuidelines = () => {
                                 },
                                 {
                                     icon: ShieldCheck,
-                                    title: "Clinical Background",
+                                    title: "Professional Background",
                                     desc: "Enhanced DBS checks, professional registration codes (NMC/HCPC), and credential validation."
                                 },
                                 {
                                     icon: HeartPulse,
                                     title: "Reference Analysis",
-                                    desc: "Manual verification of at least three professional references with a focus on clinical performance."
+                                    desc: "Manual verification of at least three professional references with a focus on care performance."
                                 }
                             ].map((pillar, i) => (
                                 <div key={i} className="text-center space-y-6">
@@ -75,7 +75,7 @@ const SafetyGuidelines = () => {
                                 <div className="space-y-4">
                                     {[
                                         "Requests for off-platform payment",
-                                        "Pressure to bypass clinical documentation",
+                                        "Pressure to bypass documentation",
                                         "Unprofessional or aggressive communication",
                                         "Inconsistency between profile and identity",
                                         "Sharing of sensitive platform login details"

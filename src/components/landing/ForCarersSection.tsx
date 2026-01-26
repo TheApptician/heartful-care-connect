@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const carerBenefits = [
   { icon: TrendingUp, text: "Set your own rates — earn £15-40/hour" },
   { icon: Clock, text: "Complete flexibility — work when you want" },
-  { icon: Shield, text: "Insurance & liability coverage included" },
+
   { icon: Heart, text: "Meaningful work with ongoing clients" },
 ];
 

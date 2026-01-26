@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +35,7 @@ const CarerSignup = () => {
     careTypes: [] as string[],
     hasDBS: false,
     hasInsurance: false,
+    hasTransport: false,
     hasRightToWork: false,
     referral1Name: "",
     referral1Email: "",
@@ -46,6 +47,27 @@ const CarerSignup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Redirect logged-in users to their dashboard
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const role = session.user.user_metadata?.role;
+        if (role) {
+          navigate(`/${role}/dashboard`, { replace: true });
+        } else {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+          navigate(`/${profile?.role || 'carer'}/dashboard`, { replace: true });
+        }
+      }
+    };
+    checkUser();
+  }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -128,14 +150,12 @@ const CarerSignup = () => {
             specializations: formData.careTypes,
             has_dbs: formData.hasDBS,
             has_insurance: formData.hasInsurance,
+            has_transportation: formData.hasTransport,
             has_right_to_work: formData.hasRightToWork,
           });
 
-        toast({
-          title: "Application Submitted",
-          description: "We will review your documents and contact your referees.",
-        });
-        navigate("/login");
+        // Redirect to success page instead of login
+        navigate("/signup/success", { state: { role: 'carer' } });
       }
     } catch (error: any) {
       toast({
@@ -221,12 +241,13 @@ const CarerSignup = () => {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Clinical Experience</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Care Experience</Label>
               <Select value={formData.experience} onValueChange={(v) => setFormData({ ...formData, experience: v })}>
                 <SelectTrigger className="h-12 bg-slate-50 border-black/[0.05] rounded-xl">
                   <SelectValue placeholder="Years in Service" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="0-1">6 Months - 1 Year</SelectItem>
                   <SelectItem value="1-3">1-3 Years</SelectItem>
                   <SelectItem value="3-5">3-5 Years</SelectItem>
                   <SelectItem value="5-10">5-10 Years</SelectItem>
@@ -240,13 +261,20 @@ const CarerSignup = () => {
                 <Checkbox id="hasDBS" checked={formData.hasDBS} onCheckedChange={(c) => setFormData({ ...formData, hasDBS: !!c })} />
                 <Label htmlFor="hasDBS" className="text-xs font-bold text-[#111827]">DBS Certificate (Enhanced)</Label>
               </div>
+
               <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-black/[0.03]">
                 <Checkbox id="hasInsurance" checked={formData.hasInsurance} onCheckedChange={(c) => setFormData({ ...formData, hasInsurance: !!c })} />
                 <Label htmlFor="hasInsurance" className="text-xs font-bold text-[#111827]">Professional Liability Insurance</Label>
               </div>
+
               <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-black/[0.03]">
                 <Checkbox id="hasRTW" checked={formData.hasRightToWork} onCheckedChange={(c) => setFormData({ ...formData, hasRightToWork: !!c })} />
                 <Label htmlFor="hasRTW" className="text-xs font-bold text-[#111827]">Valid Right to Work in UK</Label>
+              </div>
+
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-black/[0.03]">
+                <Checkbox id="hasTransport" checked={formData.hasTransport} onCheckedChange={(c) => setFormData({ ...formData, hasTransport: !!c })} />
+                <Label htmlFor="hasTransport" className="text-xs font-bold text-[#111827]">Do you drive?</Label>
               </div>
             </div>
 

@@ -76,7 +76,7 @@ const UserGuide = () => {
                         <div className="grid lg:grid-cols-2 gap-24 items-center">
                             <div>
                                 <h2 className="text-4xl font-black mb-8 leading-tight">Watch: A Day in the Life with Heems</h2>
-                                <p className="text-white/60 text-lg font-medium mb-10 leading-relaxed">See how Heems simplifies management for both families and carers. Our platform handles the clinical details so you can handle the care.</p>
+                                <p className="text-white/60 text-lg font-medium mb-10 leading-relaxed">See how Heems simplifies management for both families and carers. Our platform handles the details so you can handle the care.</p>
                                 <div className="space-y-6">
                                     <div className="flex gap-6 p-6 rounded-3xl bg-white/5 border border-white/10">
                                         <div className="h-12 w-12 rounded-2xl bg-[#1a9e8c] flex items-center justify-center shrink-0">
@@ -110,8 +110,8 @@ const UserGuide = () => {
                         <div className="space-y-4">
                             {[
                                 { q: "How do I update a care plan mid-session?", a: "You can update care notes in real-time through the dashboard. Carers will receive an instant notification on their mobile interface." },
-                                { q: "What happens if a carer needs to cancel?", a: "If a carer cancels, our automated priority system will notify other vetted carers in your area with similar clinical skills immediately." },
-                                { q: "Managing multiple patients for one family?", a: "The 'Primary Client' account can manage multiple 'Members' profiles, each with an independent care plan and clinical documentation." }
+                                { q: "What happens if a carer needs to cancel?", a: "If a carer cancels, our automated priority system will notify other vetted carers in your area with similar skills immediately." },
+                                { q: "Managing multiple patients for one family?", a: "The 'Primary Client' account can manage multiple 'Members' profiles, each with an independent care plan and documentation." }
                             ].map((faq, i) => (
                                 <Card key={i} className="border-black/5 rounded-3xl hover:bg-slate-50 transition-colors">
                                     <CardContent className="p-8">

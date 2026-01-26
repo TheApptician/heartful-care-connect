@@ -31,7 +31,7 @@ const documentTypes = [
   { id: "right_to_work", name: "Right to Work", icon: FileCheck, required: true },
   { id: "insurance", name: "Public Liability Insurance", icon: ShieldCheck, required: true },
   { id: "references", name: "Work References", icon: Users, required: true },
-  { id: "qualifications", name: "Clinical Training", icon: GraduationCap, required: false },
+  { id: "qualifications", name: "Care Training", icon: GraduationCap, required: false },
 ];
 
 interface VerificationDoc {

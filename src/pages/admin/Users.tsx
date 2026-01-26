@@ -34,16 +34,18 @@ import { format } from "date-fns";
 
 interface User {
   id: string;
-  email: string;
-  first_name: string | null;
-  last_name: string | null;
   full_name: string | null;
-  phone: string | null;
   avatar_url: string | null;
+  phone: string | null;
+  address: string | null;
   role: string;
   verified: boolean;
   created_at: string;
-  last_sign_in_at: string | null;
+  updated_at: string | null;
+  // These may come from auth.users metadata or derived
+  email?: string;
+  first_name?: string | null;
+  last_name?: string | null;
 }
 
 const AdminUsers = () => {
@@ -180,16 +182,39 @@ const AdminUsers = () => {
 
   const handleToggleVerification = async (user: User) => {
     try {
+      const newStatus = !user.verified;
       const { error } = await supabase
         .from('profiles')
-        .update({ verified: !user.verified })
+        .update({ verified: newStatus })
         .eq('id', user.id);
 
       if (error) throw error;
 
+      // If we just verified the user, send the approval email
+      if (newStatus) {
+        try {
+          const { error: fnError } = await supabase.functions.invoke('send-account-approved-email', {
+            body: {
+              email: user.email,
+              name: user.full_name || user.first_name || 'User'
+            }
+          });
+
+          if (fnError) throw fnError;
+
+        } catch (emailErr) {
+          console.error("Failed to send approval email:", emailErr);
+          toast({
+            title: "Verification Warning",
+            description: "User verified, but email notification failed to send.",
+            variant: "destructive"
+          });
+        }
+      }
+
       toast({
-        title: user.verified ? "User unverified" : "User verified",
-        description: `${user.email} has been ${user.verified ? "unverified" : "verified"}.`,
+        title: newStatus ? "User verified" : "User unverified",
+        description: `${user.email} has been ${newStatus ? "verified" : "unverified"}.`,
       });
 
       fetchUsers();
@@ -255,65 +280,113 @@ const AdminUsers = () => {
   };
 
   const handleAddUser = async () => {
-    try {
-      if (!newUserFormData.email || !newUserFormData.password || !newUserFormData.first_name || !newUserFormData.last_name) {
-        toast({
-          title: "Validation Error",
-          description: "Please fill in all required fields.",
-          variant: "destructive",
-        });
-        return;
-      }
+    // Validate required fields
+    if (!newUserFormData.email || !newUserFormData.password || !newUserFormData.first_name || !newUserFormData.last_name) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
 
+    // Validate password length
+    if (newUserFormData.password.length < 6) {
+      toast({
+        title: "Validation Error",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newUserFormData.email)) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      console.log('Creating user with email:', newUserFormData.email);
+
+      // Step 1: Create auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: newUserFormData.email,
         password: newUserFormData.password,
         options: {
           data: {
-            first_name: newUserFormData.first_name,
-            last_name: newUserFormData.last_name,
             full_name: `${newUserFormData.first_name} ${newUserFormData.last_name}`,
             phone: newUserFormData.phone,
             role: newUserFormData.role,
-          }
+          },
+          // Skip email confirmation for admin-created users
+          emailRedirectTo: undefined,
         }
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        console.error('Auth error:', authError);
+        throw new Error(`Authentication failed: ${authError.message}`);
+      }
 
-      if (authData.user) {
-        // Wait for trigger to create profile
-        await new Promise(resolve => setTimeout(resolve, 1000));
+      if (!authData.user) {
+        throw new Error('User creation failed: No user data returned');
+      }
 
-        // Upsert profile (insert or update)
+      console.log('Auth user created:', authData.user.id);
+
+      // Step 2: Wait for database trigger to create profile
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Step 3: Upsert profile with correct columns (matching database schema)
+      try {
+        const profileData = {
+          id: authData.user.id,
+          full_name: `${newUserFormData.first_name} ${newUserFormData.last_name}`.trim(),
+          phone: newUserFormData.phone || null,
+          role: newUserFormData.role,
+          verified: false,
+        };
+
+        console.log('Upserting profile:', profileData);
+
         const { error: profileError } = await supabase
           .from('profiles')
-          .upsert({
-            id: authData.user.id,
-            email: newUserFormData.email,
-            first_name: newUserFormData.first_name,
-            last_name: newUserFormData.last_name,
-            full_name: `${newUserFormData.first_name} ${newUserFormData.last_name}`,
-            phone: newUserFormData.phone,
-            role: newUserFormData.role,
-          }, {
+          .upsert(profileData, {
             onConflict: 'id'
           });
 
         if (profileError) {
-          console.error('Profile error:', profileError);
+          console.error('Profile upsert error:', profileError);
+          // Don't throw - user was still created successfully
           toast({
             title: "User created with warning",
-            description: "User was created but profile update failed.",
+            description: `User account created but profile update failed: ${profileError.message}`,
           });
+        } else {
+          console.log('Profile upserted successfully');
         }
+      } catch (profileErr: any) {
+        console.error('Profile update exception:', profileErr);
+        // Don't throw - user was still created
+        toast({
+          title: "User created with warning",
+          description: "User account created but profile could not be updated.",
+        });
       }
 
+      // Success notification
       toast({
-        title: "User created",
-        description: `${newUserFormData.email} has been added successfully.`,
+        title: "User created successfully",
+        description: `${newUserFormData.email} has been added. They can now log in.`,
       });
 
+      // Reset form and close dialog
       setNewUserFormData({
         first_name: "",
         last_name: "",
@@ -324,13 +397,27 @@ const AdminUsers = () => {
       });
       setAddDialogOpen(false);
 
-      // Wait before refreshing
+      // Wait and refresh user list
       await new Promise(resolve => setTimeout(resolve, 500));
       fetchUsers();
+
     } catch (error: any) {
+      console.error('User creation failed:', error);
+
+      // Provide specific error messages for common issues
+      let errorMessage = error.message || 'An unexpected error occurred';
+
+      if (errorMessage.includes('already registered')) {
+        errorMessage = 'This email is already registered. Please use a different email.';
+      } else if (errorMessage.includes('invalid email')) {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (errorMessage.includes('password')) {
+        errorMessage = 'Password must be at least 6 characters long.';
+      }
+
       toast({
-        title: "Error creating user",
-        description: error.message,
+        title: "Error Creating User",
+        description: errorMessage,
         variant: "destructive",
       });
     }

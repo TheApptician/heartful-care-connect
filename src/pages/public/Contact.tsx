@@ -65,7 +65,7 @@ const Contact = () => {
                                             <div>
                                                 <p className="text-xs font-black text-[#1a9e8c] uppercase tracking-widest mb-1">Call Us</p>
                                                 <p className="text-lg font-bold text-[#111827]">07472414103</p>
-                                                <p className="text-sm text-slate-500 font-medium">Mon-Fri from 9am to 6pm.</p>
+                                                <p className="text-sm text-slate-500 font-medium">Mon-Fri from 9am to 5pm.</p>
                                             </div>
                                         </div>
 
@@ -87,8 +87,8 @@ const Contact = () => {
                                         <div className="h-12 w-12 rounded-2xl bg-white flex items-center justify-center shadow-sm">
                                             <Clock className="h-6 w-6 text-[#1a9e8c]" />
                                         </div>
-                                        <h3 className="text-xl font-bold text-[#111827]">24/7 Support for Active Care</h3>
-                                        <p className="text-slate-600 font-medium">Existing clients and carers have access to our emergency support line available 24 hours a day, 7 days a week.</p>
+                                        <h3 className="text-xl font-bold text-[#111827]">Lines Open 9am - 5pm</h3>
+                                        <p className="text-slate-600 font-medium">Existing clients and carers have access to our support line available during business hours.</p>
                                     </CardContent>
                                 </Card>
                             </div>

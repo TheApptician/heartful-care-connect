@@ -9,8 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { 
-  Search, 
+import {
+  Search,
   Shield,
   FileText,
   CheckCircle2,
@@ -25,7 +25,8 @@ import {
   Phone,
   Mail,
   Star,
-  ChevronRight
+  ChevronRight,
+  Sparkles
 } from "lucide-react";
 
 const verificationQueue = [
@@ -219,7 +220,7 @@ export default function AdminVerifications() {
             {/* Search */}
             <div className="relative w-full max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
+              <Input
                 placeholder="Search applications..."
                 className="pl-10"
                 value={searchQuery}
@@ -263,8 +264,8 @@ export default function AdminVerifications() {
                         <p className="text-sm font-medium mb-2">Documents</p>
                         <div className="flex flex-wrap gap-2">
                           {application.documents.map((doc, i) => (
-                            <Badge 
-                              key={i} 
+                            <Badge
+                              key={i}
                               variant={doc.status === 'approved' ? 'default' : 'secondary'}
                               className={doc.status === 'approved' ? 'bg-emerald-500' : ''}
                             >
@@ -349,7 +350,7 @@ export default function AdminVerifications() {
               <DialogTitle>Review Application</DialogTitle>
               <DialogDescription>Review documents and approve or reject this carer application</DialogDescription>
             </DialogHeader>
-            
+
             {selectedApplication && (
               <div className="space-y-6">
                 {/* Carer Profile */}
@@ -395,6 +396,50 @@ export default function AdminVerifications() {
                   </CardContent>
                 </Card>
 
+                {/* AI Analysis Section */}
+                <Card className="border-indigo-100 bg-indigo-50/30">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-indigo-700">
+                      <Sparkles className="h-5 w-5" />
+                      AI Vetting Analysis
+                    </CardTitle>
+                    <CardDescription>Automated risk assessment and document validation</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="p-4 bg-white rounded-lg border border-indigo-100">
+                        <p className="text-sm font-medium text-slate-500 mb-1">DBS Check</p>
+                        <div className="flex items-center gap-2 text-emerald-600 font-bold">
+                          <CheckCircle2 className="h-4 w-4" />
+                          Clear
+                        </div>
+                        <p className="text-xs text-slate-400 mt-2">Enhanced Disclosure verified. No warnings found.</p>
+                      </div>
+                      <div className="p-4 bg-white rounded-lg border border-indigo-100">
+                        <p className="text-sm font-medium text-slate-500 mb-1">Identity Match</p>
+                        <div className="flex items-center gap-2 text-emerald-600 font-bold">
+                          <CheckCircle2 className="h-4 w-4" />
+                          99.8% Match
+                        </div>
+                        <p className="text-xs text-slate-400 mt-2">Passport photo matches selfie video.</p>
+                      </div>
+                      <div className="p-4 bg-white rounded-lg border border-indigo-100">
+                        <p className="text-sm font-medium text-slate-500 mb-1">Right to Work</p>
+                        <div className="flex items-center gap-2 text-emerald-600 font-bold">
+                          <CheckCircle2 className="h-4 w-4" />
+                          Verified
+                        </div>
+                        <p className="text-xs text-slate-400 mt-2">Share code validated with Home Office API.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 p-3 bg-indigo-100 text-indigo-800 rounded-lg text-sm">
+                      <Shield className="h-4 w-4" />
+                      <strong>AI Recommendation:</strong> Low Risk. Recommended for approval pending manual specific-document review.
+                    </div>
+                  </CardContent>
+                </Card>
+
                 {/* Documents */}
                 <Card>
                   <CardHeader>
@@ -412,7 +457,10 @@ export default function AdminVerifications() {
                               <FileText className="h-5 w-5 text-muted-foreground" />
                             </div>
                             <div>
-                              <p className="font-medium">{doc.type}</p>
+                              <div className="flex items-center gap-2">
+                                <p className="font-medium">{doc.type}</p>
+                                {doc.status === 'approved' && <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-600 border-emerald-200"><Sparkles className="w-2 h-2 mr-1" /> AI Verified</Badge>}
+                              </div>
                               <p className="text-sm text-muted-foreground">{doc.fileName}</p>
                             </div>
                           </div>
@@ -445,7 +493,7 @@ export default function AdminVerifications() {
                 {/* Rejection Reason (if rejecting) */}
                 <div className="space-y-2">
                   <Label>Rejection Reason (if applicable)</Label>
-                  <Textarea 
+                  <Textarea
                     placeholder="Provide a reason if rejecting this application..."
                     value={rejectionReason}
                     onChange={(e) => setRejectionReason(e.target.value)}

@@ -9,7 +9,7 @@ export const PHASE_1_CLIENT_FEE = 0.10; // 10%
 export const PHASE_1_CARER_FEE = 0.00; // 0%
 
 export const PHASE_2_CLIENT_FEE = 0.12; // 12%
-export const PHASE_2_CARER_FEE = 0.05; // 5%
+export const PHASE_2_CARER_FEE = 0.08; // 8%
 
 /**
  * Calculate fees based on the active pricing phase

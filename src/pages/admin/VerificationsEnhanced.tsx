@@ -34,6 +34,7 @@ interface VerificationQueueItem {
     carer_id: string;
     carer_name: string;
     carer_email: string;
+    user_role: string;
     verification: any;
     referrals: any[];
     submitted_at: string;
@@ -58,47 +59,53 @@ export default function AdminVerificationsEnhanced() {
         try {
             setLoading(true);
 
-            // Fetch all carers with their verification status
+            // Fetch all unverified users (not just carers with carer_verification records)
             const { data: profiles, error: profilesError } = await supabase
                 .from('profiles')
-                .select('id, full_name, email, role')
-                .eq('role', 'carer');
+                .select('id, full_name, role, verified, created_at')
+                .eq('verified', false)
+                .order('created_at', { ascending: false });
 
             if (profilesError) throw profilesError;
 
             const queueItems: VerificationQueueItem[] = [];
 
             for (const profile of profiles || []) {
-                // Fetch verification data
-                const { data: verification } = await supabase
-                    .from('carer_verification')
-                    .select('*')
-                    .eq('id', profile.id)
-                    .single();
+                // Try to fetch verification data if exists (for carers)
+                let verification = null;
+                let referrals: any[] = [];
 
-                // Fetch referrals
-                const { data: referrals } = await supabase
-                    .from('carer_referrals')
-                    .select('*')
-                    .eq('carer_id', profile.id);
+                if (profile.role === 'carer') {
+                    const { data: verificationData } = await supabase
+                        .from('carer_verification')
+                        .select('*')
+                        .eq('id', profile.id)
+                        .single();
+                    verification = verificationData;
 
-                // Only include if there's something to review
-                if (verification && (
-                    verification.dbs_status === 'pending' ||
-                    verification.id_status === 'pending' ||
-                    verification.rtw_status === 'pending' ||
-                    verification.insurance_status === 'pending' ||
-                    (referrals && referrals.some(r => r.status === 'pending'))
-                )) {
-                    queueItems.push({
-                        carer_id: profile.id,
-                        carer_name: profile.full_name || 'Unknown',
-                        carer_email: profile.email || '',
-                        verification,
-                        referrals: referrals || [],
-                        submitted_at: verification.created_at || new Date().toISOString(),
-                    });
+                    // Fetch referrals for carers
+                    const { data: referralsData } = await supabase
+                        .from('carer_referrals')
+                        .select('*')
+                        .eq('carer_id', profile.id);
+                    referrals = referralsData || [];
                 }
+
+                // Add all unverified users to the queue
+                queueItems.push({
+                    carer_id: profile.id,
+                    carer_name: profile.full_name || 'Unknown User',
+                    carer_email: '',
+                    user_role: profile.role || 'user',
+                    verification: verification || {
+                        dbs_status: 'pending',
+                        id_status: 'pending',
+                        rtw_status: 'pending',
+                        insurance_status: 'pending',
+                    },
+                    referrals,
+                    submitted_at: profile.created_at || new Date().toISOString(),
+                });
             }
 
             setQueue(queueItems);
@@ -209,6 +216,36 @@ export default function AdminVerificationsEnhanced() {
                 description: 'Failed to review referral',
                 variant: 'destructive',
             });
+        }
+    };
+
+    // Direct user verification - sets profiles.verified = true
+    const handleVerifyUser = async (userId: string, userName: string) => {
+        try {
+            setProcessing(true);
+
+            const { error } = await supabase
+                .from('profiles')
+                .update({ verified: true })
+                .eq('id', userId);
+
+            if (error) throw error;
+
+            toast({
+                title: 'User Verified',
+                description: `${userName} has been verified successfully.`,
+            });
+
+            await fetchVerificationQueue();
+        } catch (error: any) {
+            console.error('Error verifying user:', error);
+            toast({
+                title: 'Error',
+                description: 'Failed to verify user',
+                variant: 'destructive',
+            });
+        } finally {
+            setProcessing(false);
         }
     };
 
@@ -337,14 +374,21 @@ export default function AdminVerificationsEnhanced() {
                                         <div>
                                             <CardTitle className="text-xl">{item.carer_name}</CardTitle>
                                             <CardDescription className="flex items-center gap-2 mt-1">
-                                                <Mail className="h-3 w-3" />
-                                                {item.carer_email}
+                                                <Badge variant="outline" className="capitalize">{item.user_role}</Badge>
+                                                <Badge variant="outline">
+                                                    <Clock className="h-3 w-3 mr-1" />
+                                                    Joined {new Date(item.submitted_at).toLocaleDateString()}
+                                                </Badge>
                                             </CardDescription>
                                         </div>
-                                        <Badge variant="outline">
-                                            <Clock className="h-3 w-3 mr-1" />
-                                            Submitted {new Date(item.submitted_at).toLocaleDateString()}
-                                        </Badge>
+                                        <Button
+                                            className="bg-[#1a9e8c] hover:bg-[#158a7a]"
+                                            onClick={() => handleVerifyUser(item.carer_id, item.carer_name)}
+                                            disabled={processing}
+                                        >
+                                            <CheckCircle className="h-4 w-4 mr-2" />
+                                            {processing ? 'Verifying...' : 'Verify User'}
+                                        </Button>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="pt-6">

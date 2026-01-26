@@ -3,10 +3,8 @@ import Header from "@/components/landing/Header";
 import HeroSection from "@/components/landing/HeroSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
-import ForCarersSection from "@/components/landing/ForCarersSection";
 import ForOrganisationsSection from "@/components/landing/ForOrganisationsSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
-import PricingSection from "@/components/landing/PricingSection";
 import CTASection from "@/components/landing/CTASection";
 import ParallaxSection from "@/components/landing/ParallaxSection";
 import Footer from "@/components/landing/Footer";
@@ -19,9 +17,9 @@ const Index = () => {
         <title>Heems | UK's Trusted On-Demand Care Marketplace</title>
         <meta
           name="description"
-          content="Connect with verified carers in minutes. Heems is the UK's leading care marketplace for families, self-employed carers, and healthcare organisations. DBS checked, CQC compliant."
+          content="Connect with verified carers in minutes. Heems is the UK's leading care marketplace for families, self-employed carers, and healthcare organisations. DBS checked, Introductory Agency standards matched."
         />
-        <meta name="keywords" content="care marketplace, home care, carers, UK healthcare, domiciliary care, care agency software, NHS staffing" />
+        <meta name="keywords" content="care marketplace, home care, carers, UK healthcare, domiciliary care, care agency software" />
         <link rel="canonical" href="https://heemscare.com" />
 
         {/* Open Graph */}
@@ -59,10 +57,8 @@ const Index = () => {
           <FeaturesSection />
           <HowItWorksSection />
           <ParallaxSection />
-          <ForCarersSection />
           <ForOrganisationsSection />
           <TestimonialsSection />
-          <PricingSection />
           <CTASection />
         </main>
         <Footer />

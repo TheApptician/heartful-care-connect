@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,10 +12,9 @@ import { supabase } from "@/integrations/supabase/client";
 
 const organisationTypes = [
   { value: "care_agency", label: "Care Agency" },
-  { value: "nhs_trust", label: "NHS Trust" },
   { value: "local_council", label: "Local Council" },
   { value: "care_home", label: "Care Home" },
-  { value: "hospital", label: "Hospital" },
+  { value: "hospital", label: "Private Hospital" },
   { value: "hospice", label: "Hospice" },
   { value: "other", label: "Other" },
 ];
@@ -40,6 +39,27 @@ const OrganisationSignup = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Redirect logged-in users to their dashboard
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const role = session.user.user_metadata?.role;
+        if (role) {
+          navigate(`/${role}/dashboard`, { replace: true });
+        } else {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+          navigate(`/${profile?.role || 'organisation'}/dashboard`, { replace: true });
+        }
+      }
+    };
+    checkUser();
+  }, [navigate]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -50,7 +70,7 @@ const OrganisationSignup = () => {
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Passwords don't match",
-        description: "Please check your clinical credentials.",
+        description: "Please check your credentials.",
         variant: "destructive",
       });
       return;
@@ -101,11 +121,8 @@ const OrganisationSignup = () => {
             onConflict: 'id'
           });
 
-        toast({
-          title: "Organisation Registered",
-          description: "Welcome to the Heems marketplace infrastructure.",
-        });
-        navigate("/login");
+        // Redirect to success page
+        navigate("/signup/success", { state: { role: 'organisation' } });
       }
     } catch (error: any) {
       toast({
@@ -160,7 +177,7 @@ const OrganisationSignup = () => {
 
             <div className="space-y-1.5">
               <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Work Email (Corporate)</Label>
-              <Input name="email" type="email" placeholder="m.chen@hospitaltrust.nhs.uk" value={formData.email} onChange={handleChange} className="h-12 bg-slate-50 border-black/[0.05] rounded-xl text-sm" required />
+              <Input name="email" type="email" placeholder="name@care-agency.com" value={formData.email} onChange={handleChange} className="h-12 bg-slate-50 border-black/[0.05] rounded-xl text-sm" required />
             </div>
 
             <div className="space-y-1.5">
@@ -184,7 +201,7 @@ const OrganisationSignup = () => {
               <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Organisation Legal Name</Label>
               <div className="relative">
                 <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <Input name="orgName" placeholder="NHS Foundation Trust" value={formData.orgName} onChange={handleChange} className="pl-11 h-12 bg-slate-50 border-black/[0.05] rounded-xl text-sm" required />
+                <Input name="orgName" placeholder="Care Solutions Ltd" value={formData.orgName} onChange={handleChange} className="pl-11 h-12 bg-slate-50 border-black/[0.05] rounded-xl text-sm" required />
               </div>
             </div>
 
@@ -202,15 +219,9 @@ const OrganisationSignup = () => {
               </Select>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">CQC Reference</Label>
-                <Input name="cqcNumber" placeholder="1-738..." value={formData.cqcNumber} onChange={handleChange} className="h-12 bg-slate-50 border-black/[0.05] rounded-xl text-sm" />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">HQ Postcode</Label>
-                <Input name="postcode" placeholder="W1 1AA" value={formData.postcode} onChange={handleChange} className="h-12 bg-slate-50 border-black/[0.05] rounded-xl text-sm" required />
-              </div>
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">HQ Postcode</Label>
+              <Input name="postcode" placeholder="W1 1AA" value={formData.postcode} onChange={handleChange} className="h-12 bg-slate-50 border-black/[0.05] rounded-xl text-sm" required />
             </div>
 
             <div className="p-4 rounded-2xl bg-[#1a9e8c]/5 border border-[#1a9e8c]/20 my-4">

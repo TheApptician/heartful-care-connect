@@ -61,6 +61,7 @@ const CarerDashboard = () => {
     rating: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [missingRequirements, setMissingRequirements] = useState<string[]>([]);
   const [processingBookings, setProcessingBookings] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -139,6 +140,28 @@ const CarerDashboard = () => {
         .eq('carer_id', user.id);
 
       const uniqueClients = new Set(allBookings?.map(b => b.client_id)).size;
+
+      // Fetch detailed carer info
+      const { data: carerDetails } = await supabase
+        .from('carer_details')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      const missing: string[] = [];
+      if (!profileData?.phone) missing.push("Phone Number");
+      if (!profileData?.first_name) missing.push("First Name");
+      if (!carerDetails?.has_dbs) missing.push("DBS Certificate");
+      if (!carerDetails?.has_insurance) missing.push("Liability Insurance");
+      if (!carerDetails?.has_right_to_work) missing.push("Right to Work");
+      // Optional: if (!carerDetails?.has_transportation) missing.push("Transportation Staus"); 
+
+      setMissingRequirements(missing);
+
+      // Check for video
+      if (carerDetails?.video_url) {
+        setProfile(prev => ({ ...prev, video_url: carerDetails.video_url }));
+      }
 
       setStats({
         weeklyEarnings,
@@ -249,7 +272,7 @@ const CarerDashboard = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground">
-              {getGreeting()}, {profile?.first_name || "Carer"}
+              {getGreeting()}, {profile?.full_name?.split(' ')[0] || "Carer"}
             </h1>
             <p className="text-muted-foreground">
               You have {upcomingBookings.length} upcoming visit{upcomingBookings.length !== 1 ? 's' : ''}
@@ -264,6 +287,65 @@ const CarerDashboard = () => {
             </Button>
           </div>
         </div>
+
+        {/* Welcome Video Section */}
+        {profile?.video_url && (
+          <div className="bg-slate-900 rounded-3xl p-6 text-white overflow-hidden relative mb-6">
+            <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none" />
+            <div className="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs font-bold uppercase tracking-wider mb-4 border border-white/20">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Your Intro Video
+                </div>
+                <h2 className="text-2xl font-bold mb-2">Welcome to your dashboard</h2>
+                <p className="text-slate-300 mb-6">This video is currently being shown to potential clients on your profile.</p>
+                <Button variant="outline" className="bg-white/10 border-white/10 text-white hover:bg-white/20 hover:text-white" asChild>
+                  <Link to="/carer/profile">Update Video</Link>
+                </Button>
+              </div>
+              <div className="aspect-video bg-black/50 rounded-xl overflow-hidden shadow-2xl border border-white/10">
+                {profile.video_url.includes('youtube') || profile.video_url.includes('youtu.be') ? (
+                  <iframe
+                    src={profile.video_url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                    title="Welcome Video"
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <video src={profile.video_url} controls className="w-full h-full" />
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Missing Requirements Alert */}
+        {missingRequirements.length > 0 && (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-start gap-4 animate-in fade-in slide-in-from-top-4">
+            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+              <AlertCircle className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-amber-900 mb-2">Pending Verification</h3>
+              <p className="text-amber-700 text-sm mb-4">
+                Your profile is not yet fully verified. To appear in search results and receive bookings, please complete the following:
+              </p>
+              <div className="grid sm:grid-cols-2 gap-2 mb-4">
+                {missingRequirements.map((req, i) => (
+                  <div key={i} className="flex items-center gap-2 text-amber-800 text-sm font-medium bg-amber-100/50 px-3 py-1.5 rounded-lg border border-amber-200/50">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    {req}
+                  </div>
+                ))}
+              </div>
+              <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white font-bold border-none" asChild>
+                <Link to="/carer/profile">Complete Profile</Link>
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -490,6 +572,31 @@ const CarerDashboard = () => {
                     </Link>
                   </Button>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Platform Benefits */}
+            <Card className="bg-gradient-to-br from-[#1a9e8c]/10 to-transparent border-[#1a9e8c]/20">
+              <CardHeader>
+                <CardTitle className="text-base text-[#1a9e8c]">Your Skills. Your Terms.</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Join thousands of self-employed carers who've taken control of their careers.
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    "Set your own rates — earn £15-40/hour",
+                    "Complete flexibility — work when you want",
+                    "Insurance & liability coverage included",
+                    "Meaningful work with ongoing clients"
+                  ].map((benefit, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-foreground">
+                      <CheckCircle2 className="w-4 h-4 text-[#1a9e8c] shrink-0 mt-0.5" />
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           </div>

@@ -37,6 +37,7 @@ const OrganisationDashboard = () => {
   });
   const [recentBookings, setRecentBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [missingRequirements, setMissingRequirements] = useState<string[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -104,6 +105,13 @@ const OrganisationDashboard = () => {
 
       setRecentBookings(bookings.slice(0, 5));
 
+      const missing: string[] = [];
+      if (!orgData?.company_name) missing.push("Company Name");
+      if (!orgData?.registration_number) missing.push("Registration Number");
+      if (!orgData?.postcode) missing.push("Postcode");
+
+      setMissingRequirements(missing);
+
     } catch (error: any) {
       toast({
         title: "Error loading dashboard",
@@ -140,7 +148,7 @@ const OrganisationDashboard = () => {
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Organisation Dashboard</span>
             </div>
             <h1 className="text-3xl font-black text-[#111827] tracking-tight">
-              Welcome, {orgDetails?.company_name || profile?.first_name || "Organisation"}
+              Welcome, {orgDetails?.company_name || profile?.full_name?.split(' ')[0] || "Organisation"}
             </h1>
             <p className="text-slate-500 font-medium">Manage your care services and staff.</p>
           </div>
@@ -159,6 +167,32 @@ const OrganisationDashboard = () => {
             </Button>
           </div>
         </div>
+
+        {/* Missing Requirements Alert */}
+        {missingRequirements.length > 0 && (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-start gap-4 animate-in fade-in slide-in-from-top-4">
+            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+              <Zap className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-amber-900 mb-2">Complete Your Profile</h3>
+              <p className="text-amber-700 text-sm mb-4">
+                To become a verified organization and unlock full platform features, please provide:
+              </p>
+              <div className="grid sm:grid-cols-2 gap-2 mb-4">
+                {missingRequirements.map((req, i) => (
+                  <div key={i} className="flex items-center gap-2 text-amber-800 text-sm font-medium bg-amber-100/50 px-3 py-1.5 rounded-lg border border-amber-200/50">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    {req}
+                  </div>
+                ))}
+              </div>
+              <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white font-bold border-none" asChild>
+                <Link to="/organisation/profile">Update Profile</Link>
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">

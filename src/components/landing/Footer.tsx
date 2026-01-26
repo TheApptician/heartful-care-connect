@@ -13,7 +13,6 @@ const footerLinks = {
   ],
   company: [
     { name: "About Us", href: "/about" },
-    { name: "Careers", href: "/careers" },
     { name: "Press", href: "/press" },
     { name: "Blog", href: "/blog" },
     { name: "Contact", href: "/contact" },
@@ -46,9 +45,11 @@ const Footer = () => {
                 className="h-12 w-auto brightness-0 invert"
               />
             </Link>
-            <p className="text-white/60 font-medium leading-relaxed mb-10">
-              Technological infrastructure for the future of private care. Connecting families, carers, and organisations through clinical-grade vetting and matching.
-            </p>
+            <div className="text-white/60 font-medium leading-relaxed mb-10 space-y-4">
+              <p>Our platform brings families and independent carers together through secure verification, transparent profiles, and intelligent matching, helping the right people find each other at the right time.</p>
+              <p>For families, it’s confidence and clarity.</p>
+              <p>For carers, it’s independence, dignity, and choice. For everyone, it’s care built on trust.</p>
+            </div>
             <div className="flex gap-4">
               <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 cursor-pointer transition-all">
                 <Mail className="w-4 h-4 text-white/40" />
@@ -67,8 +68,9 @@ const Footer = () => {
               <h4 className="text-xs font-black text-[#1a9e8c] uppercase tracking-widest mb-8">Ecosystem</h4>
               <ul className="space-y-4">
                 <li><Link to="/marketplace" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link to="/carers" className="text-sm font-bold text-white/60 hover:text-white transition-colors">For Carers</Link></li>
-                <li><Link to="/solutions" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Solutions</Link></li>
+                <li><Link to="/types-of-care" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Types of Care</Link></li>
+                <li><Link to="/how-it-works" className="text-sm font-bold text-white/60 hover:text-white transition-colors">How it Works</Link></li>
+
                 <li><Link to="/pricing" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Pricing</Link></li>
               </ul>
             </div>
@@ -85,9 +87,10 @@ const Footer = () => {
               <h4 className="text-xs font-black text-[#1a9e8c] uppercase tracking-widest mb-8">Company</h4>
               <ul className="space-y-4">
                 <li><Link to="/about" className="text-sm font-bold text-white/60 hover:text-white transition-colors">About Heems</Link></li>
-                <li><Link to="/blog" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Insights</Link></li>
+                <li><Link to="/blog" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Blog</Link></li>
+                <li><Link to="/privacy" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Terms & Conditions</Link></li>
                 <li><Link to="/contact" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Contact</Link></li>
-                <li><Link to="/careers" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Careers</Link></li>
               </ul>
             </div>
             <div>
@@ -145,7 +148,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-xs font-bold text-white/30 uppercase tracking-[0.1em]">© {new Date().getFullYear()} Heems Care Ltd. Registered in England & Wales.</p>
+          <p className="text-xs font-bold text-white/30 uppercase tracking-[0.1em]">© {new Date().getFullYear()} Heems -All rights Reserved</p>
           <div className="flex gap-8">
             <Link to="/privacy" className="text-xs font-bold text-white/30 hover:text-white uppercase tracking-[0.1em] transition-colors">Privacy</Link>
             <Link to="/terms" className="text-xs font-bold text-white/30 hover:text-white uppercase tracking-[0.1em] transition-colors">Terms</Link>

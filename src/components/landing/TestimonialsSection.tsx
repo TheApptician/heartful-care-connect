@@ -5,10 +5,10 @@ import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 
 const testimonials = [
   {
-    content: "Heems transformed how we manage care for our service users. The compliance tracking alone has saved us countless hours and the carers are exceptional.",
+    content: "Heems transformed how we manage care for our service users. The verified carers are reliable, professional, and truly care about the people they support.",
     author: "James Henderson",
-    role: "Operations Director",
-    company: "Brighton Care Services",
+    role: "Care Coordinator",
+    company: "Brighton",
     rating: 5,
     avatar: "JH",
   },
@@ -29,20 +29,20 @@ const testimonials = [
     avatar: "MO",
   },
   {
-    content: "The NHS trust I work for has partnered with Heems for staff bank management. The quality of carers and the speed of placement is remarkable.",
-    author: "Dr. Amir Hassan",
-    role: "Head of Workforce",
-    company: "NHS Foundation Trust",
+    content: "I was overwhelmed trying to find support for my rehabilitation after surgery. Heems made it simple. I found a lovely carer who helped me get back on my feet.",
+    author: "Emily Thompson",
+    role: "Service User",
+    company: "Oxford",
     rating: 5,
-    avatar: "AH",
+    avatar: "ET",
   },
   {
-    content: "We've reduced our agency spend by 40% since switching to Heems. The platform gives us complete visibility over our workforce compliance.",
-    author: "Sarah Mitchell",
-    role: "Managing Director",
-    company: "HomeFirst Care Ltd",
+    content: "Heems is the best platform I've used. I set my own hours and rates, and the clients treat me like a professional. It's refreshing to be in control.",
+    author: "Michael Okon",
+    role: "Professional Carer",
+    company: "Self-Employed",
     rating: 5,
-    avatar: "SM",
+    avatar: "MO",
   },
   {
     content: "My mum needs complex care due to Parkinson's. Heems matched us with a carer who has specialist training. The peace of mind is priceless.",
@@ -78,7 +78,7 @@ const TestimonialsSection = () => {
             <span className="text-gradient">Thousands</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            From families to NHS trusts, hear how Heems is transforming care across the UK.
+            From families to professional carers, hear how Heems is transforming care across the UK.
           </p>
         </div>
 
@@ -147,8 +147,8 @@ const TestimonialsSection = () => {
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className={`h-2 rounded-full transition-all duration-300 ${index === currentIndex
-                      ? 'w-8 bg-primary'
-                      : 'w-2 bg-muted-foreground/30'
+                    ? 'w-8 bg-primary'
+                    : 'w-2 bg-muted-foreground/30'
                     }`}
                   aria-label={`Go to testimonial ${index + 1}`}
                 />
@@ -214,8 +214,6 @@ const TestimonialsSection = () => {
         <div className="mt-16 text-center">
           <p className="text-sm text-muted-foreground mb-6">Trusted by leading organisations</p>
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-            <div className="text-2xl font-bold text-foreground">NHS</div>
-            <div className="text-xl font-bold text-foreground">CQC Registered</div>
             <div className="text-xl font-bold text-foreground">ICO Certified</div>
             <div className="text-xl font-bold text-foreground">Stripe Verified</div>
           </div>

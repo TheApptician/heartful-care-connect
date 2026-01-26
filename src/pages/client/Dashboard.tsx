@@ -137,6 +137,12 @@ const ClientDashboard = () => {
                 Plan
               </Link>
             </Button>
+            <Button className="h-11 px-6 rounded-xl font-bold text-xs shadow-md shadow-primary/10 bg-[#111827] text-white hover:bg-[#1f2937]" asChild>
+              <Link to="/client/post-job">
+                <FileText className="w-4 h-4 mr-2" />
+                Post a Job
+              </Link>
+            </Button>
             <Button className="h-11 px-6 rounded-xl font-bold text-xs shadow-md shadow-primary/10" asChild>
               <Link to="/client/search">
                 <Plus className="w-4 h-4 mr-2" />
@@ -273,7 +279,9 @@ const ClientDashboard = () => {
                   <h3 className="text-lg font-bold">Recipients</h3>
                 </div>
                 <p className="text-xs text-white/50 mb-6 font-medium leading-relaxed">Manage documentation for members receiving care.</p>
-                <Button className="w-full bg-white text-slate-900 hover:bg-slate-100 font-bold h-10 rounded-lg text-xs">Manage Contacts</Button>
+                <Button className="w-full bg-white text-slate-900 hover:bg-slate-100 font-bold h-10 rounded-lg text-xs" asChild>
+                  <Link to="/client/profile">Manage Contacts</Link>
+                </Button>
               </Card>
 
               <Card className="rounded-2xl border-black/5 bg-accent/5 p-6 border-2 border-dashed border-accent/10">

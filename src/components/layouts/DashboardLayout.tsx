@@ -64,6 +64,7 @@ const getDefaultNavItems = (role: string): NavItem[] => {
     case "client":
       return [
         { name: "Dashboard", href: "/client/dashboard", icon: LayoutDashboard },
+        { name: "Post a Job", href: "/client/post-job", icon: Briefcase },
         { name: "Find Carers", href: "/client/search", icon: Search },
         { name: "Bookings", href: "/client/bookings", icon: Calendar },
         { name: "Care Plans", href: "/client/care-plans", icon: ClipboardList },
@@ -127,58 +128,90 @@ const DashboardLayout = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCounts = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+    let isMounted = true;
+    let debounceTimer: NodeJS.Timeout;
 
+    const fetchCounts = async () => {
+      // Use getSession (cached) instead of getUser (server validation)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user || !isMounted) return;
+
+      const userId = session.user.id;
       const newCounts: { [key: string]: number } = {};
 
-      // 1. Unread Messages (All roles)
-      const { count: unreadMessages } = await supabase
-        .from('messages')
-        .select('*', { count: 'exact', head: true })
-        .eq('receiver_id', user.id)
-        .eq('is_read', false);
-      newCounts['messages'] = unreadMessages || 0;
+      // Run all count queries in parallel for faster loading
+      const queries: Promise<void>[] = [];
 
-      // 2. Active Bookings (Client, Carer, Organisation)
+      // 1. Unread Messages (All roles) - always fetch
+      queries.push(
+        supabase
+          .from('messages')
+          .select('*', { count: 'exact', head: true })
+          .eq('receiver_id', userId)
+          .eq('is_read', false)
+          .then(({ count }) => {
+            newCounts['messages'] = count || 0;
+          })
+      );
+
+      // 2. Active Bookings (Non-admin roles)
       if (role !== 'admin') {
         let query = supabase.from('bookings').select('*', { count: 'exact', head: true });
 
-        if (role === 'client') query = query.eq('client_id', user.id);
-        else if (role === 'carer') query = query.eq('carer_id', user.id);
-        else if (role === 'organisation') query = query.eq('client_id', user.id); // Assuming orgs act as clients for bookings
+        if (role === 'client') query = query.eq('client_id', userId);
+        else if (role === 'carer') query = query.eq('carer_id', userId);
+        else if (role === 'organisation') query = query.eq('client_id', userId);
 
-        const { count: activeBookings } = await query
-          .in('status', ['pending', 'confirmed', 'in_progress']);
-
-        newCounts['bookings'] = activeBookings || 0;
+        queries.push(
+          query.in('status', ['pending', 'confirmed', 'in_progress']).then(({ count }) => {
+            newCounts['bookings'] = count || 0;
+          })
+        );
       }
 
       // 3. Admin specific counts
       if (role === 'admin') {
-        const { count: pendingVerifications } = await supabase
-          .from('profiles')
-          .select('*', { count: 'exact', head: true })
-          .eq('role', 'carer')
-          .eq('verified', false);
-        newCounts['verifications'] = pendingVerifications || 0;
+        queries.push(
+          supabase
+            .from('profiles')
+            .select('*', { count: 'exact', head: true })
+            .eq('role', 'carer')
+            .eq('verified', false)
+            .then(({ count }) => {
+              newCounts['verifications'] = count || 0;
+            })
+        );
       }
 
-      setCounts(newCounts);
+      // Wait for all queries to complete in parallel
+      await Promise.all(queries);
+
+      if (isMounted) {
+        setCounts(newCounts);
+      }
     };
 
-    fetchCounts();
+    // Debounced fetch for realtime updates
+    const debouncedFetch = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(fetchCounts, 500);
+    };
 
-    // Subscribe to changes (Optional but good for real real-time)
+    // Defer initial fetch to allow UI to render first (non-blocking)
+    const initialTimer = setTimeout(fetchCounts, 100);
+
+    // Subscribe to realtime changes with debounce
     const channel = supabase
       .channel('dashboard-counts')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, fetchCounts)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, fetchCounts)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, fetchCounts)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, debouncedFetch)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, debouncedFetch)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, debouncedFetch)
       .subscribe();
 
     return () => {
+      isMounted = false;
+      clearTimeout(debounceTimer);
+      clearTimeout(initialTimer);
       supabase.removeChannel(channel);
     };
   }, [role]);

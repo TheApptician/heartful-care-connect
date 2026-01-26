@@ -26,17 +26,25 @@ const ParallaxSection = () => {
                 {/* Premium Badge */}
                 <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-black uppercase tracking-[0.25em] mb-12 mt-12 shadow-2xl">
                     <Award className="w-4 h-4 text-[#1a9e8c]" />
-                    CQC Compliant Excellence
+                    Introductory Agency Excellence
                 </div>
 
                 <h2 className="text-5xl lg:text-8xl font-black text-white mb-10 tracking-tighter leading-none max-w-5xl mx-auto">
-                    Proven clinical vetting. <br />
+                    Proven vetting standards. <br />
                     <span className="text-[#1a9e8c]">Unmatched peace of mind.</span>
                 </h2>
 
-                <p className="text-xl lg:text-2xl text-white/90 font-medium max-w-3xl mx-auto mb-16 leading-relaxed">
-                    We don't just find carers. We verify every single professional through our proprietary 20-point clinical audit.
-                </p>
+                <div className="text-lg lg:text-xl text-white/90 font-medium max-w-4xl mx-auto mb-16 leading-relaxed space-y-6 text-left lg:text-center">
+                    <p>
+                        Every carer using the Heems platform goes through a robust, multi-stage verification process designed to promote safety, professionalism, and trust.
+                    </p>
+                    <p>
+                        This includes identity verification to a high digital standard, confirmation of the right to work in the UK, and a detailed review of experience, skills, and suitability for care roles. Carers are also required to provide verified professional references, which are independently checked as part of onboarding.
+                    </p>
+                    <p>
+                        Our approach combines technology-led checks with human review to ensure that families and organisations can make informed decisions, while carers are recognised for their professionalism and commitment.
+                    </p>
+                </div>
 
                 {/* Stats Row */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-16">
@@ -50,7 +58,7 @@ const ParallaxSection = () => {
                     <div className="p-8 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500">
                         <div className="flex items-center justify-center gap-3 mb-3">
                             <TrendingUp className="w-8 h-8 text-[#1a9e8c]" />
-                            <p className="text-4xl font-black text-white">8,234</p>
+                            <p className="text-4xl font-black text-white">593+</p>
                         </div>
                         <p className="text-sm font-bold text-white/70 uppercase tracking-widest">Elite Carers</p>
                     </div>
@@ -75,15 +83,11 @@ const ParallaxSection = () => {
                 <div className="mt-16 flex flex-wrap items-center justify-center gap-8 text-white/60 text-sm font-bold">
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-[#1a9e8c]" />
-                        <span>ISO 27001 Certified</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-[#1a9e8c]" />
                         <span>GDPR Compliant</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-[#1a9e8c]" />
-                        <span>CQC Registered</span>
+                        <span>Introductory Agency Standards</span>
                     </div>
                 </div>
             </div>

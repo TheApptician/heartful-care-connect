@@ -35,6 +35,10 @@ CREATE TABLE IF NOT EXISTS public.carer_details (
   verification_status TEXT CHECK (verification_status IN ('pending', 'verified', 'rejected')) DEFAULT 'pending',
   dbs_check_date DATE,
   availability_status TEXT CHECK (availability_status IN ('available', 'busy', 'away')) DEFAULT 'available',
+  has_dbs BOOLEAN DEFAULT false,
+  has_insurance BOOLEAN DEFAULT false,
+  has_right_to_work BOOLEAN DEFAULT false,
+  has_transportation BOOLEAN DEFAULT false,
   -- Stripe Connect fields
   stripe_account_id TEXT,
   stripe_onboarding_complete BOOLEAN DEFAULT false,

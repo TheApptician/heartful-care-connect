@@ -275,7 +275,7 @@ export default function OrganisationSettings() {
                                         <Input
                                             value={formData.registration_number}
                                             onChange={(e) => setFormData({ ...formData, registration_number: e.target.value })}
-                                            placeholder="CQC/CIW Number"
+                                            placeholder="Registration Number"
                                         />
                                     </div>
                                 </div>

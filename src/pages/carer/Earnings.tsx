@@ -3,6 +3,9 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -43,6 +46,8 @@ export default function CarerEarnings() {
     avgHourlyRate: 0,
     totalCompleted: 0,
   });
+  const [calcRate, setCalcRate] = useState(25);
+  const [calcHours, setCalcHours] = useState(20);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -263,6 +268,7 @@ export default function CarerEarnings() {
           <TabsList>
             <TabsTrigger value="completed">Completed ({completedBookings.length})</TabsTrigger>
             <TabsTrigger value="pending">Upcoming ({pendingBookings.length})</TabsTrigger>
+            <TabsTrigger value="calculator">Calculator</TabsTrigger>
           </TabsList>
 
           <TabsContent value="completed">
@@ -356,6 +362,66 @@ export default function CarerEarnings() {
                     ))}
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="calculator">
+            <Card>
+              <CardHeader>
+                <CardTitle>Earnings Calculator</CardTitle>
+                <CardDescription>Estimate your potential income based on your rate and availability</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label>Hourly Rate (£)</Label>
+                      <div className="relative">
+                        <PoundSterling className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type="number"
+                          value={calcRate}
+                          onChange={(e) => setCalcRate(Number(e.target.value))}
+                          className="pl-9"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <Label>Hours per Week</Label>
+                        <span className="text-muted-foreground font-medium">{calcHours}h</span>
+                      </div>
+                      <Slider
+                        value={[calcHours]}
+                        onValueChange={(vals) => setCalcHours(vals[0])}
+                        max={80}
+                        step={1}
+                        className="py-4"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 bg-muted/50 p-6 rounded-xl">
+                    <h3 className="font-semibold text-lg">Potential Earnings</h3>
+
+                    <div className="flex justify-between items-center p-3 bg-background rounded-lg border">
+                      <span className="text-muted-foreground">Weekly</span>
+                      <span className="font-bold text-xl">£{(calcRate * calcHours).toLocaleString()}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center p-3 bg-background rounded-lg border">
+                      <span className="text-muted-foreground">Monthly</span>
+                      <span className="font-bold text-xl">£{(calcRate * calcHours * 4).toLocaleString()}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center p-3 bg-background rounded-lg border">
+                      <span className="text-muted-foreground">Yearly</span>
+                      <span className="font-bold text-xl text-primary">£{(calcRate * calcHours * 52).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

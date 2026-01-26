@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,27 @@ const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Redirect logged-in users to their dashboard
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const role = session.user.user_metadata?.role;
+        if (role) {
+          navigate(`/${role}/dashboard`, { replace: true });
+        } else {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+          navigate(`/${profile?.role || 'client'}/dashboard`, { replace: true });
+        }
+      }
+    };
+    checkUser();
+  }, [navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -29,9 +50,17 @@ const Login = () => {
       });
 
       if (error) {
+        // Provide more helpful error messages
+        let errorMessage = error.message;
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = 'Please verify your email address before logging in.';
+        }
+
         toast({
           title: "Authentication failed",
-          description: error.message,
+          description: errorMessage,
           variant: "destructive",
         });
         setIsLoading(false);
@@ -48,41 +77,35 @@ const Login = () => {
         let userRole: string | undefined;
 
         // Try to get from profiles table
-        const { data: profile, error: profileError } = await supabase
+        const { data: profile } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', data.user.id)
           .single();
-
-        console.log('Profile data:', profile);
-        console.log('Profile error:', profileError);
-        console.log('User metadata:', data.user.user_metadata);
 
         if (profile?.role) {
           userRole = profile.role;
         } else {
           // Fallback to user metadata
           userRole = data.user.user_metadata?.role;
-          console.log('Using metadata role:', userRole);
 
-          // If we found a role in metadata, try to upsert to profile (don't await, ignore errors)
+          // If we found a role in metadata, try to upsert to profile
           if (userRole) {
-            supabase
-              .from('profiles')
-              .upsert({
-                id: data.user.id,
-                email: data.user.email,
-                role: userRole,
-                full_name: data.user.user_metadata?.full_name,
-              }, {
-                onConflict: 'id'
-              })
-              .then(() => console.log('Profile upsert attempted'))
-              .catch(err => console.log('Profile upsert failed (expected if table missing):', err));
+            try {
+              await supabase
+                .from('profiles')
+                .upsert({
+                  id: data.user.id,
+                  role: userRole,
+                  full_name: data.user.user_metadata?.full_name || '',
+                }, {
+                  onConflict: 'id'
+                });
+            } catch (err) {
+              console.log('Profile upsert failed:', err);
+            }
           }
         }
-
-        console.log('Final role for redirect:', userRole);
 
         // Determine redirect path
         let redirectPath = '/client/dashboard'; // Default
@@ -95,14 +118,20 @@ const Login = () => {
         }
 
         // Use window.location for hard redirect to avoid React Router issues
-        // This ensures the redirect happens even if RoleGuard has issues
         window.location.href = redirectPath;
       }
     } catch (error: any) {
       console.error('Login error:', error);
+
+      // Handle network errors specifically
+      let errorMessage = 'An unexpected error occurred. Please try again.';
+      if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
+        errorMessage = 'Network connection error. Please check your internet connection and try again.';
+      }
+
       toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
+        title: "Connection Error",
+        description: errorMessage,
         variant: "destructive",
       });
       setIsLoading(false);

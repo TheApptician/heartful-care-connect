@@ -1,8 +1,8 @@
-// CQC Compliance Utilities (PRD v2.3.2 Compliant)
+// Introductory Agency Compliance Utilities (PRD v2.3.2 Compliant)
 import { ComplianceCheck } from '@/types/database';
 
 /**
- * Keywords that must be filtered to maintain CQC Introductory Agency status
+ * Keywords that must be filtered to maintain Heems Introductory Agency status
  * These words suggest employment/staffing relationship which is not allowed
  */
 const PROHIBITED_KEYWORDS = [

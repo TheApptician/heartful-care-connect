@@ -96,7 +96,11 @@ export default function CarerProfile() {
     emergency_availability: false,
     night_shifts: false,
     live_in_care: false,
-    show_on_search: true
+    visiting_care: false,
+    show_on_search: true,
+    video_url: "",
+    hobbies: "",
+    has_transportation: false
   });
 
   useEffect(() => {
@@ -317,7 +321,7 @@ export default function CarerProfile() {
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="personal">Personal Info</TabsTrigger>
             <TabsTrigger value="professional">Professional</TabsTrigger>
-            <TabsTrigger value="specialisms">Specialisms</TabsTrigger>
+            <TabsTrigger value="specialties">Specialties</TabsTrigger>
             <TabsTrigger value="preferences">Preferences</TabsTrigger>
           </TabsList>
 
@@ -486,6 +490,7 @@ export default function CarerProfile() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="0.5">6 Months - 1 Year</SelectItem>
                         <SelectItem value="1">1 year</SelectItem>
                         <SelectItem value="2">2 years</SelectItem>
                         <SelectItem value="3">3 years</SelectItem>
@@ -521,6 +526,47 @@ export default function CarerProfile() {
                   />
                 </div>
 
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="flex items-center gap-2">
+                      <GraduationCap className="h-4 w-4" />
+                      Driving Status
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">{carerDetails.has_transportation ? "I can drive / have a car" : "Non-driver"}</span>
+                      <Switch
+                        disabled={!isEditing}
+                        checked={carerDetails.has_transportation}
+                        onCheckedChange={(val) => setCarerDetails((c: any) => ({ ...c, has_transportation: val }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Hobbies & Interests</Label>
+                  <Textarea
+                    placeholder="E.g., Reading, Gardening, Cooking, Walking..."
+                    disabled={!isEditing}
+                    value={carerDetails.hobbies || ""}
+                    onChange={(e) => setCarerDetails((c: any) => ({ ...c, hobbies: e.target.value }))}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Camera className="h-4 w-4" />
+                    Welcome Video (URL)
+                  </Label>
+                  <Input
+                    placeholder="https://youtube.com/watch?v=..."
+                    disabled={!isEditing}
+                    value={carerDetails.video_url || ""}
+                    onChange={(e) => setCarerDetails((c: any) => ({ ...c, video_url: e.target.value }))}
+                  />
+                  <p className="text-xs text-muted-foreground">Link to a short video introducing yourself to clients (YouTube, Loom, etc.)</p>
+                </div>
+
                 <div className="space-y-4">
                   <Label>Qualifications & Training</Label>
                   <div className="space-y-3">
@@ -550,13 +596,13 @@ export default function CarerProfile() {
             </Card>
           </TabsContent>
 
-          {/* Specialisms Tab */}
-          <TabsContent value="specialisms">
+          {/* Specialties Tab */}
+          <TabsContent value="specialties">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Heart className="h-5 w-5 text-primary" />
-                  Care Specialisms
+                  Care Specialties
                 </CardTitle>
                 <CardDescription>Select the types of care you can provide</CardDescription>
               </CardHeader>
@@ -626,6 +672,17 @@ export default function CarerProfile() {
                       disabled={!isEditing}
                       checked={carerDetails.night_shifts}
                       onCheckedChange={(val) => setCarerDetails((c: any) => ({ ...c, night_shifts: val }))}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-4 rounded-lg border">
+                    <div>
+                      <p className="font-medium">Visiting Care</p>
+                      <p className="text-sm text-muted-foreground">Available for home visits (hourly)</p>
+                    </div>
+                    <Switch
+                      disabled={!isEditing}
+                      checked={carerDetails.visiting_care}
+                      onCheckedChange={(val) => setCarerDetails((c: any) => ({ ...c, visiting_care: val }))}
                     />
                   </div>
                   <div className="flex items-center justify-between p-4 rounded-lg border">

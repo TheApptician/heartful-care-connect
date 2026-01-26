@@ -7,7 +7,7 @@ const steps = [
     number: "01",
     icon: Search,
     title: "Define Your Needs",
-    description: "Tell us about your requirements. Our system starts matching instantly based on clinical expertise and personality.",
+    description: "Tell us about your requirements. Our system starts matching instantly based on care expertise and personality.",
   },
   {
     number: "02",
@@ -30,11 +30,11 @@ const steps = [
 ];
 
 const carerImages = [
-  { src: "/carer_female_1.png", name: "Sarah", role: "Specialist Nurse" },
-  { src: "/carer_male_1.png", name: "David", role: "Senior Carer" },
-  { src: "/carer_female_2.png", name: "Elizabeth", role: "Companion Care" },
-  { src: "/carer_female_1.png", name: "Sophie", role: "Dementia Care" },
-  { src: "/carer_male_1.png", name: "Marcus", role: "Night Support" },
+  { src: "/carer_casual_female_1.png", name: "Sarah", role: "Specialist Nurse" },
+  { src: "/carer_black_male_1.png", name: "David", role: "Senior Carer" },
+  { src: "/carer_casual_female_2.png", name: "Elizabeth", role: "Companion Care" },
+  { src: "/carer_black_female_1.png", name: "Sophie", role: "Dementia Care" },
+  { src: "/carer_casual_male_1.png", name: "Marcus", role: "Night Support" },
 ];
 
 const HowItWorksSection = () => {
@@ -50,14 +50,14 @@ const HowItWorksSection = () => {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1a9e8c]/10 border border-[#1a9e8c]/20 text-[#1a9e8c] text-xs font-black uppercase tracking-[0.25em] mb-8">
               <Sparkles className="w-3.5 h-3.5" />
-              The Heems Framework
+              How It Works
             </div>
             <h2 className="text-5xl lg:text-8xl font-black text-[#111827] leading-[0.95] tracking-tighter mb-10">
               A Better Path <br />
               <span className="text-[#1a9e8c]">to Quality Care.</span>
             </h2>
             <p className="text-xl text-[#4B5563] font-medium leading-relaxed max-w-xl">
-              We've combined clinical vetting with advanced matching algorithms to create the UK's most efficient care path.
+              We've combined rigorous vetting with advanced matching algorithms to create the UK's most efficient care path.
             </p>
           </div>
 

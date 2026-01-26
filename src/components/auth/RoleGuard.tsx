@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -9,62 +9,77 @@ interface RoleGuardProps {
     redirectTo?: string;
 }
 
+// Cache for user role to avoid repeated queries
+let cachedRole: string | null = null;
+let cachedUserId: string | null = null;
+let cacheTimestamp: number = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+
+// Check if cache is valid
+const isCacheValid = () => {
+    return cachedRole && cachedUserId && (Date.now() - cacheTimestamp) < CACHE_DURATION;
+};
+
 /**
- * RoleGuard - Protects routes based on user role
- * 
- * Usage:
- * <RoleGuard allowedRoles={['admin']}>
- *   <AdminDashboard />
- * </RoleGuard>
+ * RoleGuard - Protects routes based on user role (Optimized - No Flash)
  */
 export default function RoleGuard({ children, allowedRoles, redirectTo }: RoleGuardProps) {
-    const [loading, setLoading] = useState(true);
-    const [authorized, setAuthorized] = useState(false);
+    // Start with authorized if we have valid cache that matches allowed roles
+    const initialAuthorized = isCacheValid() && allowedRoles.includes(cachedRole!);
+
+    const [loading, setLoading] = useState(!initialAuthorized);
+    const [authorized, setAuthorized] = useState(initialAuthorized);
     const navigate = useNavigate();
     const location = useLocation();
     const { toast } = useToast();
+    const hasChecked = useRef(initialAuthorized);
 
-    useEffect(() => {
-        const abortController = new AbortController();
+    const checkAuthorization = useCallback(async (signal?: AbortSignal) => {
+        // Skip if already checked or we have valid cached auth
+        if (hasChecked.current && authorized) return;
+        hasChecked.current = true;
 
-        checkAuthorization(abortController.signal);
-
-        return () => {
-            abortController.abort();
-        };
-    }, [location.pathname]);
-
-    const checkAuthorization = async (signal?: AbortSignal) => {
         try {
-            const { data: { user } } = await supabase.auth.getUser();
+            // Use getSession() - faster than getUser() as it doesn't validate with server
+            const { data: { session } } = await supabase.auth.getSession();
 
-            // Check if aborted
             if (signal?.aborted) return;
 
-            if (!user) {
+            if (!session?.user) {
+                setAuthorized(false);
+                setLoading(false);
                 navigate("/login", { state: { from: location.pathname } });
                 return;
             }
 
-            // Try to fetch user's role from profiles
-            const { data: profile, error } = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', user.id)
-                .single();
-
-            // Check if aborted after async call
-            if (signal?.aborted) return;
-
-            // Determine role - use profile if available, otherwise fallback to user metadata
+            const user = session.user;
             let userRole: string | null = null;
 
-            if (profile?.role) {
-                userRole = profile.role;
+            // Check cache first
+            if (isCacheValid() && cachedUserId === user.id) {
+                userRole = cachedRole;
             } else {
-                // Fallback to user metadata (useful when profiles table doesn't exist yet)
+                // First try user metadata (instant, no API call)
                 userRole = user.user_metadata?.role || null;
-                console.log('RoleGuard: Using metadata role:', userRole);
+
+                // Only query profiles if metadata doesn't have role
+                if (!userRole) {
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('role')
+                        .eq('id', user.id)
+                        .single();
+
+                    if (signal?.aborted) return;
+                    userRole = profile?.role || null;
+                }
+
+                // Update cache
+                if (userRole) {
+                    cachedRole = userRole;
+                    cachedUserId = user.id;
+                    cacheTimestamp = Date.now();
+                }
             }
 
             if (!userRole) {
@@ -73,6 +88,7 @@ export default function RoleGuard({ children, allowedRoles, redirectTo }: RoleGu
                     description: "Could not verify your access permissions. Please contact support.",
                     variant: "destructive",
                 });
+                setAuthorized(false);
                 navigate("/login");
                 return;
             }
@@ -84,7 +100,6 @@ export default function RoleGuard({ children, allowedRoles, redirectTo }: RoleGu
                     variant: "destructive",
                 });
 
-                // Redirect to appropriate dashboard based on actual role
                 const roleRedirects: Record<string, string> = {
                     client: "/client/dashboard",
                     carer: "/carer/dashboard",
@@ -92,23 +107,39 @@ export default function RoleGuard({ children, allowedRoles, redirectTo }: RoleGu
                     admin: "/admin/dashboard",
                 };
 
+                setAuthorized(false);
                 navigate(redirectTo || roleRedirects[userRole] || "/");
                 return;
             }
 
             setAuthorized(true);
         } catch (error: any) {
-            // Ignore abort errors
             if (error.name === 'AbortError' || error.message?.includes('aborted')) {
                 return;
             }
             console.error("Auth check error:", error);
+            setAuthorized(false);
             navigate("/login");
         } finally {
             setLoading(false);
         }
-    };
+    }, [allowedRoles, authorized, location.pathname, navigate, redirectTo, toast]);
 
+    useEffect(() => {
+        const abortController = new AbortController();
+        checkAuthorization(abortController.signal);
+
+        return () => {
+            abortController.abort();
+        };
+    }, [checkAuthorization]);
+
+    // Always render children if authorized (either cached or verified)
+    if (authorized) {
+        return <>{children}</>;
+    }
+
+    // Only show loading if not authorized and still loading
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background">
@@ -117,11 +148,14 @@ export default function RoleGuard({ children, allowedRoles, redirectTo }: RoleGu
         );
     }
 
-    if (!authorized) {
-        return null;
-    }
+    return null;
+}
 
-    return <>{children}</>;
+// Export function to clear cache on logout
+export function clearRoleCache() {
+    cachedRole = null;
+    cachedUserId = null;
+    cacheTimestamp = 0;
 }
 
 /**

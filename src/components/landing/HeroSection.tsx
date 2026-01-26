@@ -40,7 +40,7 @@ const HeroSection = () => {
             {/* Trust Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
               <Shield className="h-4 w-4 text-[#1a9e8c]" />
-              <span className="text-sm font-medium">CQC Compliant • Fully Verified</span>
+              <span className="text-sm font-medium">Fully Vetted • Verified Professionals</span>
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                 <span className="text-sm font-bold">4.9</span>
@@ -58,7 +58,7 @@ const HeroSection = () => {
               </h1>
               <p className="text-lg sm:text-xl text-slate-300 font-light leading-relaxed max-w-xl">
                 Connect with verified, experienced carers in minutes.
-                The UK's most trusted care marketplace.
+                The UK's most trusted introductory care marketplace.
               </p>
             </div>
 
@@ -66,7 +66,7 @@ const HeroSection = () => {
             <div className="flex flex-wrap gap-4">
               {[
                 { icon: CheckCircle, text: "Verified Carers" },
-                { icon: Shield, text: "DBS Checked" },
+                { icon: Shield, text: "DBS Checked and Insured" },
                 { icon: Sparkles, text: "Instant Booking" }
               ].map((benefit, index) => (
                 <div

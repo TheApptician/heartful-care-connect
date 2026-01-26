@@ -49,7 +49,7 @@ const ForOrganisationsSection = () => {
             <span className="text-[#1a9e8c]">for Modern Care.</span>
           </h2>
           <p className="text-lg text-[#4B5563] font-medium leading-relaxed max-w-2xl mx-auto">
-            Whether you're an NHS trust, local authority, or private care home — Heems provides the clinical vetting, talent pool, and compliance tools you need.
+            Whether you're a local authority, private agency, or care home — Heems provides the vetting, talent pool, and compliance tools you need.
           </p>
         </div>
 

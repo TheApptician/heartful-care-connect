@@ -13,17 +13,35 @@ export const ChatWidget = () => {
         { role: 'agent', text: 'Hello! How can we help you today?' }
     ]);
 
+    const getSmartResponse = (text: string) => {
+        const lower = text.toLowerCase();
+        if (lower.includes('price') || lower.includes('cost') || lower.includes('rate')) {
+            return "Our carers set their own rates, typically between £15-£35/hour depending on experience and care type.";
+        }
+        if (lower.includes('join') || lower.includes('job') || lower.includes('work')) {
+            return "We're always looking for great carers! You can apply directly through the 'For Carers' section.";
+        }
+        if (lower.includes('book') || lower.includes('schedule')) {
+            return "You can book a carer directly from their profile page. Just click 'Secure Profile' to get started.";
+        }
+        if (lower.includes('hello') || lower.includes('hi')) {
+            return "Hello! I'm the Heems AI assistant. How can I help you today?";
+        }
+        return "Thanks for reaching out! One of our Agents will be with you shortly to assist you further.";
+    };
+
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault();
         if (!message.trim()) return;
 
         setChatHistory([...chatHistory, { role: 'user', text: message }]);
+        const currentMessage = message;
         setMessage("");
 
-        // Simulated agent response
+        // Simulated intelligent response
         setTimeout(() => {
-            setChatHistory(prev => [...prev, { role: 'agent', text: "Thanks for reaching out! One of our care specialists will be with you shortly." }]);
-        }, 1000);
+            setChatHistory(prev => [...prev, { role: 'agent', text: getSmartResponse(currentMessage) }]);
+        }, 1500);
     };
 
     if (!isOpen) {

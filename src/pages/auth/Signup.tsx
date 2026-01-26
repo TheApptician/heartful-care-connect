@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import { Users, Heart, Building2, ArrowRight } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const roleOptions = [
   {
@@ -22,7 +23,7 @@ const roleOptions = [
   {
     id: "organisation",
     title: "Organisation",
-    description: "Agencies, NHS, Hubs",
+    description: "Agencies, Care Hubs",
     icon: Building2,
     href: "/signup/organisation",
   },
@@ -30,6 +31,28 @@ const roleOptions = [
 
 const Signup = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  // Redirect logged-in users to their dashboard
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const role = session.user.user_metadata?.role;
+        if (role) {
+          navigate(`/${role}/dashboard`, { replace: true });
+        } else {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+          navigate(`/${profile?.role || 'client'}/dashboard`, { replace: true });
+        }
+      }
+    };
+    checkUser();
+  }, [navigate]);
 
   return (
     <AuthLayout
@@ -43,8 +66,8 @@ const Signup = () => {
             <div
               key={role.id}
               className={`group cursor-pointer p-5 rounded-2xl border transition-all duration-300 ${selectedRole === role.id
-                  ? "bg-[#111827] border-[#111827] shadow-lg"
-                  : "bg-white border-black/[0.05] hover:border-[#1a9e8c]/30"
+                ? "bg-[#111827] border-[#111827] shadow-lg"
+                : "bg-white border-black/[0.05] hover:border-[#1a9e8c]/30"
                 }`}
               onClick={() => setSelectedRole(role.id)}
             >
@@ -62,8 +85,8 @@ const Signup = () => {
                   </p>
                 </div>
                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${selectedRole === role.id
-                    ? "border-[#1a9e8c] bg-[#1a9e8c]"
-                    : "border-black/10 group-hover:border-[#1a9e8c]"
+                  ? "border-[#1a9e8c] bg-[#1a9e8c]"
+                  : "border-black/10 group-hover:border-[#1a9e8c]"
                   }`}>
                   {selectedRole === role.id && (
                     <div className="w-2 h-2 rounded-full bg-white" />

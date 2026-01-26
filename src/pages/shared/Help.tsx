@@ -102,7 +102,7 @@ const faqs = [
         questions: [
             {
                 q: "How do I message my carer?",
-                a: "Use the Messages page in your dashboard to communicate with your carers. All messages are monitored for CQC compliance.",
+                a: "Use the Messages page in your dashboard to communicate with your carers. All messages are monitored for compliance.",
             },
             {
                 q: "Can I share my phone number?",
@@ -273,7 +273,7 @@ const Help = () => {
                     <Users className="h-12 w-12 text-primary mx-auto mb-3" />
                     <h3 className="text-lg font-semibold mb-2">Still need help?</h3>
                     <p className="text-muted-foreground mb-4">
-                        Our support team is available 24/7 to assist you
+                        Our support team is available 9am - 5pm to assist you
                     </p>
                     <Button>
                         <MessageCircle className="h-4 w-4 mr-2" />

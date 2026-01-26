@@ -36,7 +36,7 @@ const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
             <div className="flex items-center gap-3 mb-6">
               <span className="h-1.5 w-1.5 rounded-full bg-[#1a9e8c]" />
               <span className="text-xs font-black text-white/40 uppercase tracking-[0.25em]">
-                Clinical Infrastructure
+                Care Infrastructure
               </span>
             </div>
             <h2 className="text-5xl lg:text-6xl font-black text-white mb-6 tracking-tighter leading-[0.95]">
@@ -54,8 +54,8 @@ const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
                 <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">Acceptance Rate</p>
               </div>
               <div>
-                <p className="text-3xl font-black text-white mb-1">24/7</p>
-                <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">Clinical Support</p>
+                <p className="text-3xl font-black text-white mb-1">9-5</p>
+                <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">Support Team</p>
               </div>
             </div>
           </div>

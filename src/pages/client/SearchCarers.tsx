@@ -209,7 +209,7 @@ export default function SearchCarers() {
                       </div>
 
                       <div className="space-y-4">
-                        <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Clinical Expertise</Label>
+                        <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Care Expertise</Label>
                         <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-2 scrollbar-hide">
                           {careTypes.map(type => (
                             <div key={type}
@@ -341,7 +341,7 @@ export default function SearchCarers() {
                           </div>
 
                           <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-2 font-medium">
-                            {carer.carer_details.bio || 'Professional caregiver dedicated to providing compassionate and high-quality clinical support at home.'}
+                            {carer.carer_details.bio || 'Professional caregiver dedicated to providing compassionate and high-quality care support at home.'}
                           </p>
 
                           <div className="mt-4 flex flex-wrap gap-1.5">

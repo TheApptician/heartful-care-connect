@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,29 @@ const ClientSignup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Redirect logged-in users to their dashboard
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        // User is logged in, get their role and redirect
+        const role = session.user.user_metadata?.role;
+        if (role) {
+          navigate(`/${role}/dashboard`, { replace: true });
+        } else {
+          // Fetch role from profiles
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+          navigate(`/${profile?.role || 'client'}/dashboard`, { replace: true });
+        }
+      }
+    };
+    checkUser();
+  }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -76,9 +99,6 @@ const ClientSignup = () => {
           .from('profiles')
           .upsert({
             id: authData.user.id,
-            email: formData.email,
-            first_name: formData.firstName,
-            last_name: formData.lastName,
             full_name: `${formData.firstName} ${formData.lastName}`,
             phone: formData.phone,
             role: 'client',
@@ -90,13 +110,8 @@ const ClientSignup = () => {
           console.error('Profile upsert error:', profileError);
         }
 
-        toast({
-          title: "Account Created",
-          description: "Welcome to Heems. You can now search for verified carers.",
-        });
-
-        // Redirect to login or dashboard
-        navigate("/login");
+        // Redirect to success page instead of login
+        navigate("/signup/success", { state: { role: 'client' } });
       }
     } catch (error: any) {
       toast({
@@ -254,7 +269,7 @@ const ClientSignup = () => {
 
         <div className="p-4 rounded-2xl bg-[#1a9e8c]/5 border border-[#1a9e8c]/20 text-center">
           <p className="text-[10px] font-black text-[#1a9e8c] uppercase tracking-widest flex items-center justify-center gap-2">
-            <ShieldCheck className="w-3 h-3" /> GDPR & CQC COMPLIANT
+            <ShieldCheck className="w-3 h-3" /> GDPR COMPLIANT
           </p>
         </div>
 

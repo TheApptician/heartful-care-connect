@@ -33,7 +33,8 @@ const About = () => {
                                 <h2 className="text-4xl font-black text-[#111827] mb-8 leading-tight">The problem we're solving</h2>
                                 <div className="space-y-6 text-lg text-slate-600 font-medium leading-relaxed">
                                     <p>The traditional care industry is fragmented, slow, and often lacks the necessary oversight to ensure safety and quality. Families are left to navigate complex regulations and vetting processes on their own.</p>
-                                    <p>Heems provides a clinical-grade platform that automates vetting, matching, and management, allowing families to focus on what matters most: quality care for their loved ones.</p>
+                                    <p>Heems provides digital tools that help families, carers, and organisations connect, communicate, and organise care arrangements more efficiently —so everyone can focus on what matters most.</p>
+                                    <p>Through secure onboarding, transparent profiles, and intelligent matching features, the platform helps users make informed decisions while remaining in control of their own care relationships.</p>
                                 </div>
                                 <div className="mt-10 flex gap-4">
                                     <Button className="h-14 px-8 bg-[#111827] hover:bg-[#1a9e8c] text-white rounded-xl font-black" asChild>
@@ -70,7 +71,7 @@ const About = () => {
                             {[
                                 {
                                     icon: Shield,
-                                    title: "Clinical-Grade Vetting",
+                                    title: "High-Standard Vetting",
                                     desc: "Security isn't a feature; it's our foundation. Every carer undergoes rigorous identity, background, and professional checks."
                                 },
                                 {
@@ -112,11 +113,9 @@ const About = () => {
                             <div className="order-1 lg:order-2">
                                 <h2 className="text-4xl font-black text-[#111827] mb-8 leading-tight">Built by technology experts, guided by care specialists</h2>
                                 <p className="text-lg text-slate-600 font-medium leading-relaxed mb-8">
-                                    Our team brings together veterans from the healthtech, fintech, and specialist care sectors. We combined high-trust infrastructure principles with deep clinical empathy to create Heems.
+                                    Our team brings together veterans from the healthtech, fintech, and specialist care sectors. We combined high-trust infrastructure principles with deep empathy to create Heems.
                                 </p>
-                                <Button className="h-14 px-8 bg-transparent border-2 border-[#111827] text-[#111827] hover:bg-[#111827] hover:text-white rounded-xl font-black transition-all" asChild>
-                                    <Link to="/careers">Join Our Mission</Link>
-                                </Button>
+
                             </div>
                         </div>
                     </div>

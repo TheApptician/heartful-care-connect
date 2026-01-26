@@ -105,7 +105,7 @@ const Marketplace = () => {
                         </div>
                         <Button className="h-16 px-10 rounded-2xl bg-[#111827] text-white font-black text-sm hover:bg-[#1a9e8c] transition-all gap-3 shadow-xl shadow-black/10">
                             <Filter className="w-4 h-4" />
-                            Apply Clinical Filters
+                            Apply Filters
                         </Button>
                     </div>
 
@@ -173,7 +173,7 @@ const Marketplace = () => {
                                             <div className="grid grid-cols-2 gap-2">
                                                 <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-50 border border-black/[0.02]">
                                                     <BadgeCheck className="w-4 h-4 text-[#1a9e8c]" />
-                                                    <span className="text-[11px] font-bold text-[#111827]">Insured & Vetted</span>
+                                                    <span className="text-[11px] font-bold text-[#111827]">Fully Vetted</span>
                                                 </div>
                                                 <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-50 border border-black/[0.02]">
                                                     <FileCheck className="w-4 h-4 text-[#1a9e8c]" />
@@ -214,7 +214,7 @@ const Marketplace = () => {
                                     Rigorous Compliance as Standard.
                                 </h2>
                                 <p className="text-white/60 font-medium leading-relaxed mb-8">
-                                    Heems operates strictly as an introductory agency. We verify clinical credentials
+                                    Heems operates strictly as an introductory agency. We verify credentials
                                     so you can focus on building a direct relationship with your care professional.
                                 </p>
                                 <div className="flex flex-wrap gap-6">
@@ -224,7 +224,7 @@ const Marketplace = () => {
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <div className="w-1.5 h-1.5 rounded-full bg-[#1a9e8c]" />
-                                        <span className="text-xs font-black text-white uppercase tracking-widest">Insurance Expiry Alerts</span>
+                                        <span className="text-xs font-black text-white uppercase tracking-widest">Compliance Expiry Alerts</span>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <div className="w-1.5 h-1.5 rounded-full bg-[#1a9e8c]" />

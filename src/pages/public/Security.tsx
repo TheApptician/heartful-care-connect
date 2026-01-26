@@ -4,6 +4,8 @@ import { Shield, Lock, Server, Fingerprint, Eye, CheckCircle2, FileCheck, Globe 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChatWidget } from "@/components/shared/ChatWidget";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Security = () => {
     return (
@@ -16,7 +18,7 @@ const Security = () => {
                     <div className="container mx-auto px-6 relative z-10">
                         <div className="max-w-4xl">
                             <Badge className="mb-6 bg-[#1a9e8c]/10 text-[#1a9e8c] border-[#1a9e8c]/20 py-1 px-4 text-xs font-black uppercase tracking-widest">Trust & Reliability</Badge>
-                            <h1 className="text-6xl font-black text-[#111827] mb-8 leading-tight">Bank-grade security for <span className="text-[#1a9e8c]">clinical-grade care</span>.</h1>
+                            <h1 className="text-6xl font-black text-[#111827] mb-8 leading-tight">Bank-grade security for <span className="text-[#1a9e8c]">trusted care</span>.</h1>
                             <p className="text-xl text-slate-600 font-medium leading-relaxed max-w-2xl">
                                 We protect your most sensitive data with the same intensity we use to vet our carers. Heems is built on a foundation of high-trust infrastructure.
                             </p>
@@ -37,12 +39,12 @@ const Security = () => {
                                 {
                                     icon: Server,
                                     title: "Sovereign Cloud Infrastructure",
-                                    desc: "Your data stays where it belongs. We use localized, clinical-grade data centers with 99.99% uptime guarantees."
+                                    desc: "Your data stays where it belongs. We use localized, high-security data centers with 99.99% uptime guarantees."
                                 },
                                 {
                                     icon: Fingerprint,
-                                    title: "Advanced Identity Management",
-                                    desc: "Multi-factor authentication (MFA) and biometric verification ensure that only authorized individuals can access care plans."
+                                    title: "Secure Account Protection",
+                                    desc: "Multi-factor authentication (MFA) and biometric verification ensure that only authorized individuals can access account data."
                                 }
                             ].map((pillar, i) => (
                                 <div key={i} className="p-10 rounded-[2.5rem] bg-white border border-black/5 shadow-2xl shadow-black/5 hover:shadow-black/10 transition-all">
@@ -63,7 +65,7 @@ const Security = () => {
                         <div className="grid lg:grid-cols-2 gap-24 items-center">
                             <div>
                                 <h2 className="text-4xl font-black mb-8 leading-tight">Our Vetting Infrastructure</h2>
-                                <p className="text-white/60 text-lg font-medium mb-12">We've automated the most rigorous verification standards in the industry to ensure that every participant in the Heems ecosystem is verified, insured, and compliant.</p>
+                                <p className="text-white/60 text-lg font-medium mb-12">We've automated the most rigorous verification standards in the industry to ensure that every participant in the Heems ecosystem is verified and compliant.</p>
 
                                 <div className="space-y-8">
                                     {[
@@ -105,8 +107,8 @@ const Security = () => {
                                 <div className="absolute -top-10 -right-10 bg-white p-6 rounded-3xl shadow-3xl text-[#111827] flex items-center gap-4">
                                     <CheckCircle2 className="h-10 w-10 text-[#1a9e8c]" />
                                     <div>
-                                        <p className="text-2xl font-black">ISO 27001</p>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Security Certified</p>
+                                        <p className="text-2xl font-black">AES-256</p>
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Bank-Grade Security</p>
                                     </div>
                                 </div>
                             </div>
@@ -120,12 +122,9 @@ const Security = () => {
                         <div className="max-w-3xl mx-auto">
                             <h2 className="text-4xl font-black text-[#111827] mb-8">Report a Security Issue</h2>
                             <p className="text-lg text-slate-600 font-medium mb-10">We take security reports from the community seriously. If you've identified a vulnerability, please reach out directly to our security team.</p>
-                            <Card className="bg-slate-50 border-black/5 rounded-[2rem] p-8 border-dashed">
-                                <CardContent className="pt-6">
-                                    <p className="text-2xl font-black text-[#111827]">security@heems.com</p>
-                                    <p className="text-sm font-bold text-slate-400 mt-2 uppercase tracking-widest">Our team will respond within 4 hours</p>
-                                </CardContent>
-                            </Card>
+                            <Button size="lg" className="h-16 px-10 rounded-2xl bg-[#111827] text-white font-black text-lg hover:bg-[#1a9e8c] transition-all shadow-xl" asChild>
+                                <Link to="/contact">Contact Security Team</Link>
+                            </Button>
                         </div>
                     </div>
                 </section>

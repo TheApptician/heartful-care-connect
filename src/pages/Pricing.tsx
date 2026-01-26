@@ -1,56 +1,6 @@
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
-import { Button } from "@/components/ui/button";
-import { Check, ArrowRight, ShieldCheck, Zap, Heart } from "lucide-react";
-import { Link } from "react-router-dom";
-
-const plans = [
-    {
-        name: "Families & Individuals",
-        price: "10%",
-        description: "Direct connection with elite, self-employed carers. Introductory model.",
-        features: [
-            "Access to top 1% Carer Marketplace",
-            "Fixed £15/hr minimum rate",
-            "Badge-Only credential verification",
-            "Secure Stripe-integrated payments",
-            "No monthly subscriptions"
-        ],
-        cta: "Sign Up for Care",
-        href: "/signup/client",
-        highlight: false
-    },
-    {
-        name: "Care Organisations",
-        price: "10%",
-        description: "Specialized infrastructure for Agencies, NHS Trusts, and Care Hubs.",
-        features: [
-            "Clinical Compliance Vault access",
-            "Postcode-radius discovery tools",
-            "Volume booking management",
-            "No 14-day trials (Transactional)",
-            "GDPR & CQC compliant data"
-        ],
-        cta: "Register Organisation",
-        href: "/signup/organisation",
-        highlight: true
-    },
-    {
-        name: "Independent Carers",
-        price: "0%",
-        description: "Work independently. Set your own rates. Keep what you earn.",
-        features: [
-            "Listed in Elite Marketplace",
-            "Set your own rates (£15/hr min)",
-            "Verified Referrals system",
-            "Automated payment splits",
-            "Insurance & DBS validation"
-        ],
-        cta: "Apply as a Carer",
-        href: "/signup/carer",
-        highlight: false
-    }
-];
+import { ShieldCheck, Zap, Heart } from "lucide-react";
 
 const Pricing = () => {
     return (
@@ -74,65 +24,8 @@ const Pricing = () => {
                         </p>
                     </div>
 
-                    {/* Plans Grid */}
-                    <div className="grid lg:grid-cols-3 gap-10">
-                        {plans.map((plan) => (
-                            <div
-                                key={plan.name}
-                                className={`flex flex-col p-12 rounded-[3.5rem] border transition-all duration-700 ${plan.highlight
-                                    ? "bg-[#111827] border-[#111827] shadow-2xl shadow-black/20 hover:-translate-y-2"
-                                    : "bg-white border-black/[0.05] hover:border-[#1a9e8c]/30 hover:shadow-xl hover:-translate-y-1"
-                                    }`}
-                            >
-                                <div className="mb-12">
-                                    <h3 className={`text-2xl font-black mb-10 tracking-tight ${plan.highlight ? "text-white" : "text-[#111827]"}`}>
-                                        {plan.name}
-                                    </h3>
-                                    <div className="flex items-baseline gap-2 mb-6">
-                                        <span className={`text-6xl font-black ${plan.highlight ? "text-[#1a9e8c]" : "text-[#111827]"}`}>
-                                            {plan.price}
-                                        </span>
-                                        <span className={`text-sm font-black uppercase tracking-widest ${plan.highlight ? "text-slate-400" : "text-slate-400"}`}>
-                                            Service Fee
-                                        </span>
-                                    </div>
-                                    <p className={`text-sm font-bold leading-relaxed ${plan.highlight ? "text-slate-400/80" : "text-[#4B5563]"}`}>
-                                        {plan.description}
-                                    </p>
-                                </div>
-
-                                <ul className="space-y-5 mb-12 flex-grow">
-                                    {plan.features.map((feature) => (
-                                        <li key={feature} className="flex items-start gap-3">
-                                            <div className={`mt-0.5 h-6 w-6 rounded-xl flex items-center justify-center shrink-0 ${plan.highlight ? "bg-white/10" : "bg-slate-50"}`}>
-                                                <Check className={`h-3.5 w-3.5 ${plan.highlight ? "text-[#1a9e8c]" : "text-[#1a9e8c]"}`} />
-                                            </div>
-                                            <span className={`text-sm font-bold ${plan.highlight ? "text-white/80" : "text-[#111827]"}`}>
-                                                {feature}
-                                            </span>
-                                        </li>
-                                    ))}
-                                </ul>
-
-                                <Button
-                                    size="lg"
-                                    className={`h-16 px-10 rounded-2xl font-black text-sm transition-all ${plan.highlight
-                                        ? "bg-[#1a9e8c] text-white hover:bg-[#15806c] shadow-xl shadow-[#1a9e8c]/20"
-                                        : "bg-[#111827] text-white hover:bg-[#1a9e8c]"
-                                        }`}
-                                    asChild
-                                >
-                                    <Link to={plan.href}>
-                                        {plan.cta}
-                                        <ArrowRight className="w-4 h-4 ml-2" />
-                                    </Link>
-                                </Button>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Pricing FAQ Section */}
-                    <div className="mt-32 pt-24 border-t border-black/[0.05]">
+                    {/* Explainer Section */}
+                    <div className="border-t border-black/[0.05] pt-16">
                         <div className="grid lg:grid-cols-2 gap-20">
                             <div>
                                 <h2 className="text-4xl font-black text-[#111827] mb-8 tracking-tight">The Transactional Model</h2>

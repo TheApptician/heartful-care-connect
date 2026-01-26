@@ -505,7 +505,7 @@ const ClientSettings = () => {
                                 <p className="text-xs text-slate-600 font-medium">By adding a card, you authorize Heems to save this method for future care bookings.</p>
                             </div>
                         </div>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.1em] text-center italic">Professional • Secure • Clinical-Grade</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.1em] text-center italic">Professional • Secure • Trusted</p>
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setShowCardModal(false)} disabled={addingCard}>

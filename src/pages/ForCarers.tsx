@@ -68,7 +68,7 @@ const ForCarers = () => {
                                 { title: "Premium Earnings", icon: PoundSterling, desc: "Set your own rates and keep 100% of your listed price." },
                                 { title: "Smart Scheduling", icon: Laptop, desc: "Our intelligent app manages your diary and recurring visits." },
                                 { title: "Instant Payments", icon: Zap, desc: "Get paid automatically after every visit. No chasing invoices." },
-                                { title: "Top-Tier Support", icon: Heart, desc: "Access clinical guidance and career coaching 24/7." }
+                                { title: "Top-Tier Support", icon: Heart, desc: "Access guidance and career coaching (Lines Open 9-5)." }
                             ].map((item, i) => (
                                 <div key={i} className="bg-white p-10 rounded-3xl border border-black/5 hover:border-[#1a9e8c]/30 hover:shadow-xl transition-all duration-500">
                                     <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-8 border border-black/[0.03]">
@@ -89,10 +89,11 @@ const ForCarers = () => {
                             <h2 className="text-3xl lg:text-5xl font-black text-[#111827] mb-8">Ready to transition?</h2>
                             <div className="space-y-6 mb-10">
                                 {[
-                                    "Minimum 1 year clinical experience",
+                                    "Minimum 6 months care experience",
                                     "Right-to-work in the United Kingdom",
                                     "Enhanced DBS (or willing to obtain)",
                                     "Two professional care references",
+                                    "Professional Liability Insurance",
                                     "Commitment to excellence"
                                 ].map((req, i) => (
                                     <div key={i} className="flex items-center gap-4">

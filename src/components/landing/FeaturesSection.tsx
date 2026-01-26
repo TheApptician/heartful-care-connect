@@ -59,7 +59,7 @@ const FeaturesSection = () => {
               <span className="bg-gradient-to-r from-[#1a9e8c] to-[#111827] bg-clip-text text-transparent">for Total Trust.</span>
             </h2>
             <p className="text-lg text-[#4B5563] font-medium leading-relaxed max-w-xl">
-              Beyond a marketplace, Heems is a sophisticated ecosystem designed for clinical safety, operational transparency, and high-value care outcomes.
+              Beyond a marketplace, Heems is a sophisticated ecosystem designed for safety, operational transparency, and high-value care outcomes.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ const FeaturesSection = () => {
           <div className="relative">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&h=600&fit=crop"
+                src="/carer_client_home.png"
                 alt="Professional carer providing compassionate care"
                 className="w-full h-[400px] object-cover"
               />
@@ -125,11 +125,11 @@ const FeaturesSection = () => {
                 <Clock className="w-6 h-6 text-[#1a9e8c]" />
               </div>
               <div>
-                <p className="text-3xl font-black text-[#111827]">24/7</p>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Support</p>
+                <p className="text-2xl font-black text-[#111827]">9am - 5pm</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Lines Open</p>
               </div>
             </div>
-            <p className="text-sm text-[#4B5563] font-medium">Round-the-clock clinical support team ready to assist.</p>
+            <p className="text-sm text-[#4B5563] font-medium">Dedicated support team available during business hours.</p>
           </div>
 
           <div className="p-8 rounded-3xl bg-gradient-to-br from-slate-50 to-white border border-black/[0.03] hover:shadow-xl transition-all duration-500">
