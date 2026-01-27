@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import LandingLayout from "@/components/layouts/LandingLayout";
+import Header from "@/components/landing/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,8 +11,9 @@ export default function LegalPage() {
     const [activeTab, setActiveTab] = useState("terms");
 
     return (
-        <LandingLayout>
-            <div className="bg-slate-50 min-h-screen py-10">
+        <div className="min-h-screen bg-background font-sans">
+            <Header />
+            <div className="bg-slate-50 min-h-screen pt-24 pb-10">
                 <div className="container mx-auto px-4 max-w-5xl">
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-slate-900 mb-2">Legal Center</h1>
@@ -137,6 +138,6 @@ export default function LegalPage() {
                     </div>
                 </div>
             </div>
-        </LandingLayout>
+        </div>
     );
 }
