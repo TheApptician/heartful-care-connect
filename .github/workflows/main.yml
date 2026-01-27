@@ -15,8 +15,11 @@ jobs:
 
       - name: 🏗 Build app (if needed)
         run: |
-          npm install || echo "No npm dependencies"
-          npm run build || echo "No build step"
+          npm install
+          npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: 🚀 Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4

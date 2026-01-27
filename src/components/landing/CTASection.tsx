@@ -72,11 +72,11 @@ const CTASection = () => {
             {/* Stats Row */}
             <div className="grid grid-cols-3 gap-8 mt-16 pt-12 border-t border-white/10">
               <div>
-                <p className="text-3xl font-black text-white mb-1">5k</p>
-                <p className="text-xs font-bold text-white/50 uppercase tracking-widest">Families</p>
+                <p className="text-3xl font-black text-white mb-1">8k</p>
+                <p className="text-xs font-bold text-white/50 uppercase tracking-widest">Cares</p>
               </div>
               <div>
-                <p className="text-3xl font-black text-white mb-1">593+</p>
+                <p className="text-3xl font-black text-white mb-1">2000+</p>
                 <p className="text-xs font-bold text-white/50 uppercase tracking-widest">Carers</p>
               </div>
               <div>

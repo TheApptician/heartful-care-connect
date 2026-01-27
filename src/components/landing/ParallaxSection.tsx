@@ -58,9 +58,9 @@ const ParallaxSection = () => {
                     <div className="p-8 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500">
                         <div className="flex items-center justify-center gap-3 mb-3">
                             <TrendingUp className="w-8 h-8 text-[#1a9e8c]" />
-                            <p className="text-4xl font-black text-white">593+</p>
+                            <p className="text-4xl font-black text-white">2000+</p>
                         </div>
-                        <p className="text-sm font-bold text-white/70 uppercase tracking-widest">Elite Carers</p>
+                        <p className="text-sm font-bold text-white/70 uppercase tracking-widest">Carers</p>
                     </div>
                     <div className="p-8 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500">
                         <div className="flex items-center justify-center gap-3 mb-3">
