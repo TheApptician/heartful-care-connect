@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -164,269 +164,265 @@ export default function CarerEarnings() {
 
   if (loading) {
     return (
-      <DashboardLayout role="carer">
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </DashboardLayout>
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout role="carer">
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Earnings</h1>
-            <p className="text-muted-foreground">Track your income and payment history</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Select value={period} onValueChange={setPeriod}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="7days">Last 7 days</SelectItem>
-                <SelectItem value="30days">Last 30 days</SelectItem>
-                <SelectItem value="6months">Last 6 months</SelectItem>
-                <SelectItem value="year">Last year</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button variant="outline" onClick={handleExport}>
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-          </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Earnings</h1>
+          <p className="text-muted-foreground">Track your income and payment history</p>
         </div>
-
-        {/* Stats Cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Earned</p>
-                  <p className="text-2xl font-bold">£{stats.availableBalance.toFixed(2)}</p>
-                </div>
-                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Wallet className="h-6 w-6 text-primary" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">This Month</p>
-                  <p className="text-2xl font-bold">£{stats.monthlyEarnings.toFixed(2)}</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <ArrowUpRight className="h-4 w-4 text-emerald-500" />
-                    <span className="text-sm text-emerald-500">{completedBookings.length} completed</span>
-                  </div>
-                </div>
-                <div className="h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                  <TrendingUp className="h-6 w-6 text-emerald-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Hours This Month</p>
-                  <p className="text-2xl font-bold">{stats.monthlyHours}</p>
-                </div>
-                <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center">
-                  <Clock className="h-6 w-6 text-blue-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Avg. Hourly Rate</p>
-                  <p className="text-2xl font-bold">£{stats.avgHourlyRate.toFixed(2)}</p>
-                </div>
-                <div className="h-12 w-12 rounded-full bg-amber-500/10 flex items-center justify-center">
-                  <PoundSterling className="h-6 w-6 text-amber-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="flex items-center gap-3">
+          <Select value={period} onValueChange={setPeriod}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7days">Last 7 days</SelectItem>
+              <SelectItem value="30days">Last 30 days</SelectItem>
+              <SelectItem value="6months">Last 6 months</SelectItem>
+              <SelectItem value="year">Last year</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline" onClick={handleExport}>
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
         </div>
+      </div>
 
-        {/* Tabs for Transactions */}
-        <Tabs defaultValue="completed">
-          <TabsList>
-            <TabsTrigger value="completed">Completed ({completedBookings.length})</TabsTrigger>
-            <TabsTrigger value="pending">Upcoming ({pendingBookings.length})</TabsTrigger>
-            <TabsTrigger value="calculator">Calculator</TabsTrigger>
-          </TabsList>
+      {/* Stats Cards */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total Earned</p>
+                <p className="text-2xl font-bold">£{stats.availableBalance.toFixed(2)}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Wallet className="h-6 w-6 text-primary" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-          <TabsContent value="completed">
-            <Card>
-              <CardHeader>
-                <CardTitle>Completed Bookings</CardTitle>
-                <CardDescription>Earnings from completed care sessions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {completedBookings.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <PoundSterling className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No completed bookings yet</p>
-                    <p className="text-sm">Complete bookings to start earning</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {completedBookings.map((booking) => (
-                      <div
-                        key={booking.id}
-                        className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <PoundSterling className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="font-medium">{booking.client?.full_name || 'Client'}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {booking.service_type || 'Care Service'} • {booking.duration_hours}h
-                            </p>
-                          </div>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">This Month</p>
+                <p className="text-2xl font-bold">£{stats.monthlyEarnings.toFixed(2)}</p>
+                <div className="flex items-center gap-1 mt-1">
+                  <ArrowUpRight className="h-4 w-4 text-emerald-500" />
+                  <span className="text-sm text-emerald-500">{completedBookings.length} completed</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-emerald-500" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Hours This Month</p>
+                <p className="text-2xl font-bold">{stats.monthlyHours}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center">
+                <Clock className="h-6 w-6 text-blue-500" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Avg. Hourly Rate</p>
+                <p className="text-2xl font-bold">£{stats.avgHourlyRate.toFixed(2)}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-amber-500/10 flex items-center justify-center">
+                <PoundSterling className="h-6 w-6 text-amber-500" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Tabs for Transactions */}
+      <Tabs defaultValue="completed">
+        <TabsList>
+          <TabsTrigger value="completed">Completed ({completedBookings.length})</TabsTrigger>
+          <TabsTrigger value="pending">Upcoming ({pendingBookings.length})</TabsTrigger>
+          <TabsTrigger value="calculator">Calculator</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="completed">
+          <Card>
+            <CardHeader>
+              <CardTitle>Completed Bookings</CardTitle>
+              <CardDescription>Earnings from completed care sessions</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {completedBookings.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground">
+                  <PoundSterling className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No completed bookings yet</p>
+                  <p className="text-sm">Complete bookings to start earning</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {completedBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <PoundSterling className="h-5 w-5 text-primary" />
                         </div>
-                        <div className="text-right">
-                          <p className="font-medium">£{booking.total_price?.toFixed(2)}</p>
+                        <div>
+                          <p className="font-medium">{booking.client?.full_name || 'Client'}</p>
                           <p className="text-sm text-muted-foreground">
-                            {booking.start_time ? format(new Date(booking.start_time), 'dd MMM yyyy') : 'N/A'}
+                            {booking.service_type || 'Care Service'} • {booking.duration_hours}h
                           </p>
                         </div>
-                        <Badge variant="default" className="bg-emerald-500">
-                          Paid
-                        </Badge>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="pending">
-            <Card>
-              <CardHeader>
-                <CardTitle>Upcoming Bookings</CardTitle>
-                <CardDescription>Future earnings from confirmed bookings</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {pendingBookings.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No upcoming bookings</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {pendingBookings.map((booking) => (
-                      <div
-                        key={booking.id}
-                        className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center">
-                            <Calendar className="h-5 w-5 text-blue-500" />
-                          </div>
-                          <div>
-                            <p className="font-medium">{booking.client?.full_name || 'Client'}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {booking.service_type || 'Care Service'} • {booking.duration_hours}h
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium">£{booking.total_price?.toFixed(2)}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {booking.start_time ? format(new Date(booking.start_time), 'dd MMM yyyy') : 'N/A'}
-                          </p>
-                        </div>
-                        <Badge variant="secondary">
-                          {booking.status}
-                        </Badge>
+                      <div className="text-right">
+                        <p className="font-medium">£{booking.total_price?.toFixed(2)}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {booking.start_time ? format(new Date(booking.start_time), 'dd MMM yyyy') : 'N/A'}
+                        </p>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="calculator">
-            <Card>
-              <CardHeader>
-                <CardTitle>Earnings Calculator</CardTitle>
-                <CardDescription>Estimate your potential income based on your rate and availability</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <Label>Hourly Rate (£)</Label>
-                      <div className="relative">
-                        <PoundSterling className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          type="number"
-                          value={calcRate}
-                          onChange={(e) => setCalcRate(Number(e.target.value))}
-                          className="pl-9"
-                        />
-                      </div>
+                      <Badge variant="default" className="bg-emerald-500">
+                        Paid
+                      </Badge>
                     </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <Label>Hours per Week</Label>
-                        <span className="text-muted-foreground font-medium">{calcHours}h</span>
+        <TabsContent value="pending">
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Bookings</CardTitle>
+              <CardDescription>Future earnings from confirmed bookings</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {pendingBookings.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No upcoming bookings</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {pendingBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center">
+                          <Calendar className="h-5 w-5 text-blue-500" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{booking.client?.full_name || 'Client'}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {booking.service_type || 'Care Service'} • {booking.duration_hours}h
+                          </p>
+                        </div>
                       </div>
-                      <Slider
-                        value={[calcHours]}
-                        onValueChange={(vals) => setCalcHours(vals[0])}
-                        max={80}
-                        step={1}
-                        className="py-4"
+                      <div className="text-right">
+                        <p className="font-medium">£{booking.total_price?.toFixed(2)}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {booking.start_time ? format(new Date(booking.start_time), 'dd MMM yyyy') : 'N/A'}
+                        </p>
+                      </div>
+                      <Badge variant="secondary">
+                        {booking.status}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="calculator">
+          <Card>
+            <CardHeader>
+              <CardTitle>Earnings Calculator</CardTitle>
+              <CardDescription>Estimate your potential income based on your rate and availability</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <Label>Hourly Rate (£)</Label>
+                    <div className="relative">
+                      <PoundSterling className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="number"
+                        value={calcRate}
+                        onChange={(e) => setCalcRate(Number(e.target.value))}
+                        className="pl-9"
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-4 bg-muted/50 p-6 rounded-xl">
-                    <h3 className="font-semibold text-lg">Potential Earnings</h3>
-
-                    <div className="flex justify-between items-center p-3 bg-background rounded-lg border">
-                      <span className="text-muted-foreground">Weekly</span>
-                      <span className="font-bold text-xl">£{(calcRate * calcHours).toLocaleString()}</span>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label>Hours per Week</Label>
+                      <span className="text-muted-foreground font-medium">{calcHours}h</span>
                     </div>
-
-                    <div className="flex justify-between items-center p-3 bg-background rounded-lg border">
-                      <span className="text-muted-foreground">Monthly</span>
-                      <span className="font-bold text-xl">£{(calcRate * calcHours * 4).toLocaleString()}</span>
-                    </div>
-
-                    <div className="flex justify-between items-center p-3 bg-background rounded-lg border">
-                      <span className="text-muted-foreground">Yearly</span>
-                      <span className="font-bold text-xl text-primary">£{(calcRate * calcHours * 52).toLocaleString()}</span>
-                    </div>
+                    <Slider
+                      value={[calcHours]}
+                      onValueChange={(vals) => setCalcHours(vals[0])}
+                      max={80}
+                      step={1}
+                      className="py-4"
+                    />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </DashboardLayout>
+
+                <div className="space-y-4 bg-muted/50 p-6 rounded-xl">
+                  <h3 className="font-semibold text-lg">Potential Earnings</h3>
+
+                  <div className="flex justify-between items-center p-3 bg-background rounded-lg border">
+                    <span className="text-muted-foreground">Weekly</span>
+                    <span className="font-bold text-xl">£{(calcRate * calcHours).toLocaleString()}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center p-3 bg-background rounded-lg border">
+                    <span className="text-muted-foreground">Monthly</span>
+                    <span className="font-bold text-xl">£{(calcRate * calcHours * 4).toLocaleString()}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center p-3 bg-background rounded-lg border">
+                    <span className="text-muted-foreground">Yearly</span>
+                    <span className="font-bold text-xl text-primary">£{(calcRate * calcHours * 52).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

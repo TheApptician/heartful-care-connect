@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -156,244 +156,240 @@ export default function ClientPayments() {
 
   if (loading) {
     return (
-      <DashboardLayout role="client">
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </DashboardLayout>
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout role="client">
-      <div className="max-w-6xl mx-auto space-y-6 animate-fade-in pb-12">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-foreground tracking-tight">Payments & Billing</h1>
-            <p className="text-sm text-muted-foreground font-medium">View your payment history and transaction details.</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Select value={period} onValueChange={setPeriod}>
-              <SelectTrigger className="w-[160px] h-10 rounded-xl border-black/5 bg-white shadow-sm text-xs font-bold">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="30days" className="text-xs">Last 30 days</SelectItem>
-                <SelectItem value="6months" className="text-xs">Last 6 months</SelectItem>
-                <SelectItem value="year" className="text-xs">Last year</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button
-              variant="outline"
-              className="h-10 px-4 rounded-xl border-black/5 bg-white shadow-sm text-xs font-bold"
-              onClick={handleExport}
-            >
-              <Download className="h-4 w-4 mr-2 text-muted-foreground" />
-              Export
-            </Button>
-          </div>
+    <div className="max-w-6xl mx-auto space-y-6 animate-fade-in pb-12">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Payments & Billing</h1>
+          <p className="text-sm text-muted-foreground font-medium">View your payment history and transaction details.</p>
         </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="rounded-2xl border-black/5 shadow-sm overflow-hidden bg-white">
-            <CardContent className="p-5 flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Spent</p>
-                <p className="text-xl font-bold tracking-tight">£{stats.totalSpent.toFixed(2)}</p>
-              </div>
-              <div className="h-10 w-10 rounded-xl bg-primary/5 flex items-center justify-center">
-                <PoundSterling className="h-5 w-5 text-primary" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl border-black/5 shadow-sm overflow-hidden bg-white">
-            <CardContent className="p-5 flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Pending</p>
-                <p className="text-xl font-bold tracking-tight">£{stats.pendingAmount.toFixed(2)}</p>
-              </div>
-              <div className="h-10 w-10 rounded-xl bg-amber-50 flex items-center justify-center">
-                <Clock className="h-5 w-5 text-amber-500" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl border-black/5 shadow-sm overflow-hidden bg-white">
-            <CardContent className="p-5 flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Care Hours</p>
-                <p className="text-xl font-bold tracking-tight">{stats.totalHours} hrs</p>
-              </div>
-              <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                <Calendar className="h-5 w-5 text-blue-500" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl border-black/5 shadow-sm overflow-hidden bg-white">
-            <CardContent className="p-5 flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Avg. Visit</p>
-                <p className="text-xl font-bold tracking-tight">£{stats.avgPerVisit.toFixed(2)}</p>
-              </div>
-              <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-emerald-500" />
-              </div>
-            </CardContent>
-          </Card>
+        <div className="flex items-center gap-2">
+          <Select value={period} onValueChange={setPeriod}>
+            <SelectTrigger className="w-[160px] h-10 rounded-xl border-black/5 bg-white shadow-sm text-xs font-bold">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="30days" className="text-xs">Last 30 days</SelectItem>
+              <SelectItem value="6months" className="text-xs">Last 6 months</SelectItem>
+              <SelectItem value="year" className="text-xs">Last year</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            variant="outline"
+            className="h-10 px-4 rounded-xl border-black/5 bg-white shadow-sm text-xs font-bold"
+            onClick={handleExport}
+          >
+            <Download className="h-4 w-4 mr-2 text-muted-foreground" />
+            Export
+          </Button>
         </div>
-
-        {/* Transactions */}
-        <Tabs defaultValue="all" className="w-full">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-bold tracking-tight">Transaction History</h3>
-            <TabsList className="bg-slate-100/80 p-1 rounded-xl h-10 border border-black/5">
-              <TabsTrigger value="all" className="h-8 px-4 rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs">
-                All ({bookings.length})
-              </TabsTrigger>
-              <TabsTrigger value="pending" className="h-8 px-4 rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs">
-                Pending ({pendingBookings.length})
-              </TabsTrigger>
-              <TabsTrigger value="completed" className="h-8 px-4 rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs">
-                Paid ({completedBookings.length})
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="all" className="mt-2">
-            <Card className="rounded-2xl border-black/5 shadow-sm bg-white overflow-hidden">
-              <CardContent className="p-0">
-                {bookings.length === 0 ? (
-                  <div className="p-12 text-center text-muted-foreground">
-                    <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No transactions found</p>
-                    <p className="text-sm">Your payment history will appear here</p>
-                  </div>
-                ) : (
-                  <div className="divide-y divide-black/5">
-                    {bookings.map((booking) => (
-                      <div
-                        key={booking.id}
-                        className="flex items-center justify-between p-5 hover:bg-slate-50/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-2xl bg-slate-50 border border-black/5 flex items-center justify-center shadow-sm">
-                            <PoundSterling className={`h-4 w-4 ${booking.status === 'completed' ? 'text-primary' : 'text-slate-400'}`} />
-                          </div>
-                          <div>
-                            <p className="text-[13px] font-bold text-foreground leading-snug">
-                              Care visit - {booking.carer?.full_name || 'Carer'}
-                            </p>
-                            <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
-                                {booking.service_type || 'Care Service'}
-                              </span>
-                              <span className="text-[10px] text-slate-300">•</span>
-                              <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
-                                {booking.duration_hours}h
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-8">
-                          <div className="text-right min-w-[80px]">
-                            <p className="text-[14px] font-bold text-foreground">£{booking.total_price?.toFixed(2)}</p>
-                            <p className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-tighter leading-none">
-                              {booking.start_time ? format(new Date(booking.start_time), 'dd MMM') : 'N/A'}
-                            </p>
-                          </div>
-                          {getStatusBadge(booking.status)}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="pending" className="mt-2">
-            <Card className="rounded-2xl border-black/5 shadow-sm bg-white overflow-hidden">
-              <CardContent className="p-0">
-                {pendingBookings.length === 0 ? (
-                  <div className="p-12 text-center text-muted-foreground">
-                    <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No pending payments</p>
-                  </div>
-                ) : (
-                  <div className="divide-y divide-black/5">
-                    {pendingBookings.map((booking) => (
-                      <div
-                        key={booking.id}
-                        className="flex items-center justify-between p-5 hover:bg-slate-50/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center">
-                            <Clock className="h-4 w-4 text-amber-500" />
-                          </div>
-                          <div>
-                            <p className="text-[13px] font-bold text-foreground leading-snug">
-                              Care visit - {booking.carer?.full_name || 'Carer'}
-                            </p>
-                            <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
-                              {booking.start_time ? format(new Date(booking.start_time), 'dd MMM yyyy') : 'N/A'}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-[14px] font-bold text-foreground">£{booking.total_price?.toFixed(2)}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="completed" className="mt-2">
-            <Card className="rounded-2xl border-black/5 shadow-sm bg-white overflow-hidden">
-              <CardContent className="p-0">
-                {completedBookings.length === 0 ? (
-                  <div className="p-12 text-center text-muted-foreground">
-                    <CheckCircle2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No completed payments</p>
-                  </div>
-                ) : (
-                  <div className="divide-y divide-black/5">
-                    {completedBookings.map((booking) => (
-                      <div
-                        key={booking.id}
-                        className="flex items-center justify-between p-5 hover:bg-slate-50/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                          </div>
-                          <div>
-                            <p className="text-[13px] font-bold text-foreground leading-snug">
-                              Care visit - {booking.carer?.full_name || 'Carer'}
-                            </p>
-                            <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
-                              {booking.start_time ? format(new Date(booking.start_time), 'dd MMM yyyy') : 'N/A'}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-[14px] font-bold text-emerald-600">£{booking.total_price?.toFixed(2)}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
       </div>
-    </DashboardLayout>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="rounded-2xl border-black/5 shadow-sm overflow-hidden bg-white">
+          <CardContent className="p-5 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Spent</p>
+              <p className="text-xl font-bold tracking-tight">£{stats.totalSpent.toFixed(2)}</p>
+            </div>
+            <div className="h-10 w-10 rounded-xl bg-primary/5 flex items-center justify-center">
+              <PoundSterling className="h-5 w-5 text-primary" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-black/5 shadow-sm overflow-hidden bg-white">
+          <CardContent className="p-5 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Pending</p>
+              <p className="text-xl font-bold tracking-tight">£{stats.pendingAmount.toFixed(2)}</p>
+            </div>
+            <div className="h-10 w-10 rounded-xl bg-amber-50 flex items-center justify-center">
+              <Clock className="h-5 w-5 text-amber-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-black/5 shadow-sm overflow-hidden bg-white">
+          <CardContent className="p-5 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Care Hours</p>
+              <p className="text-xl font-bold tracking-tight">{stats.totalHours} hrs</p>
+            </div>
+            <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center">
+              <Calendar className="h-5 w-5 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-black/5 shadow-sm overflow-hidden bg-white">
+          <CardContent className="p-5 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Avg. Visit</p>
+              <p className="text-xl font-bold tracking-tight">£{stats.avgPerVisit.toFixed(2)}</p>
+            </div>
+            <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+              <TrendingUp className="h-5 w-5 text-emerald-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Transactions */}
+      <Tabs defaultValue="all" className="w-full">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-lg font-bold tracking-tight">Transaction History</h3>
+          <TabsList className="bg-slate-100/80 p-1 rounded-xl h-10 border border-black/5">
+            <TabsTrigger value="all" className="h-8 px-4 rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs">
+              All ({bookings.length})
+            </TabsTrigger>
+            <TabsTrigger value="pending" className="h-8 px-4 rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs">
+              Pending ({pendingBookings.length})
+            </TabsTrigger>
+            <TabsTrigger value="completed" className="h-8 px-4 rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm text-xs">
+              Paid ({completedBookings.length})
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        <TabsContent value="all" className="mt-2">
+          <Card className="rounded-2xl border-black/5 shadow-sm bg-white overflow-hidden">
+            <CardContent className="p-0">
+              {bookings.length === 0 ? (
+                <div className="p-12 text-center text-muted-foreground">
+                  <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No transactions found</p>
+                  <p className="text-sm">Your payment history will appear here</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-black/5">
+                  {bookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="flex items-center justify-between p-5 hover:bg-slate-50/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-2xl bg-slate-50 border border-black/5 flex items-center justify-center shadow-sm">
+                          <PoundSterling className={`h-4 w-4 ${booking.status === 'completed' ? 'text-primary' : 'text-slate-400'}`} />
+                        </div>
+                        <div>
+                          <p className="text-[13px] font-bold text-foreground leading-snug">
+                            Care visit - {booking.carer?.full_name || 'Carer'}
+                          </p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
+                              {booking.service_type || 'Care Service'}
+                            </span>
+                            <span className="text-[10px] text-slate-300">•</span>
+                            <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
+                              {booking.duration_hours}h
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-8">
+                        <div className="text-right min-w-[80px]">
+                          <p className="text-[14px] font-bold text-foreground">£{booking.total_price?.toFixed(2)}</p>
+                          <p className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-tighter leading-none">
+                            {booking.start_time ? format(new Date(booking.start_time), 'dd MMM') : 'N/A'}
+                          </p>
+                        </div>
+                        {getStatusBadge(booking.status)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="pending" className="mt-2">
+          <Card className="rounded-2xl border-black/5 shadow-sm bg-white overflow-hidden">
+            <CardContent className="p-0">
+              {pendingBookings.length === 0 ? (
+                <div className="p-12 text-center text-muted-foreground">
+                  <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No pending payments</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-black/5">
+                  {pendingBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="flex items-center justify-between p-5 hover:bg-slate-50/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center">
+                          <Clock className="h-4 w-4 text-amber-500" />
+                        </div>
+                        <div>
+                          <p className="text-[13px] font-bold text-foreground leading-snug">
+                            Care visit - {booking.carer?.full_name || 'Carer'}
+                          </p>
+                          <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
+                            {booking.start_time ? format(new Date(booking.start_time), 'dd MMM yyyy') : 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[14px] font-bold text-foreground">£{booking.total_price?.toFixed(2)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="completed" className="mt-2">
+          <Card className="rounded-2xl border-black/5 shadow-sm bg-white overflow-hidden">
+            <CardContent className="p-0">
+              {completedBookings.length === 0 ? (
+                <div className="p-12 text-center text-muted-foreground">
+                  <CheckCircle2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No completed payments</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-black/5">
+                  {completedBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="flex items-center justify-between p-5 hover:bg-slate-50/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                        </div>
+                        <div>
+                          <p className="text-[13px] font-bold text-foreground leading-snug">
+                            Care visit - {booking.carer?.full_name || 'Carer'}
+                          </p>
+                          <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
+                            {booking.start_time ? format(new Date(booking.start_time), 'dd MMM yyyy') : 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[14px] font-bold text-emerald-600">£{booking.total_price?.toFixed(2)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

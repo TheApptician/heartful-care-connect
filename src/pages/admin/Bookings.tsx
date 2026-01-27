@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -226,16 +226,14 @@ const AdminBookings = () => {
 
     if (loading) {
         return (
-            <DashboardLayout role="admin">
-                <div className="flex items-center justify-center h-[60vh]">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                </div>
-            </DashboardLayout>
+            <div className="flex items-center justify-center h-[60vh]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
         );
     }
 
     return (
-        <DashboardLayout role="admin">
+        <>
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -459,7 +457,7 @@ const AdminBookings = () => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </DashboardLayout>
+        </>
     );
 };
 

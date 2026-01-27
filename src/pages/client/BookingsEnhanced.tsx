@@ -1,6 +1,6 @@
 // Enhanced Client Bookings Page with Status Management
 import { useState, useEffect } from 'react';
-import DashboardLayout from '@/components/layouts/DashboardLayout';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -146,211 +146,207 @@ export default function ClientBookingsEnhanced() {
 
     if (loading) {
         return (
-            <DashboardLayout role="client">
-                <div className="flex items-center justify-center h-96">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1a9e8c] mx-auto mb-4"></div>
-                        <p className="text-slate-500">Loading bookings...</p>
-                    </div>
+            <div className="flex items-center justify-center h-96">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1a9e8c] mx-auto mb-4"></div>
+                    <p className="text-slate-500">Loading bookings...</p>
                 </div>
-            </DashboardLayout>
+            </div>
         );
     }
 
     return (
-        <DashboardLayout role="client">
-            <div className="space-y-6 max-w-7xl mx-auto py-4">
-                {/* Header */}
-                <div>
-                    <div className="flex items-center gap-3 mb-2">
-                        <span className="h-2 w-2 rounded-full bg-[#1a9e8c]" />
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                            My Bookings
-                        </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-3xl font-black text-[#111827] tracking-tight">Bookings</h1>
-                            <p className="text-slate-500 font-medium">Manage your care bookings</p>
-                        </div>
-                        <Button onClick={() => navigate('/client/search-enhanced')}>
-                            <Calendar className="h-4 w-4 mr-2" />
-                            New Booking
-                        </Button>
-                    </div>
+        <div className="space-y-6 max-w-7xl mx-auto py-4">
+            {/* Header */}
+            <div>
+                <div className="flex items-center gap-3 mb-2">
+                    <span className="h-2 w-2 rounded-full bg-[#1a9e8c]" />
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        My Bookings
+                    </span>
                 </div>
-
-                {/* Stats Cards */}
-                <div className="grid md:grid-cols-4 gap-4">
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Total</p>
-                                    <p className="text-2xl font-black">{bookings.length}</p>
-                                </div>
-                                <Calendar className="h-8 w-8 text-slate-300" />
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Confirmed</p>
-                                    <p className="text-2xl font-black text-blue-600">
-                                        {bookings.filter(b => b.status === 'confirmed').length}
-                                    </p>
-                                </div>
-                                <CheckCircle className="h-8 w-8 text-blue-300" />
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Completed</p>
-                                    <p className="text-2xl font-black text-green-600">
-                                        {bookings.filter(b => b.status === 'completed').length}
-                                    </p>
-                                </div>
-                                <CheckCircle className="h-8 w-8 text-green-300" />
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Total Spent</p>
-                                    <p className="text-2xl font-black text-[#1a9e8c]">
-                                        {formatCurrency(
-                                            bookings
-                                                .filter(b => b.payment_status === 'paid')
-                                                .reduce((sum, b) => sum + (b.total_price || 0), 0)
-                                        )}
-                                    </p>
-                                </div>
-                                <DollarSign className="h-8 w-8 text-[#1a9e8c]/30" />
-                            </div>
-                        </CardContent>
-                    </Card>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-black text-[#111827] tracking-tight">Bookings</h1>
+                        <p className="text-slate-500 font-medium">Manage your care bookings</p>
+                    </div>
+                    <Button onClick={() => navigate('/client/search-enhanced')}>
+                        <Calendar className="h-4 w-4 mr-2" />
+                        New Booking
+                    </Button>
                 </div>
+            </div>
 
-                {/* Bookings List */}
+            {/* Stats Cards */}
+            <div className="grid md:grid-cols-4 gap-4">
                 <Card>
-                    <CardHeader>
-                        <CardTitle>All Bookings</CardTitle>
-                        <CardDescription>View and manage your care bookings</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Tabs value={activeTab} onValueChange={setActiveTab}>
-                            <TabsList className="mb-4">
-                                <TabsTrigger value="all">All ({bookings.length})</TabsTrigger>
-                                <TabsTrigger value="pending">
-                                    Pending ({bookings.filter(b => b.status === 'pending').length})
-                                </TabsTrigger>
-                                <TabsTrigger value="confirmed">
-                                    Confirmed ({bookings.filter(b => b.status === 'confirmed').length})
-                                </TabsTrigger>
-                                <TabsTrigger value="completed">
-                                    Completed ({bookings.filter(b => b.status === 'completed').length})
-                                </TabsTrigger>
-                            </TabsList>
-
-                            <TabsContent value={activeTab} className="space-y-4">
-                                {filteredBookings.length === 0 ? (
-                                    <div className="text-center py-12">
-                                        <Calendar className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-                                        <h3 className="text-lg font-bold text-slate-700 mb-2">No bookings found</h3>
-                                        <p className="text-slate-500 mb-4">
-                                            {activeTab === 'all'
-                                                ? 'You haven\'t made any bookings yet'
-                                                : `No ${activeTab} bookings`}
-                                        </p>
-                                        <Button onClick={() => navigate('/client/search-enhanced')}>
-                                            Find a Carer
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    filteredBookings.map(booking => {
-                                        const duration = calculateDuration(booking.start_time, booking.end_time);
-                                        const canCancel = booking.status === 'pending' || booking.status === 'confirmed';
-
-                                        return (
-                                            <Card key={booking.id} className="hover:shadow-md transition-shadow">
-                                                <CardContent className="pt-6">
-                                                    <div className="flex items-start justify-between mb-4">
-                                                        <div className="flex items-start gap-4">
-                                                            <Avatar className="h-12 w-12">
-                                                                <AvatarImage
-                                                                    src={booking.carer.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${booking.carer.full_name}`}
-                                                                />
-                                                                <AvatarFallback>{booking.carer.full_name[0]}</AvatarFallback>
-                                                            </Avatar>
-                                                            <div>
-                                                                <h3 className="font-bold text-lg">{booking.carer.full_name}</h3>
-                                                                <div className="flex items-center gap-2 mt-1">
-                                                                    {getStatusBadge(booking.status)}
-                                                                    {getPaymentBadge(booking.payment_status)}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="text-right">
-                                                            <p className="text-2xl font-black text-[#1a9e8c]">
-                                                                {formatCurrency(booking.total_price)}
-                                                            </p>
-                                                            <p className="text-xs text-muted-foreground">
-                                                                {formatCurrency(booking.rate_per_hour)}/hr × {duration}hrs
-                                                            </p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="grid md:grid-cols-2 gap-4 mb-4">
-                                                        <div className="flex items-center gap-2 text-sm">
-                                                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                                                            <span>{format(new Date(booking.start_time), 'PPP')}</span>
-                                                        </div>
-                                                        <div className="flex items-center gap-2 text-sm">
-                                                            <Clock className="h-4 w-4 text-muted-foreground" />
-                                                            <span>
-                                                                {format(new Date(booking.start_time), 'p')} - {format(new Date(booking.end_time), 'p')}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="flex items-center gap-2">
-                                                        <Button
-                                                            variant="outline"
-                                                            size="sm"
-                                                            onClick={() => navigate(`/client/messages?user=${booking.carer.id}`)}
-                                                        >
-                                                            <MessageCircle className="h-4 w-4 mr-1" />
-                                                            Message
-                                                        </Button>
-                                                        {canCancel && (
-                                                            <Button
-                                                                variant="outline"
-                                                                size="sm"
-                                                                onClick={() => cancelBooking(booking.id)}
-                                                                className="text-red-600 hover:text-red-700"
-                                                            >
-                                                                <XCircle className="h-4 w-4 mr-1" />
-                                                                Cancel
-                                                            </Button>
-                                                        )}
-                                                    </div>
-                                                </CardContent>
-                                            </Card>
-                                        );
-                                    })
-                                )}
-                            </TabsContent>
-                        </Tabs>
+                    <CardContent className="pt-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Total</p>
+                                <p className="text-2xl font-black">{bookings.length}</p>
+                            </div>
+                            <Calendar className="h-8 w-8 text-slate-300" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardContent className="pt-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Confirmed</p>
+                                <p className="text-2xl font-black text-blue-600">
+                                    {bookings.filter(b => b.status === 'confirmed').length}
+                                </p>
+                            </div>
+                            <CheckCircle className="h-8 w-8 text-blue-300" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardContent className="pt-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Completed</p>
+                                <p className="text-2xl font-black text-green-600">
+                                    {bookings.filter(b => b.status === 'completed').length}
+                                </p>
+                            </div>
+                            <CheckCircle className="h-8 w-8 text-green-300" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardContent className="pt-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Total Spent</p>
+                                <p className="text-2xl font-black text-[#1a9e8c]">
+                                    {formatCurrency(
+                                        bookings
+                                            .filter(b => b.payment_status === 'paid')
+                                            .reduce((sum, b) => sum + (b.total_price || 0), 0)
+                                    )}
+                                </p>
+                            </div>
+                            <DollarSign className="h-8 w-8 text-[#1a9e8c]/30" />
+                        </div>
                     </CardContent>
                 </Card>
             </div>
-        </DashboardLayout>
+
+            {/* Bookings List */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>All Bookings</CardTitle>
+                    <CardDescription>View and manage your care bookings</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Tabs value={activeTab} onValueChange={setActiveTab}>
+                        <TabsList className="mb-4">
+                            <TabsTrigger value="all">All ({bookings.length})</TabsTrigger>
+                            <TabsTrigger value="pending">
+                                Pending ({bookings.filter(b => b.status === 'pending').length})
+                            </TabsTrigger>
+                            <TabsTrigger value="confirmed">
+                                Confirmed ({bookings.filter(b => b.status === 'confirmed').length})
+                            </TabsTrigger>
+                            <TabsTrigger value="completed">
+                                Completed ({bookings.filter(b => b.status === 'completed').length})
+                            </TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value={activeTab} className="space-y-4">
+                            {filteredBookings.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <Calendar className="h-16 w-16 text-slate-300 mx-auto mb-4" />
+                                    <h3 className="text-lg font-bold text-slate-700 mb-2">No bookings found</h3>
+                                    <p className="text-slate-500 mb-4">
+                                        {activeTab === 'all'
+                                            ? 'You haven\'t made any bookings yet'
+                                            : `No ${activeTab} bookings`}
+                                    </p>
+                                    <Button onClick={() => navigate('/client/search-enhanced')}>
+                                        Find a Carer
+                                    </Button>
+                                </div>
+                            ) : (
+                                filteredBookings.map(booking => {
+                                    const duration = calculateDuration(booking.start_time, booking.end_time);
+                                    const canCancel = booking.status === 'pending' || booking.status === 'confirmed';
+
+                                    return (
+                                        <Card key={booking.id} className="hover:shadow-md transition-shadow">
+                                            <CardContent className="pt-6">
+                                                <div className="flex items-start justify-between mb-4">
+                                                    <div className="flex items-start gap-4">
+                                                        <Avatar className="h-12 w-12">
+                                                            <AvatarImage
+                                                                src={booking.carer.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${booking.carer.full_name}`}
+                                                            />
+                                                            <AvatarFallback>{booking.carer.full_name[0]}</AvatarFallback>
+                                                        </Avatar>
+                                                        <div>
+                                                            <h3 className="font-bold text-lg">{booking.carer.full_name}</h3>
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                                {getStatusBadge(booking.status)}
+                                                                {getPaymentBadge(booking.payment_status)}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="text-2xl font-black text-[#1a9e8c]">
+                                                            {formatCurrency(booking.total_price)}
+                                                        </p>
+                                                        <p className="text-xs text-muted-foreground">
+                                                            {formatCurrency(booking.rate_per_hour)}/hr × {duration}hrs
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                    <div className="flex items-center gap-2 text-sm">
+                                                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                                                        <span>{format(new Date(booking.start_time), 'PPP')}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-sm">
+                                                        <Clock className="h-4 w-4 text-muted-foreground" />
+                                                        <span>
+                                                            {format(new Date(booking.start_time), 'p')} - {format(new Date(booking.end_time), 'p')}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => navigate(`/client/messages?user=${booking.carer.id}`)}
+                                                    >
+                                                        <MessageCircle className="h-4 w-4 mr-1" />
+                                                        Message
+                                                    </Button>
+                                                    {canCancel && (
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={() => cancelBooking(booking.id)}
+                                                            className="text-red-600 hover:text-red-700"
+                                                        >
+                                                            <XCircle className="h-4 w-4 mr-1" />
+                                                            Cancel
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    );
+                                })
+                            )}
+                        </TabsContent>
+                    </Tabs>
+                </CardContent>
+            </Card>
+        </div>
     );
 }

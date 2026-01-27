@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -171,217 +171,213 @@ const AdminDisputes = () => {
 
     if (loading) {
         return (
-            <DashboardLayout role="admin">
-                <div className="flex items-center justify-center h-[60vh]">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                </div>
-            </DashboardLayout>
+            <div className="flex items-center justify-center h-[60vh]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
         );
     }
 
     return (
-        <DashboardLayout role="admin">
-            <div className="space-y-6">
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold">Dispute Tribunal</h1>
-                        <p className="text-muted-foreground">Manage and resolve platform disputes</p>
-                    </div>
-                    <Badge className="bg-amber-500 text-white px-4 py-2">
-                        {disputes.length} Active Disputes
-                    </Badge>
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold">Dispute Tribunal</h1>
+                    <p className="text-muted-foreground">Manage and resolve platform disputes</p>
                 </div>
+                <Badge className="bg-amber-500 text-white px-4 py-2">
+                    {disputes.length} Active Disputes
+                </Badge>
+            </div>
 
-                {/* Stats */}
-                <div className="grid sm:grid-cols-3 gap-4">
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex items-center gap-4">
-                                <div className="h-10 w-10 rounded-full bg-amber-500/10 flex items-center justify-center">
-                                    <Clock className="h-5 w-5 text-amber-500" />
-                                </div>
-                                <div>
-                                    <p className="text-2xl font-bold">
-                                        {disputes.filter(d => d.status === 'pending').length}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">Pending</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex items-center gap-4">
-                                <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center">
-                                    <AlertTriangle className="h-5 w-5 text-blue-500" />
-                                </div>
-                                <div>
-                                    <p className="text-2xl font-bold">
-                                        {disputes.filter(d => d.status === 'investigating').length}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">Investigating</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex items-center gap-4">
-                                <div className="h-10 w-10 rounded-full bg-red-500/10 flex items-center justify-center">
-                                    <AlertTriangle className="h-5 w-5 text-red-500" />
-                                </div>
-                                <div>
-                                    <p className="text-2xl font-bold">
-                                        {disputes.filter(d => d.priority === 'high').length}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">High Priority</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                {/* Filters */}
+            {/* Stats */}
+            <div className="grid sm:grid-cols-3 gap-4">
                 <Card>
                     <CardContent className="pt-6">
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <div className="flex-1 relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input
-                                    placeholder="Search disputes..."
-                                    className="pl-10"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
+                        <div className="flex items-center gap-4">
+                            <div className="h-10 w-10 rounded-full bg-amber-500/10 flex items-center justify-center">
+                                <Clock className="h-5 w-5 text-amber-500" />
                             </div>
-                            <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All Status</SelectItem>
-                                    <SelectItem value="pending">Pending</SelectItem>
-                                    <SelectItem value="investigating">Investigating</SelectItem>
-                                    <SelectItem value="resolved">Resolved</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <div>
+                                <p className="text-2xl font-bold">
+                                    {disputes.filter(d => d.status === 'pending').length}
+                                </p>
+                                <p className="text-sm text-muted-foreground">Pending</p>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                {/* Disputes List */}
-                <div className="space-y-6">
-                    {filteredDisputes.length === 0 ? (
-                        <Card className="p-12 text-center">
-                            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                            <h3 className="text-xl font-bold mb-2">No Active Disputes</h3>
-                            <p className="text-muted-foreground">All disputes have been resolved. Great work!</p>
-                        </Card>
-                    ) : (
-                        filteredDisputes.map((dispute) => (
-                            <Card key={dispute.id} className="overflow-hidden">
-                                <CardHeader className="bg-slate-50 border-b">
-                                    <div className="flex items-start justify-between">
-                                        <div className="space-y-2">
-                                            <div className="flex items-center gap-3">
-                                                <CardTitle className="text-lg">{dispute.title}</CardTitle>
-                                                {getPriorityBadge(dispute.priority)}
-                                                {getStatusBadge(dispute.status)}
-                                            </div>
-                                            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                                                <span className="flex items-center gap-2">
-                                                    <Clock className="h-4 w-4" />
-                                                    {new Date(dispute.created_at).toLocaleDateString()}
-                                                </span>
-                                                <span className="font-semibold text-foreground">£{dispute.amount}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="p-6 space-y-6">
-                                    {/* Parties */}
-                                    <div className="grid md:grid-cols-2 gap-6">
-                                        <div className="space-y-2">
-                                            <p className="text-xs font-bold text-muted-foreground uppercase">Client</p>
-                                            <div className="flex items-center gap-3">
-                                                <div className="h-10 w-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
-                                                    {dispute.client?.full_name?.[0] || 'C'}
-                                                </div>
-                                                <div>
-                                                    <p className="font-semibold">{dispute.client?.full_name || 'Unknown'}</p>
-                                                    <p className="text-xs text-muted-foreground">Seeking refund</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <p className="text-xs font-bold text-muted-foreground uppercase">Carer</p>
-                                            <div className="flex items-center gap-3">
-                                                <div className="h-10 w-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">
-                                                    {dispute.carer?.full_name?.[0] || 'C'}
-                                                </div>
-                                                <div>
-                                                    <p className="font-semibold">{dispute.carer?.full_name || 'Unknown'}</p>
-                                                    <p className="text-xs text-muted-foreground">Defending claim</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                <Card>
+                    <CardContent className="pt-6">
+                        <div className="flex items-center gap-4">
+                            <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center">
+                                <AlertTriangle className="h-5 w-5 text-blue-500" />
+                            </div>
+                            <div>
+                                <p className="text-2xl font-bold">
+                                    {disputes.filter(d => d.status === 'investigating').length}
+                                </p>
+                                <p className="text-sm text-muted-foreground">Investigating</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
 
-                                    {/* Description */}
-                                    <div className="space-y-2">
-                                        <p className="text-xs font-bold text-muted-foreground uppercase">Description</p>
-                                        <p className="text-sm text-muted-foreground leading-relaxed">{dispute.description}</p>
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="flex flex-wrap gap-3 pt-4 border-t">
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => handleResolve(dispute.id, 'client')}
-                                        >
-                                            <CheckCircle className="h-4 w-4 mr-2 text-blue-500" />
-                                            Favor Client
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => handleResolve(dispute.id, 'carer')}
-                                        >
-                                            <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
-                                            Favor Carer
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => handleResolve(dispute.id, 'split')}
-                                        >
-                                            <CheckCircle className="h-4 w-4 mr-2 text-amber-500" />
-                                            Split 50/50
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => handleContactParties(dispute)}
-                                        >
-                                            <MessageSquare className="h-4 w-4 mr-2" />
-                                            Contact Parties
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            className="text-red-600 hover:text-red-700"
-                                            onClick={() => handleEscalate(dispute.id)}
-                                        >
-                                            <AlertTriangle className="h-4 w-4 mr-2" />
-                                            Escalate
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))
-                    )}
-                </div>
+                <Card>
+                    <CardContent className="pt-6">
+                        <div className="flex items-center gap-4">
+                            <div className="h-10 w-10 rounded-full bg-red-500/10 flex items-center justify-center">
+                                <AlertTriangle className="h-5 w-5 text-red-500" />
+                            </div>
+                            <div>
+                                <p className="text-2xl font-bold">
+                                    {disputes.filter(d => d.priority === 'high').length}
+                                </p>
+                                <p className="text-sm text-muted-foreground">High Priority</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
-        </DashboardLayout>
+
+            {/* Filters */}
+            <Card>
+                <CardContent className="pt-6">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex-1 relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Search disputes..."
+                                className="pl-10"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+                        <Select value={statusFilter} onValueChange={setStatusFilter}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Status</SelectItem>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="investigating">Investigating</SelectItem>
+                                <SelectItem value="resolved">Resolved</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Disputes List */}
+            <div className="space-y-6">
+                {filteredDisputes.length === 0 ? (
+                    <Card className="p-12 text-center">
+                        <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+                        <h3 className="text-xl font-bold mb-2">No Active Disputes</h3>
+                        <p className="text-muted-foreground">All disputes have been resolved. Great work!</p>
+                    </Card>
+                ) : (
+                    filteredDisputes.map((dispute) => (
+                        <Card key={dispute.id} className="overflow-hidden">
+                            <CardHeader className="bg-slate-50 border-b">
+                                <div className="flex items-start justify-between">
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-3">
+                                            <CardTitle className="text-lg">{dispute.title}</CardTitle>
+                                            {getPriorityBadge(dispute.priority)}
+                                            {getStatusBadge(dispute.status)}
+                                        </div>
+                                        <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                                            <span className="flex items-center gap-2">
+                                                <Clock className="h-4 w-4" />
+                                                {new Date(dispute.created_at).toLocaleDateString()}
+                                            </span>
+                                            <span className="font-semibold text-foreground">£{dispute.amount}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-6 space-y-6">
+                                {/* Parties */}
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-bold text-muted-foreground uppercase">Client</p>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
+                                                {dispute.client?.full_name?.[0] || 'C'}
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">{dispute.client?.full_name || 'Unknown'}</p>
+                                                <p className="text-xs text-muted-foreground">Seeking refund</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-bold text-muted-foreground uppercase">Carer</p>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">
+                                                {dispute.carer?.full_name?.[0] || 'C'}
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">{dispute.carer?.full_name || 'Unknown'}</p>
+                                                <p className="text-xs text-muted-foreground">Defending claim</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Description */}
+                                <div className="space-y-2">
+                                    <p className="text-xs font-bold text-muted-foreground uppercase">Description</p>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">{dispute.description}</p>
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex flex-wrap gap-3 pt-4 border-t">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => handleResolve(dispute.id, 'client')}
+                                    >
+                                        <CheckCircle className="h-4 w-4 mr-2 text-blue-500" />
+                                        Favor Client
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => handleResolve(dispute.id, 'carer')}
+                                    >
+                                        <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
+                                        Favor Carer
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => handleResolve(dispute.id, 'split')}
+                                    >
+                                        <CheckCircle className="h-4 w-4 mr-2 text-amber-500" />
+                                        Split 50/50
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => handleContactParties(dispute)}
+                                    >
+                                        <MessageSquare className="h-4 w-4 mr-2" />
+                                        Contact Parties
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        className="text-red-600 hover:text-red-700"
+                                        onClick={() => handleEscalate(dispute.id)}
+                                    >
+                                        <AlertTriangle className="h-4 w-4 mr-2" />
+                                        Escalate
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
+            </div>
+        </div>
     );
 };
 

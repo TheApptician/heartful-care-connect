@@ -50,6 +50,34 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 // DASHBOARD PAGES - Lazy loaded for faster initial load
 // ============================================
 
+// Layout Wrappers
+import { Outlet } from "react-router-dom";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+
+const ClientLayout = () => (
+  <DashboardLayout role="client">
+    <Outlet />
+  </DashboardLayout>
+);
+
+const CarerLayout = () => (
+  <DashboardLayout role="carer">
+    <Outlet />
+  </DashboardLayout>
+);
+
+const OrganisationLayout = () => (
+  <DashboardLayout role="organisation">
+    <Outlet />
+  </DashboardLayout>
+);
+
+const AdminLayout = () => (
+  <DashboardLayout role="admin">
+    <Outlet />
+  </DashboardLayout>
+);
+
 // Client Pages
 const ClientDashboard = lazy(() => import("./pages/client/Dashboard"));
 const SearchCarers = lazy(() => import("./pages/client/SearchCarers"));
@@ -157,246 +185,86 @@ const App = () => (
               <Route path="/signup/success" element={<SignupSuccess />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
 
-              {/* Client Routes - Protected for 'client' role only */}
-              <Route path="/client/dashboard" element={
+              {/* Client Routes */}
+              <Route element={
                 <RoleGuard allowedRoles={['client', 'organisation']}>
-                  <ClientDashboard />
+                  <ClientLayout />
                 </RoleGuard>
-              } />
-              <Route path="/client/search" element={
-                <RoleGuard allowedRoles={['client', 'organisation']}>
-                  <SearchCarers />
-                </RoleGuard>
-              } />
-              <Route path="/client/search-enhanced" element={
-                <RoleGuard allowedRoles={['client', 'organisation']}>
-                  <SearchEnhanced />
-                </RoleGuard>
-              } />
-              <Route path="/client/bookings" element={
-                <RoleGuard allowedRoles={['client']}>
-                  <ClientBookings />
-                </RoleGuard>
-              } />
-              <Route path="/client/post-job" element={
-                <RoleGuard allowedRoles={['client']}>
-                  <PostJob />
-                </RoleGuard>
-              } />
-              <Route path="/client/book/:carerId" element={
-                <RoleGuard allowedRoles={['client', 'organisation']}>
-                  <CreateBooking />
-                </RoleGuard>
-              } />
-              <Route path="/client/care-plans" element={
-                <RoleGuard allowedRoles={['client']}>
-                  <CarePlans />
-                </RoleGuard>
-              } />
-              <Route path="/client/messages" element={
-                <RoleGuard allowedRoles={['client']}>
-                  <MessagesPage role="client" />
-                </RoleGuard>
-              } />
-              <Route path="/client/payments" element={
-                <RoleGuard allowedRoles={['client']}>
-                  <ClientPayments />
-                </RoleGuard>
-              } />
-              <Route path="/client/profile" element={
-                <RoleGuard allowedRoles={['client']}>
-                  <ClientProfile />
-                </RoleGuard>
-              } />
-              <Route path="/client/settings" element={
-                <RoleGuard allowedRoles={['client']}>
-                  <ClientSettings />
-                </RoleGuard>
-              } />
+              }>
+                <Route path="/client/dashboard" element={<ClientDashboard />} />
+                <Route path="/client/search" element={<SearchCarers />} />
+                <Route path="/client/search-enhanced" element={<SearchEnhanced />} />
+                <Route path="/client/bookings" element={<ClientBookings />} />
+                <Route path="/client/post-job" element={<PostJob />} />
+                <Route path="/client/book/:carerId" element={<CreateBooking />} />
+                <Route path="/client/care-plans" element={<CarePlans />} />
+                <Route path="/client/messages" element={<MessagesPage role="client" />} />
+                <Route path="/client/payments" element={<ClientPayments />} />
+                <Route path="/client/profile" element={<ClientProfile />} />
+                <Route path="/client/settings" element={<ClientSettings />} />
+              </Route>
 
               {/* Shared Routes */}
               <Route path="/help" element={<Help />} />
 
-              {/* Carer Routes - Protected for 'carer' role only */}
-              <Route path="/carer/dashboard" element={
+              {/* Carer Routes */}
+              <Route element={
                 <RoleGuard allowedRoles={['carer']}>
-                  <CarerDashboard />
+                  <CarerLayout />
                 </RoleGuard>
-              } />
-              <Route path="/carer/availability" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <CarerAvailability />
-                </RoleGuard>
-              } />
-              <Route path="/carer/bookings" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <CarerBookings />
-                </RoleGuard>
-              } />
-              <Route path="/carer/earnings" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <CarerEarnings />
-                </RoleGuard>
-              } />
-              <Route path="/carer/earnings-enhanced" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <EarningsEnhanced />
-                </RoleGuard>
-              } />
-              <Route path="/carer/documents" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <CarerDocuments />
-                </RoleGuard>
-              } />
-              <Route path="/carer/verification" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <DocumentsNew />
-                </RoleGuard>
-              } />
-              <Route path="/carer/profile" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <CarerProfile />
-                </RoleGuard>
-              } />
-              <Route path="/carer/profile-enhanced" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <ProfileEnhanced />
-                </RoleGuard>
-              } />
-              <Route path="/carer/messages" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <MessagesPage role="carer" />
-                </RoleGuard>
-              } />
-              <Route path="/carer/settings" element={
-                <RoleGuard allowedRoles={['carer']}>
-                  <CarerProfile />
-                </RoleGuard>
-              } />
+              }>
+                <Route path="/carer/dashboard" element={<CarerDashboard />} />
+                <Route path="/carer/availability" element={<CarerAvailability />} />
+                <Route path="/carer/bookings" element={<CarerBookings />} />
+                <Route path="/carer/earnings" element={<CarerEarnings />} />
+                <Route path="/carer/earnings-enhanced" element={<EarningsEnhanced />} />
+                <Route path="/carer/documents" element={<CarerDocuments />} />
+                <Route path="/carer/verification" element={<DocumentsNew />} />
+                <Route path="/carer/profile" element={<CarerProfile />} />
+                <Route path="/carer/profile-enhanced" element={<ProfileEnhanced />} />
+                <Route path="/carer/messages" element={<MessagesPage role="carer" />} />
+                <Route path="/carer/settings" element={<CarerProfile />} />
+              </Route>
 
-              {/* Organisation Routes - Protected for 'organisation' role only */}
-              <Route path="/organisation/dashboard" element={
+              {/* Organisation Routes */}
+              <Route element={
                 <RoleGuard allowedRoles={['organisation']}>
-                  <OrganisationDashboard />
+                  <OrganisationLayout />
                 </RoleGuard>
-              } />
-              <Route path="/organisation/staff" element={
-                <RoleGuard allowedRoles={['organisation']}>
-                  <OrganisationStaff />
-                </RoleGuard>
-              } />
-              <Route path="/organisation/jobs" element={
-                <RoleGuard allowedRoles={['organisation']}>
-                  <OrganisationJobs />
-                </RoleGuard>
-              } />
-              <Route path="/organisation/bookings" element={
-                <RoleGuard allowedRoles={['organisation']}>
-                  <OrganisationBookings />
-                </RoleGuard>
-              } />
-              <Route path="/organisation/compliance" element={
-                <RoleGuard allowedRoles={['organisation']}>
-                  <OrganisationCompliance />
-                </RoleGuard>
-              } />
-              <Route path="/organisation/analytics" element={
-                <RoleGuard allowedRoles={['organisation']}>
-                  <OrganisationAnalytics />
-                </RoleGuard>
-              } />
-              <Route path="/organisation/profile" element={
-                <RoleGuard allowedRoles={['organisation']}>
-                  <OrganisationDashboard />
-                </RoleGuard>
-              } />
-              <Route path="/organisation/messages" element={
-                <RoleGuard allowedRoles={['organisation']}>
-                  <MessagesPage role="organisation" />
-                </RoleGuard>
-              } />
-              <Route path="/organisation/settings" element={
-                <RoleGuard allowedRoles={['organisation']}>
-                  <OrganisationSettings />
-                </RoleGuard>
-              } />
+              }>
+                <Route path="/organisation/dashboard" element={<OrganisationDashboard />} />
+                <Route path="/organisation/staff" element={<OrganisationStaff />} />
+                <Route path="/organisation/jobs" element={<OrganisationJobs />} />
+                <Route path="/organisation/bookings" element={<OrganisationBookings />} />
+                <Route path="/organisation/compliance" element={<OrganisationCompliance />} />
+                <Route path="/organisation/analytics" element={<OrganisationAnalytics />} />
+                <Route path="/organisation/profile" element={<OrganisationDashboard />} />
+                <Route path="/organisation/messages" element={<MessagesPage role="organisation" />} />
+                <Route path="/organisation/settings" element={<OrganisationSettings />} />
+              </Route>
 
-              {/* Admin Routes - Protected for 'admin' role only */}
-              <Route path="/admin/dashboard" element={
+              {/* Admin Routes */}
+              <Route element={
                 <RoleGuard allowedRoles={['admin']}>
-                  <AdminDashboard />
+                  <AdminLayout />
                 </RoleGuard>
-              } />
-              <Route path="/admin/users" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <AdminUsers />
-                </RoleGuard>
-              } />
-              <Route path="/admin/verifications" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <AdminVerifications />
-                </RoleGuard>
-              } />
-              <Route path="/admin/verification-queue" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <VerificationsEnhanced />
-                </RoleGuard>
-              } />
-              <Route path="/admin/organisations" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <AdminOrganisations />
-                </RoleGuard>
-              } />
-              <Route path="/admin/reports" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <AdminReports />
-                </RoleGuard>
-              } />
-              <Route path="/admin/phase-control" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <PhaseControl />
-                </RoleGuard>
-              } />
-              <Route path="/admin/messages" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <MessagesPage role="admin" />
-                </RoleGuard>
-              } />
-              <Route path="/admin/system-logs" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <SystemLogs />
-                </RoleGuard>
-              } />
-              <Route path="/admin/settings" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <Settings />
-                </RoleGuard>
-              } />
-              <Route path="/admin/disputes" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <Disputes />
-                </RoleGuard>
-              } />
-              <Route path="/admin/profile" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <AdminProfile />
-                </RoleGuard>
-              } />
-              <Route path="/admin/carers" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <AdminCarers />
-                </RoleGuard>
-              } />
-              <Route path="/admin/bookings" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <AdminBookings />
-                </RoleGuard>
-              } />
-              <Route path="/admin/blog" element={
-                <RoleGuard allowedRoles={['admin']}>
-                  <AdminBlogManagement />
-                </RoleGuard>
-              } />
+              }>
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<AdminUsers />} />
+                <Route path="/admin/verifications" element={<AdminVerifications />} />
+                <Route path="/admin/verification-queue" element={<VerificationsEnhanced />} />
+                <Route path="/admin/organisations" element={<AdminOrganisations />} />
+                <Route path="/admin/reports" element={<AdminReports />} />
+                <Route path="/admin/phase-control" element={<PhaseControl />} />
+                <Route path="/admin/messages" element={<MessagesPage role="admin" />} />
+                <Route path="/admin/system-logs" element={<SystemLogs />} />
+                <Route path="/admin/settings" element={<Settings />} />
+                <Route path="/admin/disputes" element={<Disputes />} />
+                <Route path="/admin/profile" element={<AdminProfile />} />
+                <Route path="/admin/carers" element={<AdminCarers />} />
+                <Route path="/admin/bookings" element={<AdminBookings />} />
+                <Route path="/admin/blog" element={<AdminBlogManagement />} />
+              </Route>
 
               {/* Catch-all */}
               <Route path="*" element={<NotFound />} />

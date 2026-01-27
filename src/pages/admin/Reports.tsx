@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -191,151 +191,147 @@ const AdminReports = () => {
 
   if (loading) {
     return (
-      <DashboardLayout role="admin">
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </DashboardLayout>
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout role="admin">
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold">Reports & Analytics</h1>
-            <p className="text-muted-foreground">Platform performance and insights</p>
-          </div>
-          <div className="flex gap-3">
-            <Select value={reportType} onValueChange={setReportType}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Report Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="overview">Overview</SelectItem>
-                <SelectItem value="users">Users Report</SelectItem>
-                <SelectItem value="bookings">Bookings Report</SelectItem>
-                <SelectItem value="revenue">Revenue Report</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button onClick={handleExportReport}>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
-          </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">Reports & Analytics</h1>
+          <p className="text-muted-foreground">Platform performance and insights</p>
         </div>
-
-        {/* Overview Stats */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Users className="h-4 w-4 text-primary" />
-                Total Users
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalUsers.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">All registered users</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Users className="h-4 w-4 text-blue-500" />
-                Total Carers
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalCarers.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {stats.verifiedCarers} verified
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-green-500" />
-                Total Bookings
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalBookings.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {stats.completedBookings} completed
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <DollarSign className="h-4 w-4 text-purple-500" />
-                Total Revenue
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">£{stats.totalRevenue.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">From completed bookings</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-amber-500" />
-                Platform Revenue
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">£{(stats.totalRevenue * 0.1).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-              <p className="text-xs text-muted-foreground mt-1">10% commission</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-red-500" />
-                Completion Rate
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {stats.totalBookings > 0
-                  ? Math.round((stats.completedBookings / stats.totalBookings) * 100)
-                  : 0}%
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">Booking success rate</p>
-            </CardContent>
-          </Card>
+        <div className="flex gap-3">
+          <Select value={reportType} onValueChange={setReportType}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Report Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="overview">Overview</SelectItem>
+              <SelectItem value="users">Users Report</SelectItem>
+              <SelectItem value="bookings">Bookings Report</SelectItem>
+              <SelectItem value="revenue">Revenue Report</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button onClick={handleExportReport}>
+            <Download className="h-4 w-4 mr-2" />
+            Export Report
+          </Button>
         </div>
+      </div>
 
-        {/* Report Description */}
+      {/* Overview Stats */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Report Information</CardTitle>
-            <CardDescription>
-              {reportType === "overview" && "Complete platform overview with key metrics"}
-              {reportType === "users" && "Detailed user list with registration dates and verification status"}
-              {reportType === "bookings" && "Complete booking history with client and carer details"}
-              {reportType === "revenue" && "Revenue breakdown from completed bookings"}
-            </CardDescription>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Users className="h-4 w-4 text-primary" />
+              Total Users
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Click "Export Report" to download the selected report as a CSV file.
-              The report will include all relevant data based on your selection.
+            <div className="text-2xl font-bold">{stats.totalUsers.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">All registered users</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Users className="h-4 w-4 text-blue-500" />
+              Total Carers
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalCarers.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {stats.verifiedCarers} verified
             </p>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-green-500" />
+              Total Bookings
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalBookings.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {stats.completedBookings} completed
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <DollarSign className="h-4 w-4 text-purple-500" />
+              Total Revenue
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">£{stats.totalRevenue.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">From completed bookings</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-amber-500" />
+              Platform Revenue
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">£{(stats.totalRevenue * 0.1).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+            <p className="text-xs text-muted-foreground mt-1">10% commission</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <BarChart3 className="h-4 w-4 text-red-500" />
+              Completion Rate
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {stats.totalBookings > 0
+                ? Math.round((stats.completedBookings / stats.totalBookings) * 100)
+                : 0}%
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">Booking success rate</p>
+          </CardContent>
+        </Card>
       </div>
-    </DashboardLayout>
+
+      {/* Report Description */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Report Information</CardTitle>
+          <CardDescription>
+            {reportType === "overview" && "Complete platform overview with key metrics"}
+            {reportType === "users" && "Detailed user list with registration dates and verification status"}
+            {reportType === "bookings" && "Complete booking history with client and carer details"}
+            {reportType === "revenue" && "Revenue breakdown from completed bookings"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Click "Export Report" to download the selected report as a CSV file.
+            The report will include all relevant data based on your selection.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -223,7 +223,7 @@ const ClientSettings = () => {
     };
 
     return (
-        <DashboardLayout role="client">
+        <>
             <div className="space-y-6 max-w-4xl mx-auto">
                 {/* Header */}
                 <div>
@@ -522,7 +522,7 @@ const ClientSettings = () => {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </DashboardLayout>
+        </>
     );
 };
 
