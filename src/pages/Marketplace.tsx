@@ -71,8 +71,7 @@ const Marketplace = () => {
                     {/* Header Section */}
                     <div className="max-w-4xl mb-16">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1a9e8c]/5 border border-[#1a9e8c]/10 text-[#1a9e8c] text-[10px] font-black uppercase tracking-widest mb-6">
-                            <ShieldCheck className="w-3.5 h-3.5" />
-                            UK CQC Compliant Introductory Agency
+                            Introductory Care Agency Standards
                         </div>
                         <h1 className="text-5xl lg:text-7xl font-black text-[#111827] mb-8 tracking-tighter leading-[0.95]">
                             Discover Elite <br />

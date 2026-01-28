@@ -137,7 +137,7 @@ export default function MessagesPage({ role }: MessagesPageProps) {
                                 <MessageCircle className="h-4 w-4 text-amber-600" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-amber-900 mb-1">CQC Compliance Notice</h3>
+                                <h3 className="font-bold text-amber-900 mb-1">Compliance Notice</h3>
                                 <p className="text-sm text-amber-800 leading-relaxed">
                                     As an <strong>Introductory Agency</strong>, Heems facilitates introductions only.
                                     Messages containing prohibited words (employ, hire, staff, contract, etc.) will be

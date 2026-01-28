@@ -128,7 +128,7 @@ export default function LegalPage() {
                                             <ul>
                                                 <li><strong>Control:</strong> The Client (or their representative) is responsible for directing the care and supervising the Carer.</li>
                                                 <li><strong>Employment Status:</strong> Carers are self-employed, not employees of Heems.</li>
-                                                <li><strong>Regulation:</strong> Heems is not registered with the CQC (Care Quality Commission) because we do not directly manage the care. However, we adhere to strict voluntary standards for vetting and safety.</li>
+                                                <li><strong>Regulation:</strong> Heems is not registered with the Care Quality Commission because we do not directly manage the care. However, we adhere to strict voluntary standards for vetting and safety.</li>
                                             </ul>
                                         </article>
                                     </TabsContent>

@@ -203,7 +203,7 @@ export function useMessaging(conversationId?: string) {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('Not authenticated');
 
-            // Check for CQC compliance if there's content
+            // Check for compliance if there's content
             let complianceCheck = { isCompliant: true, detectedKeywords: [] as string[] };
             let sanitizedContent = content;
 

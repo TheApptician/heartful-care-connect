@@ -43,7 +43,7 @@ const SignupSuccess = () => {
                         },
                         {
                             text: "Complete Organisation Details",
-                            desc: "Log in and provide your CQC number and registration details."
+                            desc: "Log in and provide your Regulatory ID and registration details."
                         },
                         {
                             text: "Await Admin Approval",
