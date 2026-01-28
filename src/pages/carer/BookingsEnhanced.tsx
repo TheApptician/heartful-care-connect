@@ -166,6 +166,33 @@ export default function CarerBookingsEnhanced() {
         .filter(b => b.status === 'completed' && b.payment_status === 'paid')
         .reduce((sum, b) => sum + calculateEarnings(b).net, 0);
 
+    const handleRefundAction = async (bookingId: string, action: 'approve' | 'decline') => {
+        try {
+            setLoading(true);
+            const { error } = await supabase.functions.invoke('approve-refund', {
+                body: { bookingId, action }
+            });
+
+            if (error) throw error;
+
+            toast({
+                title: action === 'approve' ? 'Refund Approved' : 'Refund Declined',
+                description: action === 'approve' ? 'Refund has been processed.' : 'Refund request was declined.',
+            });
+
+            fetchBookings();
+        } catch (error: any) {
+            console.error('Refund action error:', error);
+            toast({
+                title: 'Error',
+                description: error.message || 'Failed to process refund action',
+                variant: 'destructive',
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-96">
@@ -349,6 +376,26 @@ export default function CarerBookingsEnhanced() {
                                                             Mark Complete
                                                         </Button>
                                                     )}
+                                                    {booking.status === 'cancellation_requested' && (
+                                                        <>
+                                                            <Button
+                                                                size="sm"
+                                                                onClick={() => handleRefundAction(booking.id, 'approve')}
+                                                                className="bg-green-600"
+                                                            >
+                                                                <CheckCircle className="h-4 w-4 mr-1" />
+                                                                Approve Refund
+                                                            </Button>
+                                                            <Button
+                                                                size="sm"
+                                                                variant="destructive"
+                                                                onClick={() => handleRefundAction(booking.id, 'decline')}
+                                                            >
+                                                                <XCircle className="h-4 w-4 mr-1" />
+                                                                Decline
+                                                            </Button>
+                                                        </>
+                                                    )}
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
@@ -370,3 +417,4 @@ export default function CarerBookingsEnhanced() {
         </div>
     );
 }
+

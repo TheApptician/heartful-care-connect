@@ -23,9 +23,23 @@ export function calculateFees(
     hours: number,
     phase: PricingPhase
 ): FeeCalculation {
-    // Enforce minimum rate
-    if (baseRate < MINIMUM_HOURLY_RATE) {
+    // Enforce minimum rate (only if a rate is provided)
+    if (baseRate > 0 && baseRate < MINIMUM_HOURLY_RATE) {
         throw new Error(`Rate must be at least £${MINIMUM_HOURLY_RATE}/hour`);
+    } else if (baseRate === 0) {
+        // Handle 0 rate gracefully without erroring, effectively returning 0 fees
+        return {
+            baseRate: 0,
+            hours,
+            subtotal: 0,
+            clientFee: 0,
+            clientFeePercentage: 0,
+            carerFee: 0,
+            carerFeePercentage: 0,
+            clientTotal: 0,
+            carerEarnings: 0,
+            platformRevenue: 0,
+        };
     }
 
     const subtotal = baseRate * hours;

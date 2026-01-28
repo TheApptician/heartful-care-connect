@@ -83,25 +83,29 @@ export default function ClientBookingsEnhanced() {
 
     const cancelBooking = async (bookingId: string) => {
         try {
-            const { error } = await supabase
-                .from('bookings')
-                .update({ status: 'cancelled' })
-                .eq('id', bookingId);
+            setLoading(true);
+            const { data, error } = await supabase.functions.invoke('cancel-booking', {
+                body: { bookingId }
+            });
 
             if (error) throw error;
 
             toast({
-                title: 'Booking Cancelled',
-                description: 'Your booking has been cancelled successfully',
+                title: data.status === 'cancelled' ? 'Booking Cancelled' : 'Cancellation Requested',
+                description: data.message,
+                variant: data.status === 'cancelled' ? 'default' : 'destructive', // Orange-ish warning? default is fine.
             });
 
             fetchBookings();
         } catch (error: any) {
+            console.error('Cancel error:', error);
             toast({
                 title: 'Error',
-                description: 'Failed to cancel booking',
+                description: error.message || 'Failed to cancel booking',
                 variant: 'destructive',
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -111,6 +115,7 @@ export default function ClientBookingsEnhanced() {
             confirmed: { color: 'bg-blue-500', icon: CheckCircle, label: 'Confirmed' },
             completed: { color: 'bg-green-500', icon: CheckCircle, label: 'Completed' },
             cancelled: { color: 'bg-red-500', icon: XCircle, label: 'Cancelled' },
+            cancellation_requested: { color: 'bg-orange-500', icon: AlertCircle, label: 'Cancel Requested' },
         };
         const badge = badges[status as keyof typeof badges] || badges.pending;
         const Icon = badge.icon;

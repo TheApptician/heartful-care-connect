@@ -110,7 +110,7 @@ export default function CreateBooking() {
 
     const calculateFeeBreakdown = () => {
         try {
-            const rate = carer.carer_details.hourly_rate;
+            const rate = carer?.carer_details?.hourly_rate || 0;
             const fees = calculateFees(rate, duration, currentPhase);
             setFeeBreakdown(fees);
         } catch (error: any) {

@@ -46,51 +46,43 @@ const carePlans = [
   {
     id: 1,
     recipientId: 1,
-    title: "Daily Care Routine",
+    title: "Morning Routine",
     category: "personal",
-    icon: Heart,
+    icon: Calendar,
     tasks: [
-      { id: 1, task: "Assist with morning wash and dressing", time: "08:00", completed: true },
-      { id: 2, task: "Administer morning medications", time: "08:30", completed: true },
-      { id: 3, task: "Prepare and assist with breakfast", time: "09:00", completed: false },
-      { id: 4, task: "Light exercises and stretching", time: "10:00", completed: false },
-      { id: 5, task: "Assist with lunch", time: "12:30", completed: false },
-      { id: 6, task: "Afternoon rest and monitoring", time: "14:00", completed: false },
-      { id: 7, task: "Evening meal preparation", time: "17:30", completed: false },
-      { id: 8, task: "Administer evening medications", time: "18:00", completed: false },
-      { id: 9, task: "Assist with evening routine", time: "20:00", completed: false },
+      { id: 1, task: "Prompt for medication", time: "08:00", completed: false },
+      { id: 2, task: "Prompt for personal care", time: "08:30", completed: false },
+      { id: 3, task: "Prompt for Breakfast", time: "09:00", completed: false },
     ],
-    progress: 22,
+    progress: 0,
     priority: "high"
   },
   {
     id: 2,
     recipientId: 1,
-    title: "Medication Schedule",
-    category: "medication",
-    icon: Pill,
+    title: "Afternoon Routine",
+    category: "personal",
+    icon: Calendar,
     tasks: [
-      { id: 1, task: "Metformin 500mg (Diabetes)", time: "08:00", completed: true },
-      { id: 2, task: "Blood pressure medication", time: "08:00", completed: true },
-      { id: 3, task: "Vitamin D supplement", time: "12:00", completed: false },
-      { id: 4, task: "Arthritis medication", time: "18:00", completed: false },
-      { id: 5, task: "Evening blood pressure check", time: "20:00", completed: false },
+      { id: 1, task: "Prompt for medication", time: "12:00", completed: false },
+      { id: 2, task: "Prompt for lunch", time: "12:30", completed: false },
+      { id: 3, task: "Ground walk", time: "13:30", completed: false },
+      { id: 4, task: "Community walk", time: "14:00", completed: false },
+      { id: 5, task: "City walk", time: "14:30", completed: false },
+      { id: 6, task: "Shop run", time: "15:00", completed: false },
     ],
-    progress: 40,
-    priority: "high"
+    progress: 0,
+    priority: "medium"
   },
   {
     id: 3,
     recipientId: 1,
-    title: "Nutrition Plan",
-    category: "nutrition",
-    icon: Utensils,
+    title: "Late Afternoon Routine",
+    category: "personal",
+    icon: Calendar,
     tasks: [
-      { id: 1, task: "Low sugar breakfast", time: "09:00", completed: false },
-      { id: 2, task: "Mid-morning snack", time: "10:30", completed: false },
-      { id: 3, task: "Balanced lunch with vegetables", time: "12:30", completed: false },
-      { id: 4, task: "Afternoon tea and light snack", time: "15:00", completed: false },
-      { id: 5, task: "Diabetic-friendly dinner", time: "17:30", completed: false },
+      { id: 1, task: "Prompt for medication", time: "16:00", completed: false },
+      { id: 2, task: "Prompt for snacks", time: "16:30", completed: false },
     ],
     progress: 0,
     priority: "medium"
@@ -98,29 +90,42 @@ const carePlans = [
   {
     id: 4,
     recipientId: 1,
-    title: "Mobility & Exercise",
-    category: "mobility",
-    icon: Activity,
+    title: "Evening Routine",
+    category: "personal",
+    icon: Calendar,
     tasks: [
-      { id: 1, task: "Gentle morning stretches", time: "10:00", completed: false },
-      { id: 2, task: "Supervised walk in garden", time: "11:00", completed: false },
-      { id: 3, task: "Hand exercises for arthritis", time: "14:30", completed: false },
-      { id: 4, task: "Evening leg exercises", time: "16:00", completed: false },
+      { id: 1, task: "Prompt for dinner", time: "18:00", completed: false },
+      { id: 2, task: "Prompt for medication", time: "18:30", completed: false },
     ],
     progress: 0,
-    priority: "medium"
+    priority: "high"
   },
   {
     id: 5,
     recipientId: 1,
-    title: "Cognitive Activities",
-    category: "cognitive",
-    icon: Brain,
+    title: "Bedtime Routine",
+    category: "personal",
+    icon: Calendar,
     tasks: [
-      { id: 1, task: "Memory games or puzzles", time: "10:30", completed: false },
-      { id: 2, task: "Reading session", time: "14:00", completed: false },
-      { id: 3, task: "Photo album review (memory stimulation)", time: "15:30", completed: false },
-      { id: 4, task: "Music therapy / favourite songs", time: "16:30", completed: false },
+      { id: 1, task: "Bedtime routine support", time: "21:00", completed: false },
+    ],
+    progress: 0,
+    priority: "high"
+  },
+  {
+    id: 6,
+    recipientId: 1,
+    title: "Activities",
+    category: "cognitive",
+    icon: Activity,
+    tasks: [
+      { id: 1, task: "Exercise", time: "10:00", completed: false },
+      { id: 2, task: "Reading session", time: "11:00", completed: false },
+      { id: 3, task: "Gardening", time: "14:00", completed: false },
+      { id: 4, task: "Memory games or puzzles", time: "15:00", completed: false },
+      { id: 5, task: "Art", time: "16:00", completed: false },
+      { id: 6, task: "Music session", time: "17:00", completed: false },
+      { id: 7, task: "Cooking", time: "17:30", completed: false },
     ],
     progress: 0,
     priority: "medium"
@@ -165,12 +170,78 @@ const visitLogs = [
 
 export default function CarePlans() {
   const [isAddingPlan, setIsAddingPlan] = useState(false);
-  const selectedRecipient = careRecipients[0];
+  const [recipient, setRecipient] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCareData() {
+      try {
+        const { data: { user } } = await import("@/integrations/supabase/client").then(m => m.supabase.auth.getUser());
+        if (!user) return;
+
+        // Fetch generic profile
+        const { data: profile } = await import("@/integrations/supabase/client").then(m => m.supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single());
+
+        // Fetch client specific details
+        const { data: clientDetails } = await import("@/integrations/supabase/client").then(m => m.supabase
+          .from('client_details')
+          .select('*')
+          .eq('id', user.id)
+          .single());
+
+        // Fetch a recent booking to find an assigned carer
+        const { data: lastBooking } = await import("@/integrations/supabase/client").then(m => m.supabase
+          .from('bookings')
+          .select('carer:profiles!carer_id(full_name)')
+          .eq('client_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single());
+
+        // Construct recipient object
+        setRecipient({
+          name: profile?.full_name || "Client",
+          avatar: profile?.avatar_url,
+          age: 78, // Placeholder as DOB might not be in profile yet
+          relationship: "Self", // Default to Self for now
+          conditions: clientDetails?.medical_notes ? [clientDetails.medical_notes] : ["No specific conditions listed"], // Use medical notes if available
+          primaryCarer: lastBooking?.carer?.full_name || "No Carer Assigned",
+          lastUpdated: new Date().toISOString()
+        });
+
+      } catch (error) {
+        console.error("Failed to load care data", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCareData();
+  }, []);
+
+  if (loading) {
+    return <div className="p-10 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
+  }
+
+  // Fallback if load failed
+  const displayRecipient = recipient || {
+    name: "Loading...",
+    avatar: "",
+    age: 0,
+    relationship: "",
+    conditions: [],
+    primaryCarer: "",
+    lastUpdated: new Date().toISOString()
+  };
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 animate-fade-in pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        {/* ... existing header code ... */}
         <div className="space-y-1">
           <h1 className="text-2xl font-bold text-foreground tracking-tight">Care Portal</h1>
           <p className="text-sm text-muted-foreground font-medium">Coordinate routines and monitor wellbeing.</p>
@@ -183,6 +254,7 @@ export default function CarePlans() {
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md rounded-2xl">
+            {/* ... existing dialog content ... */}
             <DialogHeader>
               <DialogTitle className="text-xl font-bold">New Care Protocol</DialogTitle>
               <DialogDescription className="text-sm">Define a new routine for your recipient.</DialogDescription>
@@ -239,19 +311,20 @@ export default function CarePlans() {
             <div className="flex items-center gap-4">
               <div className="relative">
                 <Avatar className="h-14 w-14 rounded-2xl border-2 border-white shadow-sm">
-                  <AvatarImage src={selectedRecipient.avatar} />
-                  <AvatarFallback className="text-lg font-bold">MW</AvatarFallback>
+                  <AvatarImage src={displayRecipient.avatar || ""} />
+                  <AvatarFallback className="text-lg font-bold">{displayRecipient.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center">
                   <CheckCircle2 className="w-3 h-3 text-white" />
                 </div>
               </div>
               <div>
-                <h2 className="text-lg font-bold tracking-tight">{selectedRecipient.name}</h2>
+                <h2 className="text-lg font-bold tracking-tight">{displayRecipient.name}</h2>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
-                  <span>{selectedRecipient.age}y</span>
+                  {/* Hardcoded age for now as DOB isn't in core profile schema yet, can be updated later */}
+                  <span>{displayRecipient.age}y</span>
                   <span>•</span>
-                  <span>{selectedRecipient.relationship}</span>
+                  <span>{displayRecipient.relationship}</span>
                 </div>
               </div>
             </div>
@@ -259,7 +332,7 @@ export default function CarePlans() {
             <div className="flex-1 md:border-l border-black/5 md:pl-6">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Conditions/Diagnosis</p>
               <div className="flex flex-wrap gap-1.5">
-                {selectedRecipient.conditions.map(condition => (
+                {displayRecipient.conditions.map((condition: string) => (
                   <Badge key={condition} className="bg-primary/5 text-primary border-none text-[10px] font-bold px-2 py-0.5 rounded-md">
                     {condition}
                   </Badge>
@@ -269,8 +342,8 @@ export default function CarePlans() {
 
             <div className="md:text-right md:border-l border-black/5 md:pl-6 min-w-[150px]">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Assigned Carer</p>
-              <p className="text-sm font-bold text-foreground">{selectedRecipient.primaryCarer}</p>
-              <p className="text-[10px] text-muted-foreground font-medium mt-1">Sync: {new Date(selectedRecipient.lastUpdated).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</p>
+              <p className="text-sm font-bold text-foreground">{displayRecipient.primaryCarer}</p>
+              <p className="text-[10px] text-muted-foreground font-medium mt-1">Sync: {new Date(displayRecipient.lastUpdated).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</p>
             </div>
           </div>
         </CardContent>

@@ -135,15 +135,20 @@ serve(async (req) => {
                     quantity: 1,
                 },
             ];
+            // Calculate Carer Earnings for delayed transfer
+            const carerEarnings = amount - applicationFeeAmount;
+
             sessionParams.payment_intent_data = {
-                application_fee_amount: applicationFeeAmount,
-                transfer_data: {
-                    destination: stripeAccountId,
-                },
+                // Remove immediate transfer to support delayed payouts (Separate Charges & Transfers)
+                // application_fee_amount: applicationFeeAmount, 
+                // transfer_data: { destination: stripeAccountId },
+
                 metadata: {
                     booking_id: bookingId,
                     carer_id: carerId,
                     client_id: clientId,
+                    payout_amount: carerEarnings, // Amount to transfer later (in pence)
+                    payout_destination: stripeAccountId, // Carer's connected account ID
                 },
             };
         } else if (mode === "setup") {
