@@ -56,25 +56,33 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 const ClientLayout = () => (
   <DashboardLayout role="client">
-    <Outlet />
+    <Suspense fallback={<PageLoader />}>
+      <Outlet />
+    </Suspense>
   </DashboardLayout>
 );
 
 const CarerLayout = () => (
   <DashboardLayout role="carer">
-    <Outlet />
+    <Suspense fallback={<PageLoader />}>
+      <Outlet />
+    </Suspense>
   </DashboardLayout>
 );
 
 const OrganisationLayout = () => (
   <DashboardLayout role="organisation">
-    <Outlet />
+    <Suspense fallback={<PageLoader />}>
+      <Outlet />
+    </Suspense>
   </DashboardLayout>
 );
 
 const AdminLayout = () => (
   <DashboardLayout role="admin">
-    <Outlet />
+    <Suspense fallback={<PageLoader />}>
+      <Outlet />
+    </Suspense>
   </DashboardLayout>
 );
 

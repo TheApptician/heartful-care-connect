@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -26,7 +27,10 @@ import {
   Ban,
   CheckCircle2,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Eye,
+  XCircle,
+  User as UserIcon
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -46,6 +50,15 @@ interface User {
   email?: string;
   first_name?: string | null;
   last_name?: string | null;
+  status?: string; // May be added to DB later
+}
+
+interface UserDetailedData {
+  profile: User;
+  carer_details?: any;
+  organisation_details?: any;
+  client_details?: any;
+  carer_verification?: any;
 }
 
 const AdminUsers = () => {
@@ -56,9 +69,12 @@ const AdminUsers = () => {
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUserDetails, setSelectedUserDetails] = useState<UserDetailedData | null>(null);
+  const [viewDetailsDialogOpen, setViewDetailsDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [editFormData, setEditFormData] = useState({
     first_name: "",
     last_name: "",
@@ -180,57 +196,12 @@ const AdminUsers = () => {
     }
   };
 
-  const handleToggleVerification = async (user: User) => {
-    try {
-      const newStatus = !user.verified;
-      const { error } = await supabase
-        .from('profiles')
-        .update({ verified: newStatus })
-        .eq('id', user.id);
-
-      if (error) throw error;
-
-      // If we just verified the user, send the approval email
-      if (newStatus) {
-        try {
-          const { error: fnError } = await supabase.functions.invoke('send-account-approved-email', {
-            body: {
-              email: user.email,
-              name: user.full_name || user.first_name || 'User'
-            }
-          });
-
-          if (fnError) throw fnError;
-
-        } catch (emailErr) {
-          console.error("Failed to send approval email:", emailErr);
-          toast({
-            title: "Verification Warning",
-            description: "User verified, but email notification failed to send.",
-            variant: "destructive"
-          });
-        }
-      }
-
-      toast({
-        title: newStatus ? "User verified" : "User unverified",
-        description: `${user.email} has been ${newStatus ? "verified" : "unverified"}.`,
-      });
-
-      fetchUsers();
-    } catch (error: any) {
-      toast({
-        title: "Error updating verification",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
 
   const handleDeleteUser = async () => {
     if (!selectedUser) return;
 
     try {
+      setProcessing(true);
       const { error } = await supabase
         .from('profiles')
         .delete()
@@ -244,6 +215,7 @@ const AdminUsers = () => {
       });
 
       setDeleteDialogOpen(false);
+      setViewDetailsDialogOpen(false);
       fetchUsers();
     } catch (error: any) {
       toast({
@@ -251,6 +223,98 @@ const AdminUsers = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleAction = async (userId: string, action: 'approve' | 'reject' | 'suspend') => {
+    try {
+      setProcessing(true);
+      let updateData: any = {};
+      let toastTitle = "";
+      let toastDescription = "";
+
+      if (action === 'approve') {
+        updateData = { verified: true };
+        toastTitle = "User Approved";
+        toastDescription = "User has been granted full access.";
+      } else if (action === 'reject') {
+        updateData = { verified: false };
+        toastTitle = "User Rejected";
+        toastDescription = "User verification has been revoked.";
+      } else if (action === 'suspend') {
+        // Since status column might not exist, we use verified as a proxy for now
+        // or attempt to update it if it exists
+        updateData = { verified: false };
+        toastTitle = "User Suspended";
+        toastDescription = "User access has been temporarily revoked.";
+
+        try {
+          // Attempt to update status column if it exists (silent fail if not)
+          await supabase.from('profiles').update({ status: 'suspended' }).eq('id', userId);
+        } catch (e) {
+          // Ignore if column doesn't exist
+        }
+      }
+
+      const { error } = await supabase
+        .from('profiles')
+        .update(updateData)
+        .eq('id', userId);
+
+      if (error) throw error;
+
+      toast({
+        title: toastTitle,
+        description: toastDescription,
+      });
+
+      fetchUsers();
+      if (viewDetailsDialogOpen) {
+        handleViewDetails(users.find(u => u.id === userId)!);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Action failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleViewDetails = async (user: User) => {
+    try {
+      setLoading(true);
+      setSelectedUser(user);
+
+      const data: UserDetailedData = { profile: user };
+
+      if (user.role === 'carer') {
+        const { data: cd } = await supabase.from('carer_details').select('*').eq('id', user.id).single();
+        data.carer_details = cd;
+        const { data: cv } = await supabase.from('carer_verification').select('*').eq('id', user.id).single();
+        data.carer_verification = cv;
+      } else if (user.role === 'organisation') {
+        const { data: od } = await supabase.from('organisation_details').select('*').eq('id', user.id).single();
+        data.organisation_details = od;
+      } else if (user.role === 'client') {
+        const { data: cld } = await supabase.from('client_details').select('*').eq('id', user.id).single();
+        data.client_details = cld;
+      }
+
+      setSelectedUserDetails(data);
+      setViewDetailsDialogOpen(true);
+    } catch (error: any) {
+      toast({
+        title: "Error fetching details",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -642,22 +706,33 @@ const AdminUsers = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleViewDetails(user)}>
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleEditUser(user)}>
                           <Edit className="h-4 w-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleToggleVerification(user)}>
+                        <DropdownMenuItem onClick={() => handleAction(user.id, user.verified ? 'reject' : 'approve')}>
                           {user.verified ? (
                             <>
-                              <UserX className="h-4 w-4 mr-2" />
-                              Unverify
+                              <XCircle className="h-4 w-4 mr-2" />
+                              Reject
                             </>
                           ) : (
                             <>
                               <UserCheck className="h-4 w-4 mr-2" />
-                              Verify
+                              Approve
                             </>
                           )}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-amber-600"
+                          onClick={() => handleAction(user.id, 'suspend')}
+                        >
+                          <Ban className="h-4 w-4 mr-2" />
+                          Suspend
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => window.location.href = `mailto:${user.email}`}>
                           <Mail className="h-4 w-4 mr-2" />
@@ -848,6 +923,236 @@ const AdminUsers = () => {
               Cancel
             </Button>
             <Button onClick={handleAddUser}>Create User</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Details Dialog */}
+      <Dialog open={viewDetailsDialogOpen} onOpenChange={setViewDetailsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={selectedUser?.avatar_url || undefined} />
+                <AvatarFallback className="text-xl">
+                  {selectedUser ? getUserInitials(selectedUser) : 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <DialogTitle className="text-2xl">{selectedUser ? getUserName(selectedUser) : 'User Details'}</DialogTitle>
+                <DialogDescription className="flex items-center gap-2 mt-1">
+                  {selectedUser?.role && getRoleBadge(selectedUser.role)}
+                  <span className="text-muted-foreground">•</span>
+                  <span>Joined {selectedUser?.created_at && format(new Date(selectedUser.created_at), 'MMM dd, yyyy')}</span>
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+
+          <Tabs defaultValue="overview" className="mt-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="onboarding">Onboarding Info</TabsTrigger>
+              <TabsTrigger value="activity">Platform Data</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="overview" className="mt-4 space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg flex items-center gap-2">
+                    <UserIcon className="h-4 w-4" /> Personal Information
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between py-1 border-b">
+                      <span className="text-muted-foreground text-sm">Email</span>
+                      <span className="font-medium">{selectedUser?.email}</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b">
+                      <span className="text-muted-foreground text-sm">Phone</span>
+                      <span className="font-medium">{selectedUser?.phone || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b">
+                      <span className="text-muted-foreground text-sm">Address</span>
+                      <span className="font-medium">{selectedUser?.address || 'N/A'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg flex items-center gap-2">
+                    <Shield className="h-4 w-4" /> Account Status
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">Verification:</span>
+                      {selectedUser?.verified ? (
+                        <Badge className="bg-green-500">Verified & Active</Badge>
+                      ) : (
+                        <Badge variant="outline" className="border-amber-500 text-amber-600">Pending Approval</Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">User ID:</span>
+                      <code className="text-[10px] bg-muted px-1 rounded">{selectedUser?.id}</code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {selectedUser?.role === 'carer' && selectedUserDetails?.carer_details && (
+                <div className="p-4 bg-muted/30 rounded-lg space-y-3">
+                  <h4 className="font-semibold flex items-center gap-2"> Professional Summary</h4>
+                  <p className="text-sm italic text-muted-foreground">
+                    "{selectedUserDetails.carer_details.bio || 'No bio provided'}"
+                  </p>
+                  <div className="flex gap-4">
+                    <div className="text-sm">
+                      <span className="text-muted-foreground">Experience:</span> {selectedUserDetails.carer_details.years_experience} years
+                    </div>
+                    <div className="text-sm">
+                      <span className="text-muted-foreground">Rate:</span> £{selectedUserDetails.carer_details.hourly_rate}/hr
+                    </div>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="onboarding" className="mt-4 space-y-6">
+              {selectedUser?.role === 'carer' && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <Card>
+                      <CardContent className="pt-4 space-y-2">
+                        <Label className="text-xs text-muted-foreground">DBS Status</Label>
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold underline cursor-pointer text-primary" onClick={() => selectedUserDetails?.carer_verification?.dbs_document_url && window.open(selectedUserDetails.carer_verification.dbs_document_url, '_blank')}>
+                            View DBS Doc
+                          </span>
+                          <Badge variant="outline">{selectedUserDetails?.carer_verification?.dbs_status || 'Pending'}</Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="pt-4 space-y-2">
+                        <Label className="text-xs text-muted-foreground">ID Verification</Label>
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold underline cursor-pointer text-primary" onClick={() => selectedUserDetails?.carer_verification?.id_document_url && window.open(selectedUserDetails.carer_verification.id_document_url, '_blank')}>
+                            View ID Doc
+                          </span>
+                          <Badge variant="outline">{selectedUserDetails?.carer_verification?.id_status || 'Pending'}</Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Skills & Specializations</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedUserDetails?.carer_details?.skills?.map((skill: string) => (
+                        <Badge key={skill} variant="secondary">{skill}</Badge>
+                      )) || 'None listed'}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedUser?.role === 'organisation' && selectedUserDetails?.organisation_details && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <Label className="text-muted-foreground">Company Name</Label>
+                      <p className="font-medium text-lg">{selectedUserDetails.organisation_details.company_name}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-muted-foreground">Registration Number</Label>
+                      <p className="font-medium">{selectedUserDetails.organisation_details.registration_number || 'N/A'}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-muted-foreground">Postcode</Label>
+                      <p className="font-medium">{selectedUserDetails.organisation_details.postcode}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-muted-foreground">Service Radius</Label>
+                      <p className="font-medium">{selectedUserDetails.organisation_details.service_radius_miles} miles</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedUser?.role === 'client' && selectedUserDetails?.client_details && (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Emergency Contact</Label>
+                    <p className="text-sm font-medium">
+                      {selectedUserDetails.client_details.emergency_contact_name || 'Not provided'}
+                      {selectedUserDetails.client_details.emergency_contact_phone && ` (${selectedUserDetails.client_details.emergency_contact_phone})`}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Medical Notes & Preferences</Label>
+                    <p className="text-sm p-3 bg-muted rounded italic">
+                      {selectedUserDetails.client_details.medical_notes || 'No medical notes provided.'}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="activity" className="mt-4">
+              <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
+                <Clock className="h-10 w-10 text-muted-foreground opacity-20" />
+                <div>
+                  <p className="font-semibold">Recent Platform Activity</p>
+                  <p className="text-sm text-muted-foreground max-w-xs mx-auto">This section will show the user's booking history and communication logs once the audit system is fully connected.</p>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+
+          <DialogFooter className="mt-8 flex flex-wrap gap-2 justify-start sm:justify-start">
+            <div className="flex flex-wrap gap-2 w-full">
+              {!selectedUser?.verified ? (
+                <Button
+                  className="bg-green-600 hover:bg-green-700 flex-1"
+                  onClick={() => handleAction(selectedUser!.id, 'approve')}
+                  disabled={processing}
+                >
+                  <CheckCircle2 className="h-4 w-4 mr-2" /> Approve Account
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  className="border-red-200 text-red-600 hover:bg-red-50 flex-1"
+                  onClick={() => handleAction(selectedUser!.id, 'reject')}
+                  disabled={processing}
+                >
+                  <XCircle className="h-4 w-4 mr-2" /> Reject/Revoke
+                </Button>
+              )}
+
+              <Button
+                variant="outline"
+                className="border-amber-200 text-amber-600 hover:bg-amber-50 flex-1"
+                onClick={() => handleAction(selectedUser!.id, 'suspend')}
+                disabled={processing}
+              >
+                <Ban className="h-4 w-4 mr-2" /> Suspend
+              </Button>
+
+              <Button
+                variant="destructive"
+                className="flex-1"
+                onClick={() => {
+                  setDeleteDialogOpen(true);
+                }}
+                disabled={processing}
+              >
+                <Trash2 className="h-4 w-4 mr-2" /> Delete
+              </Button>
+
+              <Button variant="ghost" onClick={() => setViewDetailsDialogOpen(false)} className="w-full sm:w-auto">
+                Close
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

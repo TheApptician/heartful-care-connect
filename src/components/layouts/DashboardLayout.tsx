@@ -127,6 +127,18 @@ const DashboardLayout = ({
   const location = useLocation();
   const navigate = useNavigate();
 
+  const handleSignOut = async () => {
+    try {
+      const { clearRoleCache } = await import("@/components/auth/RoleGuard");
+      clearRoleCache();
+      await supabase.auth.signOut();
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+      navigate("/login");
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
     let debounceTimer: NodeJS.Timeout;
@@ -387,7 +399,7 @@ const DashboardLayout = ({
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => navigate("/login")}
+                    onClick={handleSignOut}
                     className="text-destructive focus:text-destructive"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
@@ -425,8 +437,8 @@ const DashboardLayout = ({
           {/* Page Content */}
           <div className="p-4 lg:p-6">{children}</div>
         </main>
+        <ChatWidget />
       </div>
-      <ChatWidget />
     </>
   );
 };
