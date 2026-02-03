@@ -30,7 +30,10 @@ import {
   AlertCircle,
   Eye,
   XCircle,
-  User as UserIcon
+  User as UserIcon,
+  ChevronLeft,
+  ChevronRight,
+  Loader2
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -61,6 +64,8 @@ interface UserDetailedData {
   carer_verification?: any;
 }
 
+const ITEMS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
+
 const AdminUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -75,6 +80,11 @@ const AdminUsers = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [totalCount, setTotalCount] = useState(0);
   const [editFormData, setEditFormData] = useState({
     first_name: "",
     last_name: "",
@@ -94,7 +104,7 @@ const AdminUsers = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [currentPage, itemsPerPage, roleFilter, statusFilter]);
 
   useEffect(() => {
     filterUsers();
@@ -103,13 +113,36 @@ const AdminUsers = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+
+      // Build query with server-side pagination
+      let query = supabase
         .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('*', { count: 'exact' });
+
+      // Apply role filter at database level
+      if (roleFilter !== 'all') {
+        query = query.eq('role', roleFilter);
+      }
+
+      // Apply status filter at database level
+      if (statusFilter === 'verified') {
+        query = query.eq('verified', true);
+      } else if (statusFilter === 'unverified') {
+        query = query.eq('verified', false);
+      }
+
+      // Apply pagination
+      const from = (currentPage - 1) * itemsPerPage;
+      const to = from + itemsPerPage - 1;
+
+      const { data, error, count } = await query
+        .order('created_at', { ascending: false })
+        .range(from, to);
 
       if (error) throw error;
+
       setUsers(data || []);
+      setTotalCount(count || 0);
     } catch (error: any) {
       toast({
         title: "Error fetching users",
@@ -124,31 +157,33 @@ const AdminUsers = () => {
   const filterUsers = () => {
     let filtered = users;
 
-    // Search filter
+    // Search filter (applied client-side for responsiveness)
     if (searchQuery) {
       filtered = filtered.filter(user =>
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Role filter
-    if (roleFilter !== "all") {
-      filtered = filtered.filter(user => user.role === roleFilter);
-    }
-
-    // Status filter
-    if (statusFilter !== "all") {
-      if (statusFilter === "verified") {
-        filtered = filtered.filter(user => user.verified);
-      } else if (statusFilter === "unverified") {
-        filtered = filtered.filter(user => !user.verified);
-      }
-    }
+    // Role and status filters are now applied server-side via fetchUsers
 
     setFilteredUsers(filtered);
+  };
+
+  // Pagination helpers
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleItemsPerPageChange = (value: string) => {
+    setItemsPerPage(Number(value));
+    setCurrentPage(1); // Reset to first page when changing page size
   };
 
   const handleEditUser = (user: User) => {

@@ -11,9 +11,12 @@ const stripe = new Stripe(stripeSecretKey || "", {
     httpClient: Stripe.createFetchHttpClient(),
 });
 
+// Production-ready CORS - set ALLOWED_ORIGINS env var in Supabase Dashboard
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGINS") || "*";
 const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 serve(async (req) => {

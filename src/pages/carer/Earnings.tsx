@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -16,7 +17,12 @@ import {
   Download,
   CreditCard,
   Wallet,
-  Calendar
+  Calendar,
+  ExternalLink,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  Banknote
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -30,17 +36,34 @@ interface Booking {
   total_price: number;
   status: string;
   service_type: string;
+  payment_status?: string;
+  payout_status?: string;
   client?: {
     full_name: string;
   };
+}
+
+interface StripeStatus {
+  stripe_account_id: string | null;
+  stripe_onboarding_complete: boolean;
+  stripe_charges_enabled: boolean;
+  stripe_payouts_enabled: boolean;
 }
 
 export default function CarerEarnings() {
   const [period, setPeriod] = useState("30days");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stripeLoading, setStripeLoading] = useState(false);
+  const [stripeStatus, setStripeStatus] = useState<StripeStatus>({
+    stripe_account_id: null,
+    stripe_onboarding_complete: false,
+    stripe_charges_enabled: false,
+    stripe_payouts_enabled: false,
+  });
   const [stats, setStats] = useState({
     availableBalance: 0,
+    pendingPayout: 0,
     monthlyEarnings: 0,
     monthlyHours: 0,
     avgHourlyRate: 0,
@@ -53,7 +76,71 @@ export default function CarerEarnings() {
 
   useEffect(() => {
     fetchEarningsData();
+    fetchStripeStatus();
   }, [period]);
+
+  const fetchStripeStatus = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('carer_details')
+        .select('stripe_account_id, stripe_onboarding_complete, stripe_charges_enabled, stripe_payouts_enabled')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+
+      setStripeStatus({
+        stripe_account_id: data?.stripe_account_id || null,
+        stripe_onboarding_complete: data?.stripe_onboarding_complete || false,
+        stripe_charges_enabled: data?.stripe_charges_enabled || false,
+        stripe_payouts_enabled: data?.stripe_payouts_enabled || false,
+      });
+    } catch (error: any) {
+      console.error('Error fetching Stripe status:', error);
+    }
+  };
+
+  const handleStripeOnboarding = async () => {
+    try {
+      setStripeLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Get user email
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('id', user.id)
+        .single();
+
+      const { data, error } = await supabase.functions.invoke('stripe-connect-account', {
+        body: {
+          carerId: user.id,
+          email: profile?.email || user.email,
+          returnUrl: `${window.location.origin}/carer/earnings?stripe=success`,
+          refreshUrl: `${window.location.origin}/carer/earnings?stripe=refresh`,
+        }
+      });
+
+      if (error) throw error;
+
+      // Redirect to Stripe onboarding
+      if (data?.onboardingUrl) {
+        window.location.href = data.onboardingUrl;
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error setting up payments",
+        description: error.message || "Could not connect to Stripe. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setStripeLoading(false);
+    }
+  };
 
   const fetchEarningsData = async () => {
     try {
@@ -108,14 +195,19 @@ export default function CarerEarnings() {
       const monthlyEarnings = thisMonthBookings.reduce((sum, b) => sum + (b.total_price || 0), 0);
       const monthlyHours = thisMonthBookings.reduce((sum, b) => sum + (b.duration_hours || 0), 0);
 
-      // Calculate available balance (pending payouts from completed bookings)
-      const pendingBookings = allBookings.filter(b => b.status === 'completed');
-      const availableBalance = pendingBookings.reduce((sum, b) => sum + (b.total_price || 0), 0);
+      // Calculate available balance (paid but not yet transferred to carer)
+      const paidBookings = completedBookings.filter(b => b.payment_status === 'paid' && b.payout_status !== 'paid');
+      const pendingPayout = paidBookings.reduce((sum, b) => sum + (b.total_price || 0), 0);
+
+      // Total available (all completed bookings that have been paid)
+      const paidCompleted = completedBookings.filter(b => b.payment_status === 'paid');
+      const availableBalance = paidCompleted.reduce((sum, b) => sum + (b.total_price || 0), 0);
 
       const avgHourlyRate = monthlyHours > 0 ? monthlyEarnings / monthlyHours : 0;
 
       setStats({
         availableBalance,
+        pendingPayout,
         monthlyEarnings,
         monthlyHours,
         avgHourlyRate,
@@ -135,14 +227,15 @@ export default function CarerEarnings() {
 
   const handleExport = () => {
     const csv = [
-      ['Date', 'Client', 'Service', 'Hours', 'Amount', 'Status'].join(','),
+      ['Date', 'Client', 'Service', 'Hours', 'Amount', 'Status', 'Payment Status'].join(','),
       ...bookings.map(b => [
-        b.start_date,
+        b.start_time ? format(new Date(b.start_time), 'yyyy-MM-dd') : 'N/A',
         b.client?.full_name || 'N/A',
         b.service_type || 'Care Service',
         b.duration_hours,
         b.total_price,
-        b.status
+        b.status,
+        b.payment_status || 'pending'
       ].join(','))
     ].join('\n');
 
@@ -196,6 +289,63 @@ export default function CarerEarnings() {
           </Button>
         </div>
       </div>
+
+      {/* Stripe Connect Status Card */}
+      <Card className={stripeStatus.stripe_payouts_enabled ? "border-emerald-200 bg-emerald-50/50" : "border-amber-200 bg-amber-50/50"}>
+        <CardContent className="pt-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="flex items-start gap-4">
+              <div className={`h-12 w-12 rounded-full flex items-center justify-center ${stripeStatus.stripe_payouts_enabled
+                  ? "bg-emerald-100 text-emerald-600"
+                  : "bg-amber-100 text-amber-600"
+                }`}>
+                {stripeStatus.stripe_payouts_enabled ? (
+                  <CheckCircle className="h-6 w-6" />
+                ) : (
+                  <CreditCard className="h-6 w-6" />
+                )}
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">
+                  {stripeStatus.stripe_payouts_enabled
+                    ? "Payments Enabled"
+                    : stripeStatus.stripe_account_id
+                      ? "Complete Your Payment Setup"
+                      : "Set Up Payments"
+                  }
+                </h3>
+                <p className="text-sm text-muted-foreground max-w-md">
+                  {stripeStatus.stripe_payouts_enabled
+                    ? "Your Stripe account is fully set up. Earnings from completed bookings will be transferred to your bank account."
+                    : stripeStatus.stripe_account_id
+                      ? "Your Stripe account is pending verification. Please complete the onboarding process to receive payouts."
+                      : "Connect your bank account via Stripe to receive payments from clients. This is a one-time setup."
+                  }
+                </p>
+              </div>
+            </div>
+            {!stripeStatus.stripe_payouts_enabled && (
+              <Button
+                onClick={handleStripeOnboarding}
+                disabled={stripeLoading}
+                className="gap-2"
+              >
+                {stripeLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    <ExternalLink className="h-4 w-4" />
+                    {stripeStatus.stripe_account_id ? "Continue Setup" : "Connect Stripe"}
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats Cards */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -305,8 +455,11 @@ export default function CarerEarnings() {
                           {booking.start_time ? format(new Date(booking.start_time), 'dd MMM yyyy') : 'N/A'}
                         </p>
                       </div>
-                      <Badge variant="default" className="bg-emerald-500">
-                        Paid
+                      <Badge
+                        variant={booking.payment_status === 'paid' ? "default" : "secondary"}
+                        className={booking.payment_status === 'paid' ? "bg-emerald-500" : ""}
+                      >
+                        {booking.payment_status === 'paid' ? 'Paid' : 'Pending'}
                       </Badge>
                     </div>
                   ))}
@@ -417,6 +570,13 @@ export default function CarerEarnings() {
                     <span className="text-muted-foreground">Yearly</span>
                     <span className="font-bold text-xl text-primary">£{(calcRate * calcHours * 52).toLocaleString()}</span>
                   </div>
+
+                  <Alert className="mt-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      Note: Platform fees (10% in Phase 1) will be deducted from client payments. Your net earnings may vary.
+                    </AlertDescription>
+                  </Alert>
                 </div>
               </div>
             </CardContent>

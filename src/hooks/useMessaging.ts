@@ -46,7 +46,7 @@ export function useMessaging(conversationId?: string) {
     const [unreadCount, setUnreadCount] = useState(0);
     const { toast } = useToast();
 
-    // Fetch conversations
+    // Fetch conversations - optimized to reduce N+1 queries
     const fetchConversations = useCallback(async () => {
         try {
             setLoading(true);
@@ -71,12 +71,73 @@ export function useMessaging(conversationId?: string) {
             const { data: convs, error: convError } = await query.order('last_message_at', { ascending: false });
             if (convError) throw convError;
 
-            // 2. Enrich conversations
-            const enriched = await Promise.all((convs || []).map(async (conv: any) => {
+            if (!convs || convs.length === 0) {
+                setConversations([]);
+                setUnreadCount(0);
+                return;
+            }
+
+            // 2. Collect all unique user IDs to fetch in one batch
+            const userIds = new Set<string>();
+            convs.forEach((conv: any) => {
+                userIds.add(conv.participant_1_id);
+                userIds.add(conv.participant_2_id);
+            });
+
+            // 3. Batch fetch all user profiles in a single query
+            const { data: usersData } = await supabase
+                .from('profiles')
+                .select('id, full_name, avatar_url, role')
+                .in('id', Array.from(userIds));
+
+            const usersMap = new Map(usersData?.map(u => [u.id, u]) || []);
+
+            // 4. Fetch all unread counts for current user in one query (if not admin)
+            let unreadMap = new Map<string, number>();
+            if (!isAdmin) {
+                const { data: unreadData } = await supabase
+                    .from('messages')
+                    .select('sender_id')
+                    .eq('receiver_id', user.id)
+                    .eq('is_read', false);
+
+                if (unreadData) {
+                    unreadData.forEach((msg: any) => {
+                        unreadMap.set(msg.sender_id, (unreadMap.get(msg.sender_id) || 0) + 1);
+                    });
+                }
+            }
+
+            // 5. Fetch last messages for all conversations in one query
+            const conversationPairs = convs.map((conv: any) =>
+                `(sender_id.eq.${conv.participant_1_id}.and.receiver_id.eq.${conv.participant_2_id})`
+            ).concat(convs.map((conv: any) =>
+                `(sender_id.eq.${conv.participant_2_id}.and.receiver_id.eq.${conv.participant_1_id})`
+            ));
+
+            const { data: lastMessages } = await supabase
+                .from('messages')
+                .select('sender_id, receiver_id, content, created_at')
+                .or(conversationPairs.join(','))
+                .order('created_at', { ascending: false });
+
+            // Group last messages by conversation
+            const lastMessageMap = new Map<string, string>();
+            if (lastMessages) {
+                lastMessages.forEach((msg: any) => {
+                    const key1 = `${msg.sender_id}-${msg.receiver_id}`;
+                    const key2 = `${msg.receiver_id}-${msg.sender_id}`;
+                    if (!lastMessageMap.has(key1) && !lastMessageMap.has(key2)) {
+                        lastMessageMap.set(key1, msg.content);
+                        lastMessageMap.set(key2, msg.content);
+                    }
+                });
+            }
+
+            // 6. Enrich conversations with the data we've already fetched
+            const enriched = convs.map((conv: any) => {
                 let otherUserId;
                 if (isAdmin) {
-                    // For admins, show conversation between the two participants
-                    // We'll treat participant_2 as the "other" for display purposes
                     otherUserId = conv.participant_2_id;
                 } else {
                     otherUserId = conv.participant_1_id === user.id
@@ -84,40 +145,16 @@ export function useMessaging(conversationId?: string) {
                         : conv.participant_1_id;
                 }
 
-                // Fetch other user profile
-                const { data: userData } = await supabase
-                    .from('profiles')
-                    .select('id, full_name, avatar_url, role')
-                    .eq('id', otherUserId)
-                    .single();
-
-                // Fetch last message for this pair
-                const { data: lastMsg } = await supabase
-                    .from('messages')
-                    .select('content, created_at, is_read, receiver_id')
-                    .or(`and(sender_id.eq.${conv.participant_1_id},receiver_id.eq.${conv.participant_2_id}),and(sender_id.eq.${conv.participant_2_id},receiver_id.eq.${conv.participant_1_id})`)
-                    .order('created_at', { ascending: false })
-                    .limit(1);
-
-                // Fetch unread count (only if not admin)
-                let unread = 0;
-                if (!isAdmin) {
-                    const { count } = await supabase
-                        .from('messages')
-                        .select('*', { count: 'exact', head: true })
-                        .eq('sender_id', otherUserId)
-                        .eq('receiver_id', user.id)
-                        .eq('is_read', false);
-                    unread = count || 0;
-                }
+                const key = `${conv.participant_1_id}-${conv.participant_2_id}`;
+                const keyAlt = `${conv.participant_2_id}-${conv.participant_1_id}`;
 
                 return {
                     ...conv,
-                    other_user: userData,
-                    unread_count: unread,
-                    last_message: lastMsg?.[0]?.content || '',
+                    other_user: usersMap.get(otherUserId),
+                    unread_count: unreadMap.get(otherUserId) || 0,
+                    last_message: lastMessageMap.get(key) || lastMessageMap.get(keyAlt) || '',
                 };
-            }));
+            });
 
             setConversations(enriched);
             setUnreadCount(enriched.reduce((sum, c) => sum + (c.unread_count || 0), 0));
@@ -204,7 +241,7 @@ export function useMessaging(conversationId?: string) {
             if (!user) throw new Error('Not authenticated');
 
             // Check for compliance if there's content
-            let complianceCheck = { isCompliant: true, detectedKeywords: [] as string[] };
+            let complianceCheck = { passed: true, detectedKeywords: [] as string[] };
             let sanitizedContent = content;
 
             if (content) {
