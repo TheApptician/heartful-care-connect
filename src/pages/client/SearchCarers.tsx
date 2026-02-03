@@ -29,6 +29,7 @@ import {
   Award
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { PostcodeAddressLookup } from "@/components/shared/PostcodeAddressLookup";
 
 const careTypes = [
   "Personal Care",
@@ -174,9 +175,13 @@ export default function SearchCarers() {
               />
             </div>
             <div className="flex flex-wrap gap-3">
-              <div className="relative w-full md:w-[150px]">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Postcode" className="pl-11 h-11 rounded-xl border-black/5 bg-white/50 text-sm" defaultValue="M1 1AA" />
+              <div className="relative w-full md:w-[250px]">
+                <PostcodeAddressLookup
+                  postcode={searchQuery} // Note: This might be tricky if it's dual use, let's keep it separate or use a separate state
+                  onPostcodeChange={(pc) => setSearchQuery(pc)}
+                  onAddressSelect={() => { }}
+                  placeholder="Postcode"
+                />
               </div>
 
               <Sheet>

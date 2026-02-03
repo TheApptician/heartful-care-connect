@@ -31,7 +31,7 @@ const demoCarers = [
         email: 'sarah.jenkins@demo.heems.com',
         password: 'DemoPass123!',
         full_name: 'Sarah Jenkins',
-        bio: 'Specialist Nurse with 12 years of experience in elderly care and dementia support.',
+        bio: 'Nurse with 12 years of experience in elderly care and dementia support.',
         hourly_rate: 24,
         experience_years: '12 years',
         specializations: ['Personal Care', 'Dementia Care', 'Palliative Care', 'Medication Management']
@@ -49,7 +49,7 @@ const demoCarers = [
         email: 'elizabeth.aris@demo.heems.com',
         password: 'DemoPass123!',
         full_name: 'Elizabeth Aris',
-        bio: 'Companion Care specialist with 15 years of experience.',
+        bio: 'Companion Care professional with 15 years of experience.',
         hourly_rate: 20,
         experience_years: '15 years',
         specializations: ['Companionship', 'Elderly Care', 'Mental Health Support', 'Light Housekeeping']
@@ -58,7 +58,7 @@ const demoCarers = [
         email: 'michael.chen@demo.heems.com',
         password: 'DemoPass123!',
         full_name: 'Michael Chen',
-        bio: 'Palliative Care Specialist with 10 years experience providing end-of-life care.',
+        bio: 'Palliative Care expert with 10 years experience providing end-of-life care.',
         hourly_rate: 28,
         experience_years: '10 years',
         specializations: ['Palliative Care', 'Pain Management', 'Family Support', 'Medication Management']
@@ -67,7 +67,7 @@ const demoCarers = [
         email: 'sophie.taylor@demo.heems.com',
         password: 'DemoPass123!',
         full_name: 'Sophie Taylor',
-        bio: 'Dementia Care specialist with 6 years of focused experience.',
+        bio: 'Dementia Care expert with 6 years of focused experience.',
         hourly_rate: 24,
         experience_years: '6 years',
         specializations: ['Dementia Care', 'Memory Care', 'Behavioral Support', 'Personal Care']
@@ -76,7 +76,7 @@ const demoCarers = [
         email: 'marcus.thompson@demo.heems.com',
         password: 'DemoPass123!',
         full_name: 'Marcus Thompson',
-        bio: 'Night Support specialist with 9 years experience.',
+        bio: 'Night Support expert with 9 years experience.',
         hourly_rate: 26,
         experience_years: '9 years',
         specializations: ['Night Care', 'Sleep Support', 'Emergency Response', 'Personal Care']

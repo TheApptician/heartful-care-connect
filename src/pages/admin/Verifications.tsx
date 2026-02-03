@@ -381,7 +381,7 @@ export default function AdminVerifications() {
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm text-muted-foreground mb-2">Specialisms</p>
+                        <p className="text-sm text-muted-foreground mb-2">Expertise Areas</p>
                         <div className="flex flex-wrap gap-2">
                           {selectedApplication.specialisms.map(spec => (
                             <Badge key={spec} variant="outline">{spec}</Badge>

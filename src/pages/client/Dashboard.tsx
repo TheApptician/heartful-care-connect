@@ -34,7 +34,7 @@ const navItems = [
   { name: "Overview", href: "/client/dashboard", icon: LayoutDashboard },
   { name: "Marketplace", href: "/client/search", icon: Search },
   { name: "My Bookings", href: "/client/bookings", icon: Calendar },
-  { name: "Care Plans", href: "/client/care-plans", icon: FileText },
+  { name: "Routines", href: "/client/care-plans", icon: FileText },
   { name: "Messages", href: "/client/messages", icon: MessageSquare },
   { name: "Payments", href: "/client/payments", icon: CreditCard },
   { name: "Settings", href: "/client/settings", icon: Settings },
@@ -126,7 +126,7 @@ const ClientDashboard = () => {
           <Button variant="outline" className="h-11 px-5 rounded-xl border-black/5 bg-white font-bold text-xs" asChild>
             <Link to="/client/care-plans">
               <FileText className="w-4 h-4 mr-2 text-primary" />
-              Plan
+              Routines
             </Link>
           </Button>
           <Button className="h-11 px-6 rounded-xl font-bold text-xs shadow-md shadow-primary/10 bg-[#111827] text-white hover:bg-[#1f2937]" asChild>

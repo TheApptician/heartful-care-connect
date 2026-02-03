@@ -10,6 +10,7 @@ import { User, Mail, Phone, MapPin, Save, Upload, Camera, Loader2 } from "lucide
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
+import { PostcodeAddressLookup } from "@/components/shared/PostcodeAddressLookup";
 
 const ClientProfile = () => {
     const { toast } = useToast();
@@ -268,43 +269,72 @@ const ClientProfile = () => {
                     <CardDescription>Your residential address</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="address">Street Address</Label>
-                        <div className="relative">
-                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                id="address"
-                                name="address"
-                                value={formData.address}
-                                onChange={handleChange}
-                                disabled={!isEditing}
-                                className="pl-10"
+                    {isEditing ? (
+                        <div className="space-y-4">
+                            <PostcodeAddressLookup
+                                postcode={formData.postcode}
+                                onPostcodeChange={(pc) => setFormData(prev => ({ ...prev, postcode: pc }))}
+                                onAddressSelect={(addr) => setFormData(prev => ({ ...prev, address: addr }))}
+                                label="Postcode"
                             />
+                            <div className="space-y-2">
+                                <Label htmlFor="address">Street Address</Label>
+                                <Input
+                                    id="address"
+                                    name="address"
+                                    value={formData.address}
+                                    onChange={handleChange}
+                                    className="h-12 border-black/[0.05] rounded-xl text-sm"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="city">City</Label>
+                                <Input
+                                    id="city"
+                                    name="city"
+                                    value={formData.city}
+                                    onChange={handleChange}
+                                    className="h-12 border-black/[0.05] rounded-xl text-sm"
+                                />
+                            </div>
                         </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="city">City</Label>
-                            <Input
-                                id="city"
-                                name="city"
-                                value={formData.city}
-                                onChange={handleChange}
-                                disabled={!isEditing}
-                            />
+                    ) : (
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="address">Street Address</Label>
+                                <div className="relative">
+                                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    <Input
+                                        id="address"
+                                        name="address"
+                                        value={formData.address}
+                                        disabled
+                                        className="pl-10"
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="city">City</Label>
+                                    <Input
+                                        id="city"
+                                        name="city"
+                                        value={formData.city}
+                                        disabled
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="postcode">Postcode</Label>
+                                    <Input
+                                        id="postcode"
+                                        name="postcode"
+                                        value={formData.postcode}
+                                        disabled
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="postcode">Postcode</Label>
-                            <Input
-                                id="postcode"
-                                name="postcode"
-                                value={formData.postcode}
-                                onChange={handleChange}
-                                disabled={!isEditing}
-                            />
-                        </div>
-                    </div>
+                    )}
                 </CardContent>
             </Card>
 

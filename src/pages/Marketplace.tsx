@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,7 @@ const Marketplace = () => {
                     id,
                     full_name,
                     avatar_url,
-                    carer_details(
+                    carer_details!inner(
                         bio,
                         hourly_rate,
                         verification_status,
@@ -50,7 +51,14 @@ const Marketplace = () => {
                 .limit(12);
 
             if (error) throw error;
-            setCarers(data || []);
+
+            // Map the data to fix the array issue with carer_details
+            const formattedData = (data || []).map((carer: any) => ({
+                ...carer,
+                carer_details: Array.isArray(carer.carer_details) ? carer.carer_details[0] : carer.carer_details
+            }));
+
+            setCarers(formattedData);
         } catch (error) {
             console.error('Error fetching carers:', error);
         } finally {
@@ -65,6 +73,10 @@ const Marketplace = () => {
 
     return (
         <div className="min-h-screen bg-white font-sans selection:bg-[#1a9e8c]/30">
+            <Helmet>
+                <title>Find Carers | Heems</title>
+                <meta name="description" content="Discover and book elite independent carers on Heems. Rigorously vetted professionals for your family's needs." />
+            </Helmet>
             <Header />
             <main className="pt-28 lg:pt-36 pb-20">
                 <div className="container mx-auto px-6 lg:px-12">
@@ -233,7 +245,7 @@ const Marketplace = () => {
                             </div>
                             <div className="flex justify-end">
                                 <Button asChild className="h-16 px-12 rounded-2xl bg-white text-[#111827] font-black hover:bg-[#1a9e8c] hover:text-white transition-all text-sm">
-                                    <Link to="/register?role=organisation">
+                                    <Link to="/signup/organisation">
                                         Apply as a Care Organisation
                                     </Link>
                                 </Button>

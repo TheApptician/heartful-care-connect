@@ -9,6 +9,7 @@ import AuthLayout from "@/components/layouts/AuthLayout";
 import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight, ArrowLeft, Building2, MapPin, Globe } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { PostcodeAddressLookup } from "@/components/shared/PostcodeAddressLookup";
 
 const organisationTypes = [
   { value: "care_agency", label: "Care Agency" },
@@ -32,6 +33,7 @@ const OrganisationSignup = () => {
     orgType: "",
     cqcNumber: "",
     postcode: "",
+    address: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -117,6 +119,8 @@ const OrganisationSignup = () => {
             full_name: `${formData.firstName} ${formData.lastName}`,
             phone: formData.phone,
             role: 'organisation',
+            postcode: formData.postcode,
+            address: formData.address,
           }, {
             onConflict: 'id'
           });
@@ -220,8 +224,13 @@ const OrganisationSignup = () => {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">HQ Postcode</Label>
-              <Input name="postcode" placeholder="W1 1AA" value={formData.postcode} onChange={handleChange} className="h-12 bg-slate-50 border-black/[0.05] rounded-xl text-sm" required />
+              <PostcodeAddressLookup
+                postcode={formData.postcode}
+                onPostcodeChange={(pc) => setFormData({ ...formData, postcode: pc })}
+                onAddressSelect={(addr) => setFormData({ ...formData, address: addr })}
+                label="HQ Postcode"
+                required
+              />
             </div>
 
             <div className="p-4 rounded-2xl bg-[#1a9e8c]/5 border border-[#1a9e8c]/20 my-4">

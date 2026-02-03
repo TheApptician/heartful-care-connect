@@ -67,7 +67,8 @@ const Footer = () => {
             <div>
               <h4 className="text-xs font-black text-[#1a9e8c] uppercase tracking-widest mb-8">Ecosystem</h4>
               <ul className="space-y-4">
-                <li><Link to="/marketplace" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Marketplace</Link></li>
+                <li><Link to="/marketplace" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Find Carers</Link></li>
+                <li><Link to="/carers" className="text-sm font-bold text-white/60 hover:text-white transition-colors">For Carers</Link></li>
                 <li><Link to="/types-of-care" className="text-sm font-bold text-white/60 hover:text-white transition-colors">Types of Care</Link></li>
                 <li><Link to="/how-it-works" className="text-sm font-bold text-white/60 hover:text-white transition-colors">How it Works</Link></li>
 
@@ -115,16 +116,16 @@ const Footer = () => {
             {/* App Store Button */}
             <a
               href="#"
-              className="group flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105"
+              className="group flex items-center gap-3 px-6 py-3 bg-black hover:bg-slate-900 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105"
             >
-              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.05,20.28c-0.96,1.56-1.95,3.08-3.41,3.1c-1.43,0.02-1.89-0.86-3.53-0.86c-1.64,0-2.15,0.84-3.51,0.89 C5.19,23.46,4.1,21.94,3.14,20.57C1.19,17.76,0,13.88,0,10.23c0-3.6,1.48-5.34,3.17-5.38c1.37-0.03,2.66,0.92,3.33,0.92 c0.67,0,2.23-1.12,3.87-0.95c0.69,0.03,2.62,0.28,3.86,2.1c-0.1,0.06-2.3,1.35-2.28,4.02c0.03,3.2,2.8,4.28,2.83,4.29 C14.77,15.65,14.36,17.15,13.33,18.63L17.05,20.28z M10.4,3.5c0.77-0.94,1.3-2.25,1.16-3.55C10.41,0.06,9.08,0.72,8.21,1.72 C7.44,2.59,6.77,3.95,6.96,5.2C8.21,5.3,9.5,4.59,10.4,3.5z" />
                 </svg>
               </div>
               <div className="text-left">
-                <div className="text-xs text-white/60">Download on the</div>
-                <div className="text-sm font-bold text-white">App Store</div>
+                <div className="text-[10px] text-white/50 font-bold uppercase tracking-tight leading-none">Download on the</div>
+                <div className="text-xl font-bold text-white tracking-tight leading-none mt-1">App Store</div>
               </div>
             </a>
 

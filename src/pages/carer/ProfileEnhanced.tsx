@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
     User,
     Camera,
@@ -267,7 +268,7 @@ export default function CarerProfileEnhanced() {
                         <Textarea
                             className="min-h-[150px]"
                             disabled={!isEditing}
-                            defaultValue="I am a dedicated and compassionate carer with over 5 years of experience in providing high-quality personal care and support. I specialise in elderly care and have extensive experience working with clients who have dementia."
+                            defaultValue="I am a dedicated and compassionate carer with over 5 years of experience in providing high-quality personal care and support. I focus on elderly care and have extensive experience working with clients who have dementia."
                         />
                     </div>
 

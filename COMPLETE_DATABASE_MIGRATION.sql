@@ -578,11 +578,11 @@ CREATE POLICY "Admins can manage contact submissions"
 
 INSERT INTO public.blog_posts (title, slug, excerpt, content, author, category, reading_time, is_published, is_featured, published_at) VALUES
 (
-  'The Future of Specialist Care in the UK',
-  'future-of-specialist-care-uk',
+  'The Future of Care in the UK',
+  'future-of-care-uk',
   'How technological infrastructure is solving the fragmentation of private care and improving clinical outcomes.',
   '<h2>Introduction</h2>
-<p>The UK''s private care sector is undergoing a significant transformation. For decades, families seeking specialist care for their loved ones have navigated a fragmented landscape of agencies, independent carers, and often inadequate vetting processes.</p>
+<p>The UK''s private care sector is undergoing a significant transformation. For decades, families seeking care for their loved ones have navigated a fragmented landscape of agencies, independent carers, and often inadequate vetting processes.</p>
 
 <h2>The Current Challenges</h2>
 <p>Traditional care agencies often charge high fees while paying carers relatively little. This creates a situation where quality professionals leave the sector, and families struggle to find reliable, verified care.</p>
@@ -600,14 +600,14 @@ INSERT INTO public.blog_posts (title, slug, excerpt, content, author, category, 
   NOW() - INTERVAL '5 days'
 ),
 (
-  '5 Things to Look for in a Specialist Carer',
-  '5-things-specialist-carer',
+  '5 Things to Look for in a Carer',
+  '5-things-care-carer',
   'A comprehensive guide for families navigating the vetting process for complex care needs.',
   '<h2>Finding the Right Carer</h2>
 <p>Choosing a carer for a loved one with complex needs is one of the most important decisions a family can make. Here are five critical factors to consider.</p>
 
 <h2>1. Verified Qualifications</h2>
-<p>Always verify that your carer has the appropriate qualifications and training for your specific care needs. This includes NVQ levels, specialist certifications, and up-to-date mandatory training.</p>
+<p>Always verify that your carer has the appropriate qualifications and training for your specific care needs. This includes NVQ levels, certifications, and up-to-date mandatory training.</p>
 
 <h2>2. DBS Check Status</h2>
 <p>An Enhanced DBS check is essential. Ensure this has been completed recently and covers the appropriate workforce type.</p>
@@ -615,7 +615,7 @@ INSERT INTO public.blog_posts (title, slug, excerpt, content, author, category, 
 <h2>3. Professional References</h2>
 <p>Look for carers with verifiable references from previous care roles. A good platform will have already vetted these.</p>
 
-<h2>4. Specialist Experience</h2>
+<h2>4. Expert Experience</h2>
 <p>If your loved one has specific conditions like dementia, Parkinson''s, or requires palliative care, seek carers with documented experience in these areas.</p>
 
 <h2>5. Personality Fit</h2>

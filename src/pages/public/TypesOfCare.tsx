@@ -14,7 +14,7 @@ const careTypes = [
     {
         title: "Dementia Care",
         icon: Brain,
-        description: "Specialist support for those living with dementia, focused on maintaining routine, safety, and dignity.",
+        description: "Support for those living with dementia, focused on maintaining routine, safety, and dignity.",
         color: "bg-purple-100 text-purple-700"
     },
     {
@@ -60,7 +60,7 @@ const TypesOfCare = () => {
                             <span className="text-[#1a9e8c]">your specific needs.</span>
                         </h1>
                         <p className="text-xl text-[#4B5563] font-medium leading-relaxed max-w-2xl mx-auto mb-10">
-                            From hourly visits to full-time live-in support, Heems connects you with specialist carers vetted for every situation.
+                            From hourly visits to full-time live-in support, Heems connects you with carers vetted for every situation.
                         </p>
                     </div>
                 </section>

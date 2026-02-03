@@ -1,0 +1,8 @@
+                                            {(carer?.carer_details?.hourly_rate || 25) < MINIMUM_HOURLY_RATE && (
+                                                <Alert variant="destructive">
+                                                     <AlertCircle className="h-4 w-4" />
+                                                     <AlertDescription>
+                                                         <strong>Rate Error:</strong> This carer's rate (£{carer?.carer_details?.hourly_rate || 25}/hr) is below the minimum of £{MINIMUM_HOURLY_RATE}/hr. Booking cannot proceed.
+                                                     </AlertDescription>
+                                                 </Alert>
+                                             )}

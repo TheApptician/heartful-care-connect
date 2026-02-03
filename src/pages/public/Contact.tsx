@@ -1,4 +1,4 @@
-import Header from "@/components/landing/Header";
+(import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +34,7 @@ const Contact = () => {
                     <div className="container mx-auto px-6 relative z-10">
                         <div className="max-w-3xl">
                             <h1 className="text-5xl font-black mb-6 leading-tight">Get in touch with <span className="text-[#1a9e8c]">Heems</span></h1>
-                            <p className="text-xl text-white/70 font-medium">Have questions about our platform? Our team of care specialists is here to help you every step of the way.</p>
+                            <p className="text-xl text-white/70 font-medium">Have questions about our platform? Our team is here to help you every step of the way.</p>
                         </div>
                     </div>
                 </section>

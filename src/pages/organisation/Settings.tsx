@@ -20,6 +20,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { PostcodeAddressLookup } from "@/components/shared/PostcodeAddressLookup";
 
 export default function OrganisationSettings() {
     const [profile, setProfile] = useState<any>(null);
@@ -355,38 +356,32 @@ export default function OrganisationSettings() {
                                 </CardTitle>
                                 <CardDescription>Your address and coverage radius</CardDescription>
                             </CardHeader>
-                            <CardContent className="space-y-4">
+                            <div className="space-y-4">
+                                <PostcodeAddressLookup
+                                    postcode={formData.postcode}
+                                    onPostcodeChange={(pc) => setFormData({ ...formData, postcode: pc })}
+                                    onAddressSelect={(addr) => setFormData({ ...formData, address: addr })}
+                                    label="Postcode"
+                                />
                                 <div className="space-y-2">
                                     <Label>Address</Label>
-                                    <Textarea
+                                    <Input
                                         value={formData.address}
                                         onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                         placeholder="Full address..."
-                                        rows={2}
                                     />
                                 </div>
-
-                                <div className="grid md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label>Postcode</Label>
-                                        <Input
-                                            value={formData.postcode}
-                                            onChange={(e) => setFormData({ ...formData, postcode: e.target.value })}
-                                            placeholder="SW1A 1AA"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Service Radius (miles)</Label>
-                                        <Input
-                                            type="number"
-                                            value={formData.service_radius_miles}
-                                            onChange={(e) => setFormData({ ...formData, service_radius_miles: parseInt(e.target.value) || 10 })}
-                                            min={1}
-                                            max={100}
-                                        />
-                                    </div>
+                                <div className="space-y-2">
+                                    <Label>Service Radius (miles)</Label>
+                                    <Input
+                                        type="number"
+                                        value={formData.service_radius_miles}
+                                        onChange={(e) => setFormData({ ...formData, service_radius_miles: parseInt(e.target.value) || 10 })}
+                                        min={1}
+                                        max={100}
+                                    />
                                 </div>
-                            </CardContent>
+                            </div>
                         </Card>
                     </TabsContent>
 

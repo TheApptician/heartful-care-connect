@@ -56,7 +56,7 @@ const faqs = [
             },
             {
                 q: "Can I get a refund?",
-                a: "Refunds are available if you cancel at least 24 hours before the scheduled appointment. Contact support for cancellations within 24 hours.",
+                a: "Refunds are available if you cancel at least 48 hours before the scheduled appointment. Contact support for cancellations within 48 hours.",
             },
         ],
     },
@@ -66,7 +66,7 @@ const faqs = [
         questions: [
             {
                 q: "How do I cancel a booking?",
-                a: "Go to your Bookings page, select the booking you want to cancel, and click 'Cancel Booking'. Cancellations made 24+ hours in advance receive a full refund.",
+                a: "Go to your Bookings page, select the booking you want to cancel, and click 'Cancel Booking'. Cancellations made 48+ hours in advance receive a full refund.",
             },
             {
                 q: "Can I reschedule an appointment?",
@@ -74,7 +74,7 @@ const faqs = [
             },
             {
                 q: "What if my carer doesn't show up?",
-                a: "Contact our support team immediately. We'll help you find a replacement carer and issue a full refund for the missed appointment.",
+                a: "Heems may provide tools for the client to contact alternatives but makes no guarantees.",
             },
         ],
     },

@@ -64,7 +64,7 @@ const CTASection = () => {
               </Button>
               <Button variant="outline" size="lg" className="h-16 px-12 rounded-2xl font-black text-lg text-white border-2 border-white/20 hover:bg-white/10 transition-all" asChild>
                 <Link to="/marketplace">
-                  Browse Marketplace
+                  Find Carers
                 </Link>
               </Button>
             </div>
@@ -72,8 +72,8 @@ const CTASection = () => {
             {/* Stats Row */}
             <div className="grid grid-cols-3 gap-8 mt-16 pt-12 border-t border-white/10">
               <div>
-                <p className="text-3xl font-black text-white mb-1">8k</p>
-                <p className="text-xs font-bold text-white/50 uppercase tracking-widest">Cares</p>
+                <p className="text-3xl font-black text-white mb-1">90,000 hrs</p>
+                <p className="text-xs font-bold text-white/50 uppercase tracking-widest">Care delivered</p>
               </div>
               <div>
                 <p className="text-3xl font-black text-white mb-1">2000+</p>

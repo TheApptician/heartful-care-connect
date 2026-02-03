@@ -30,6 +30,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { MINIMUM_HOURLY_RATE, validateMinimumRate } from "@/lib/fees";
+import { PostcodeAddressLookup } from "@/components/shared/PostcodeAddressLookup";
 
 const careSpecialisms = [
   "Personal Care",
@@ -318,7 +319,7 @@ export default function CarerProfile() {
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="personal">Personal Info</TabsTrigger>
           <TabsTrigger value="professional">Professional</TabsTrigger>
-          <TabsTrigger value="specialties">Specialties</TabsTrigger>
+          <TabsTrigger value="specialties">Expertise</TabsTrigger>
           <TabsTrigger value="preferences">Preferences</TabsTrigger>
         </TabsList>
 
@@ -403,46 +404,72 @@ export default function CarerProfile() {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Label className="flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
                   Address
                 </Label>
-                <Input
-                  value={profile.address || ""}
-                  disabled={!isEditing}
-                  onChange={(e) => setProfile((p: any) => ({ ...p, address: e.target.value }))}
-                />
-                <div className="grid md:grid-cols-3 gap-4 mt-2">
-                  <Input
-                    value={profile.city || ""}
-                    disabled={!isEditing}
-                    placeholder="City"
-                    onChange={(e) => setProfile((p: any) => ({ ...p, city: e.target.value }))}
-                  />
-                  <Input
-                    value={profile.postcode || ""}
-                    disabled={!isEditing}
-                    placeholder="Postcode"
-                    onChange={(e) => setProfile((p: any) => ({ ...p, postcode: e.target.value }))}
-                  />
-                  <Select
-                    value={profile.country || "UK"}
-                    disabled={!isEditing}
-                    onValueChange={(val) => setProfile((p: any) => ({ ...p, country: val }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="UK">United Kingdom</SelectItem>
-                      <SelectItem value="england">England</SelectItem>
-                      <SelectItem value="wales">Wales</SelectItem>
-                      <SelectItem value="scotland">Scotland</SelectItem>
-                      <SelectItem value="ni">Northern Ireland</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                {isEditing ? (
+                  <div className="space-y-4">
+                    <PostcodeAddressLookup
+                      postcode={profile.postcode || ""}
+                      onPostcodeChange={(pc) => setProfile((p: any) => ({ ...p, postcode: pc }))}
+                      onAddressSelect={(addr) => setProfile((p: any) => ({ ...p, address: addr }))}
+                      label="Postcode"
+                    />
+                    <Input
+                      value={profile.address || ""}
+                      placeholder="Street Address"
+                      onChange={(e) => setProfile((p: any) => ({ ...p, address: e.target.value }))}
+                    />
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <Input
+                        value={profile.city || ""}
+                        placeholder="City"
+                        onChange={(e) => setProfile((p: any) => ({ ...p, city: e.target.value }))}
+                      />
+                      <Select
+                        value={profile.country || "UK"}
+                        onValueChange={(val) => setProfile((p: any) => ({ ...p, country: val }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Country" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="UK">United Kingdom</SelectItem>
+                          <SelectItem value="england">England</SelectItem>
+                          <SelectItem value="wales">Wales</SelectItem>
+                          <SelectItem value="scotland">Scotland</SelectItem>
+                          <SelectItem value="ni">Northern Ireland</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <Input
+                      value={profile.address || ""}
+                      disabled
+                    />
+                    <div className="grid md:grid-cols-3 gap-4 mt-2">
+                      <Input
+                        value={profile.city || ""}
+                        disabled
+                        placeholder="City"
+                      />
+                      <Input
+                        value={profile.postcode || ""}
+                        disabled
+                        placeholder="Postcode"
+                      />
+                      <Input
+                        value={profile.country || "UK"}
+                        disabled
+                        placeholder="Country"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -599,7 +626,7 @@ export default function CarerProfile() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Heart className="h-5 w-5 text-primary" />
-                Care Specialties
+                Care Expertise
               </CardTitle>
               <CardDescription>Select the types of care you can provide</CardDescription>
             </CardHeader>

@@ -66,8 +66,8 @@ const getDefaultNavItems = (role: string): NavItem[] => {
         { name: "Dashboard", href: "/client/dashboard", icon: LayoutDashboard },
         { name: "Post a Job", href: "/client/post-job", icon: Briefcase },
         { name: "Find Carers", href: "/client/search", icon: Search },
-        { name: "Bookings", href: "/client/bookings", icon: Calendar },
-        { name: "Care Plans", href: "/client/care-plans", icon: ClipboardList },
+        { name: "My Bookings", href: "/client/bookings", icon: Calendar },
+        { name: "Routines", href: "/client/care-plans", icon: ClipboardList },
         { name: "Messages", href: "/client/messages", icon: MessageSquare },
         { name: "Payments", href: "/client/payments", icon: CreditCard },
         { name: "Settings", href: "/client/settings", icon: Settings },
@@ -140,7 +140,7 @@ const DashboardLayout = ({
       const newCounts: { [key: string]: number } = {};
 
       // Run all count queries in parallel for faster loading
-      const queries: Promise<void>[] = [];
+      const queries: any[] = [];
 
       // 1. Unread Messages (All roles) - always fetch
       queries.push(

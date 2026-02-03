@@ -19,7 +19,7 @@ const UserGuide = () => {
                             <Badge className="mb-6 bg-[#1a9e8c]/10 text-[#1a9e8c] border-[#1a9e8c]/20 py-1 px-4 text-xs font-black uppercase tracking-widest">Mastering Heems</Badge>
                             <h1 className="text-6xl font-black text-[#111827] mb-8 leading-tight">Everything you need to <span className="text-[#1a9e8c]">get started</span>.</h1>
                             <p className="text-xl text-slate-600 font-medium leading-relaxed max-w-2xl">
-                                From creating your first care plan to managing complex specialist bookings, our guide covers everything you need to know.
+                                From creating your first care plan to managing complex bookings, our guide covers everything you need to know.
                             </p>
                         </div>
                     </div>

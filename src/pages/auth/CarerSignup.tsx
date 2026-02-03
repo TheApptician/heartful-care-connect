@@ -9,6 +9,7 @@ import AuthLayout from "@/components/layouts/AuthLayout";
 import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight, ArrowLeft, MapPin, ShieldCheck, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { PostcodeAddressLookup } from "@/components/shared/PostcodeAddressLookup";
 
 const careTypes = [
   "Personal Care",
@@ -31,6 +32,7 @@ const CarerSignup = () => {
     password: "",
     confirmPassword: "",
     postcode: "",
+    address: "",
     experience: "",
     careTypes: [] as string[],
     hasDBS: false,
@@ -146,6 +148,7 @@ const CarerSignup = () => {
           .insert({
             id: authData.user.id,
             postcode: formData.postcode,
+            address: formData.address,
             experience_years: formData.experience,
             specializations: formData.careTypes,
             has_dbs: formData.hasDBS,
@@ -236,8 +239,12 @@ const CarerSignup = () => {
         {step === 2 && (
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Postcode</Label>
-              <Input name="postcode" placeholder="SW1A 1AA" value={formData.postcode} onChange={handleChange} className="h-12 bg-slate-50 border-black/[0.05] rounded-xl text-sm" required />
+              <PostcodeAddressLookup
+                postcode={formData.postcode}
+                onPostcodeChange={(pc) => setFormData({ ...formData, postcode: pc })}
+                onAddressSelect={(addr) => setFormData({ ...formData, address: addr })}
+                required
+              />
             </div>
 
             <div className="space-y-1.5">

@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { formatCurrency, MINIMUM_HOURLY_RATE } from '@/lib/fees';
 import { getVerificationBadge } from '@/lib/compliance';
+import { PostcodeAddressLookup } from '@/components/shared/PostcodeAddressLookup';
 
 const SPECIALIZATIONS = [
     'Personal Care',
@@ -112,7 +113,13 @@ export default function ClientSearchEnhanced() {
 
             if (error) throw error;
 
-            setCarers(data || []);
+            const transformedData = (data as any[] || []).map(item => ({
+                ...item,
+                carer_details: Array.isArray(item.carer_details) ? item.carer_details[0] : item.carer_details,
+                carer_verification: Array.isArray(item.carer_verification) ? item.carer_verification[0] : item.carer_verification
+            }));
+
+            setCarers(transformedData);
         } catch (error: any) {
             console.error('Error fetching carers:', error);
             toast({
@@ -255,12 +262,11 @@ export default function ClientSearchEnhanced() {
                             />
                         </div>
                         <div className="relative w-64">
-                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                            <Input
-                                placeholder="Postcode (e.g., M1)"
-                                value={postcodeFilter}
-                                onChange={(e) => setPostcodeFilter(e.target.value)}
-                                className="pl-10 h-12 text-base"
+                            <PostcodeAddressLookup
+                                postcode={postcodeFilter}
+                                onPostcodeChange={(pc) => setPostcodeFilter(pc)}
+                                onAddressSelect={() => { }}
+                                placeholder="Postcode"
                             />
                         </div>
                         <Button

@@ -30,7 +30,7 @@ const steps = [
 ];
 
 const carerImages = [
-  { src: "/carer_casual_female_1.png", name: "Sarah", role: "Specialist Nurse" },
+  { src: "/carer_casual_female_1.png", name: "Sarah", role: "Nurse" },
   { src: "/carer_black_male_1.png", name: "David", role: "Senior Carer" },
   { src: "/carer_casual_female_2.png", name: "Elizabeth", role: "Companion Care" },
   { src: "/carer_black_female_1.png", name: "Sophie", role: "Dementia Care" },
@@ -168,7 +168,7 @@ const HowItWorksSection = () => {
             </div>
             <Button size="lg" className="h-16 px-12 rounded-2xl bg-white text-[#111827] font-black text-lg hover:bg-[#1a9e8c] hover:text-white shadow-2xl transition-all" asChild>
               <Link to="/marketplace">
-                Browse Marketplace
+                Find Carers
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>

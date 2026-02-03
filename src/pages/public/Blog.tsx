@@ -58,7 +58,7 @@ const Blog = () => {
                                 <Badge className="mb-6 bg-[#1a9e8c]/20 text-[#1a9e8c] border-[#1a9e8c]/30 py-1 px-4 text-xs font-black uppercase tracking-widest">Heems Insights</Badge>
                                 <h1 className="text-6xl font-black mb-8 leading-tight">Expertise in the <span className="text-[#1a9e8c]">evolution of care</span>.</h1>
                                 <p className="text-xl text-white/60 font-medium leading-relaxed">
-                                    Thought leadership, practical guides, and industry news from the intersection of technology and specialist care.
+                                    Thought leadership, practical guides, and industry news from the intersection of technology and care.
                                 </p>
                             </div>
                             <div className="w-full lg:max-w-sm">
@@ -143,8 +143,8 @@ const Blog = () => {
                                         variant="outline"
                                         onClick={() => setSelectedCategory(tag)}
                                         className={`px-4 py-2 border-black/5 rounded-full font-bold cursor-pointer transition-all ${selectedCategory === tag
-                                                ? "bg-[#111827] text-white border-[#111827]"
-                                                : "bg-white text-slate-400 hover:border-[#1a9e8c] hover:text-[#1a9e8c]"
+                                            ? "bg-[#111827] text-white border-[#111827]"
+                                            : "bg-white text-slate-400 hover:border-[#1a9e8c] hover:text-[#1a9e8c]"
                                             }`}
                                     >
                                         {tag}

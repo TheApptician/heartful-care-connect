@@ -111,9 +111,9 @@ const About = () => {
                                 </div>
                             </div>
                             <div className="order-1 lg:order-2">
-                                <h2 className="text-4xl font-black text-[#111827] mb-8 leading-tight">Built by technology experts, guided by care specialists</h2>
+                                <h2 className="text-4xl font-black text-[#111827] mb-8 leading-tight">Built by technology experts, guided by care experts</h2>
                                 <p className="text-lg text-slate-600 font-medium leading-relaxed mb-8">
-                                    Our team brings together veterans from the healthtech, fintech, and specialist care sectors. We combined high-trust infrastructure principles with deep empathy to create Heems.
+                                    Our team brings together veterans from the healthtech, fintech, and care sectors. We combined high-trust infrastructure principles with deep empathy to create Heems.
                                 </p>
 
                             </div>

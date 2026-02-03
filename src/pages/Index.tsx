@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/landing/Header";
 import HeroSection from "@/components/landing/HeroSection";
+import CareTypesSection from "@/components/landing/CareTypesSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import ForOrganisationsSection from "@/components/landing/ForOrganisationsSection";
@@ -14,7 +15,7 @@ const Index = () => {
     <>
       {/* ... previous Helmet code remains same ... */}
       <Helmet>
-        <title>Heems | UK's Trusted On-Demand Care Marketplace</title>
+        <title>Heems | Find Carers | UK's Trusted On-Demand Care Platform</title>
         <meta
           name="description"
           content="Connect with verified carers in minutes. Heems is the UK's leading care marketplace for families, self-employed carers, and healthcare organisations. DBS checked, Introductory Agency standards matched."
@@ -54,6 +55,7 @@ const Index = () => {
         <Header />
         <main className="animate-fade-in transition-all duration-1000">
           <HeroSection />
+          <CareTypesSection />
           <FeaturesSection />
           <HowItWorksSection />
           <ParallaxSection />

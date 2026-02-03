@@ -15,7 +15,7 @@ const testimonials = [
   {
     content: "As a self-employed carer, Heems has given me the flexibility I needed. The platform is intuitive, payments are always on time, and I love connecting with families directly.",
     author: "Priya Sharma",
-    role: "Specialist Dementia Carer",
+    role: "Dementia Carer",
     company: "Self-Employed",
     rating: 5,
     avatar: "PS",
@@ -45,7 +45,7 @@ const testimonials = [
     avatar: "MO",
   },
   {
-    content: "My mum needs complex care due to Parkinson's. Heems matched us with a carer who has specialist training. The peace of mind is priceless.",
+    content: "My mum needs complex care due to Parkinson's. Heems matched us with a carer who has expert training. The peace of mind is priceless.",
     author: "David Chen",
     role: "Family Member",
     company: "Manchester",

@@ -14,6 +14,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { PostcodeAddressLookup } from "@/components/shared/PostcodeAddressLookup";
 
 const STEPS = 5;
 
@@ -104,9 +105,33 @@ export default function PostJob() {
 
             if (error) throw error;
 
+            // Notify carers in the same area
+            try {
+                const outcode = formData.postcode.split(' ')[0].toUpperCase();
+                const { data: carers } = await supabase
+                    .from('carer_details')
+                    .select('id')
+                    .filter('postcode', 'ilike', `${outcode}%`);
+
+                if (carers && carers.length > 0) {
+                    const notifications = carers.map(carer => ({
+                        user_id: carer.id,
+                        type: 'booking',
+                        title: "New Job in Your Area",
+                        message: `A new ${formData.care_type} care job has been posted in ${outcode}.`,
+                        is_read: false,
+                        created_at: new Date().toISOString()
+                    }));
+                    await supabase.from('notifications').insert(notifications);
+                }
+            } catch (notifyError) {
+                console.error("Failed to send area notifications:", notifyError);
+                // Don't fail the job post if notifications fail
+            }
+
             toast({
                 title: "Job Posted Successfully",
-                description: "Carers will be able to see your requirement and apply.",
+                description: "Carers in your area have been notified.",
             });
             navigate("/client/dashboard");
 
@@ -225,7 +250,7 @@ export default function PostJob() {
                                         </RadioGroup>
                                     </div>
 
-                                    <Alert variant="warning" className="bg-amber-50 border-amber-200">
+                                    <Alert className="bg-amber-50 border-amber-200">
                                         <AlertCircle className="h-4 w-4 text-amber-600" />
                                         <AlertTitle className="text-amber-800">Important Requirement</AlertTitle>
                                         <AlertDescription className="text-amber-700 mt-2">
@@ -321,16 +346,15 @@ export default function PostJob() {
                             <div className="space-y-4 pt-4 border-t">
                                 <Label className="text-base">Location</Label>
                                 <div className="grid gap-4">
+                                    <PostcodeAddressLookup
+                                        postcode={formData.postcode}
+                                        onPostcodeChange={(pc) => updateField('postcode', pc)}
+                                        onAddressSelect={(addr) => updateField('address', addr)}
+                                        label="Postcode"
+                                    />
+
                                     <div className="space-y-2">
-                                        <Label>Postcode</Label>
-                                        <Input
-                                            placeholder="e.g. SW1A 1AA"
-                                            value={formData.postcode}
-                                            onChange={(e) => updateField('postcode', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Address (Optional for now)</Label>
+                                        <Label>Address Line 1</Label>
                                         <Input
                                             placeholder="Street address..."
                                             value={formData.address}

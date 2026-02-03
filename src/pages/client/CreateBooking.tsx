@@ -47,7 +47,7 @@ export default function CreateBooking() {
     }, [carerId]);
 
     useEffect(() => {
-        if (carer?.carer_details?.hourly_rate) {
+        if (carer) {
             calculateFeeBreakdown();
         }
     }, [carer, duration, currentPhase]);
@@ -110,7 +110,7 @@ export default function CreateBooking() {
 
     const calculateFeeBreakdown = () => {
         try {
-            const rate = carer?.carer_details?.hourly_rate || 0;
+            const rate = carer?.carer_details?.hourly_rate || 25;
             const fees = calculateFees(rate, duration, currentPhase);
             setFeeBreakdown(fees);
         } catch (error: any) {
@@ -130,7 +130,7 @@ export default function CreateBooking() {
             if (!user) throw new Error("Please log in to book");
 
             // Validate minimum rate
-            const rate = carer?.carer_details?.hourly_rate || 0;
+            const rate = carer?.carer_details?.hourly_rate || 25;
             if (!validateMinimumRate(rate)) {
                 throw new Error(`Rate must be at least £${MINIMUM_HOURLY_RATE}/hour`);
             }
@@ -307,15 +307,16 @@ export default function CreateBooking() {
                                             )}
 
                                             {/* Rate Compliance Alert */}
-                                            {carer?.carer_details?.hourly_rate < MINIMUM_HOURLY_RATE && (
+
+
+                                            {(carer?.carer_details?.hourly_rate || 25) < MINIMUM_HOURLY_RATE && (
                                                 <Alert variant="destructive">
                                                     <AlertCircle className="h-4 w-4" />
                                                     <AlertDescription>
-                                                        <strong>Rate Error:</strong> This carer's rate (£{carer.carer_details.hourly_rate}/hr) is below the minimum of £{MINIMUM_HOURLY_RATE}/hr. Booking cannot proceed.
+                                                        <strong>Rate Error:</strong> This carer's rate (£{carer?.carer_details?.hourly_rate || 25}/hr) is below the minimum of £{MINIMUM_HOURLY_RATE}/hr. Booking cannot proceed.
                                                     </AlertDescription>
                                                 </Alert>
                                             )}
-
                                             <div className="flex items-start gap-3 p-3.5 bg-amber-50 rounded-xl border border-amber-100 italic font-medium text-[11px] text-amber-900 leading-relaxed">
                                                 <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" />
                                                 Payment is processed only after the carer completes the visit. All fees comply with PRD v2.3.2.
@@ -325,7 +326,7 @@ export default function CreateBooking() {
                                         <Button
                                             className="w-full h-12 rounded-xl font-bold text-sm shadow-md shadow-primary/10"
                                             onClick={handleBooking}
-                                            disabled={loading || (carer?.carer_details?.hourly_rate < MINIMUM_HOURLY_RATE)}
+                                            disabled={loading || ((carer?.carer_details?.hourly_rate || 25) < MINIMUM_HOURLY_RATE)}
                                         >
                                             {loading ? "Processing..." : "Confirm Booking"}
                                             {!loading && <CheckCircle2 className="w-4 h-4 ml-2" />}
@@ -382,7 +383,7 @@ export default function CreateBooking() {
                             <div className="space-y-3 pt-5 border-t border-white/5">
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="font-semibold text-white/40">Hourly Rate</span>
-                                    <span className="font-bold tracking-tight">£{carer?.carer_details?.hourly_rate || '0.00'}</span>
+                                    <span className="font-bold tracking-tight">£{carer?.carer_details?.hourly_rate || '25.00'}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-[11px]">
                                     <span className="font-semibold text-white/40 flex items-center gap-2">
@@ -408,6 +409,6 @@ export default function CreateBooking() {
                     </Card>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
